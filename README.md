@@ -4,7 +4,7 @@ Full-stack application using React, Spring Boot and PostgreSQL.
 
 ## Repository structure
 
-- [frontend](./frontend/): React UI
+- [frontend](./frontend/): React frontend
 - [backend](./backend/): Spring Boot backend service
 
 ## Current stack
@@ -16,6 +16,8 @@ Full-stack application using React, Spring Boot and PostgreSQL.
 - Tooling: Docker Compose
 
 ## Run with Docker Compose
+
+To run the application with Docker Compose, you need Docker Desktop ([download](https://www.docker.com/products/docker-desktop/)).
 
 1. Create `.env` in the repository root (use `.env.example` as a template):
 
@@ -32,27 +34,3 @@ docker compose up --build
 ```
 
 3. Open `http://localhost:5173`.
-
-## Run frontend locally
-
-Make sure Node.js and npm are installed.
-
-1. Go to the [frontend](./frontend/) folder
-
-```bash
-cd frontend
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Start development server:
-
-```bash
-npm run dev
-```
-
-4. Open `http://localhost:5173`.

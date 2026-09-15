@@ -1,6 +1,6 @@
 # Osaamisenhallinta backend
 
-Spring Boot backend for Osaamisenhallinta
+Spring Boot backend for Osaamisenhallinta.
 
 ## Tech stack
 
@@ -12,21 +12,33 @@ Spring Boot backend for Osaamisenhallinta
 
 ## Requirements
 
-- Java 21
+The whole application can be run with `docker compose up --build`, so it is not necessary to run the backend locally.
+
+If you want to run the backend locally, you need:
+
+- Java 21 (e.g. Eclipse Temurin) ([download](https://adoptium.net/temurin/releases?version=21&os=any&arch=any))
 
 The project uses Maven Wrapper, so Maven does not need to be installed separately.
 
 ## Setup
 
-1. Start the backend application
+1. Start the backend application.
 
+On Linux/macOS:
 ```bash
 ./mvnw spring-boot:run
+```
+
+On Windows:
+```bash
+mvnw.cmd spring-boot:run
 ```
 
 2. Open http://localhost:8080.
 
 ## Useful commands
+
+On Windows, use `mvnw.cmd` instead of `./mvnw`. For example: `mvnw.cmd spring-boot:run`.
 
 - `./mvnw spring-boot:run`: start the backend
 - `./mvnw test`: run tests

@@ -12,8 +12,18 @@ React frontend for Osaamisenhallinta.
 
 ## Requirements
 
-- Node.js (20.19+, 22.12+)
-- npm
+The whole application can be run with `docker compose up --build`, so it is not necessary to run the frontend locally.
+
+If you want to run the frontend locally, you need:
+
+- Node.js 24 ([download](https://nodejs.org/en/download))
+- npm (included with Node.js)
+
+You can check if Node.js and npm are installed with:
+```bash
+node --version
+npm --version
+```
 
 ## Setup
 
