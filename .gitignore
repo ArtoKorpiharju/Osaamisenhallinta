@@ -3,7 +3,6 @@
 # Global ignores
 .env*
 !.env.example
-.vscode/
 
 # Frontend
 frontend/node_modules/
