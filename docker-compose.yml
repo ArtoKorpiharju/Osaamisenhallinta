@@ -2,7 +2,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "5173:80" # Frontend UI (nginx listens port 80)
     depends_on:
       backend:
         condition: service_healthy

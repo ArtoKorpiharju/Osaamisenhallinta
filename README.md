@@ -12,6 +12,7 @@ Full-stack application using React, Spring Boot and PostgreSQL.
 - Frontend: Vite 8, React 19, TypeScript 6, ESLint 10, Prettier 3
 - Backend: Java 21, Maven 3.9, Spring Boot 4.1, Checkstyle 3.6, Spotless 3.10
 - Database: PostgreSQL 18
+- Web server / reverse proxy: Nginx 1.30.4
 - Tooling: Docker Compose
 
 ## Run with Docker Compose
