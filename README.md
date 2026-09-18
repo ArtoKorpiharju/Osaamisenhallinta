@@ -34,3 +34,13 @@ docker compose up --build
 ```
 
 3. Open `http://localhost:5173`.
+
+## Tests
+
+There are three different test categories. Unit tests for frontend and backend and end to end tests which boot the full stack. The tests can be run from the root of the repository by:
+
+- Frontend: `cd frontend && npm run test` (Vitest + Testing Library)
+- Backend: `cd backend && ./mvnw test` or `cd backend && mvnw test` on Windows (Maven)
+- End to end: `npm run e2e-test`
+
+All three run automatically in CI on every push and pull request.

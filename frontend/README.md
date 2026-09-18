@@ -20,6 +20,7 @@ If you want to run the frontend locally, you need:
 - npm (included with Node.js)
 
 You can check if Node.js and npm are installed with:
+
 ```bash
 node --version
 npm --version
@@ -46,3 +47,4 @@ npm run dev
 - `npm run dev`: start dev server.
 - `npm run lint`: run ESLint
 - `npm run format`: run Prettier
+- `npm run test`: run unit tests

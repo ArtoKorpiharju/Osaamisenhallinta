@@ -1,0 +1,8 @@
+{
+  "name": "osaamisenhallinta",
+  "private": true,
+  "description": "Scripts for the Osaamisenhallinta project.",
+  "scripts": {
+    "e2e-test": "node e2e-tests/run-all.mjs"
+  }
+}
