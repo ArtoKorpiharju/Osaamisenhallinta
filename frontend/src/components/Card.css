@@ -1,0 +1,30 @@
+* {
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+}
+.card {
+  background-color: white;
+  display: inline-block;
+  padding: 10px 15px;
+  border-left: 3px solid #034182;
+  border-radius: 2.5%;
+}
+
+.card .row {
+  display: flex;
+  gap: 10px;
+  max-width: 250px;
+  margin-top: -5px;
+  font-weight: bold;
+}
+
+.card .title {
+  overflow-wrap: break-word;
+}
+
+.card .amount {
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-size: 150%;
+}
