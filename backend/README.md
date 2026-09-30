@@ -20,21 +20,43 @@ If you want to run the backend locally, you need:
 
 The project uses Maven Wrapper, so Maven does not need to be installed separately.
 
-## Setup
+## Setup Backend locally
 
-1. Start the backend application.
+1. Create `.env` in the repository root if it does not already exist (use `.env.example` as a template):
 
-On Linux/macOS:
+```env
+POSTGRES_DB=database_name
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+```
+
+2. Change directory to backend:
+
 ```bash
-./mvnw spring-boot:run
+cd backend
+```
+
+3. Start the database with Docker
+
+```bash
+docker compose up -d db
+```
+
+4. Start the backend application.
+
+On Linux/macOS (Not tested):
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 On Windows:
+
 ```bash
-mvnw.cmd spring-boot:run
+mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-2. Open http://localhost:8080.
+5. Open http://localhost:8080.
 
 ## Useful commands
 
