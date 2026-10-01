@@ -37,7 +37,9 @@ docker compose up --build
 
 ## Tests
 
-# How to run backend tests
+Backend, frontend and e2e tests run automatically when pushing to Github.
+
+### How to run backend tests
 
 All commands assume the current working directory is /backend
 
@@ -59,11 +61,9 @@ docker compose up -d db
 
 3. See test results in terminal.
 
-# How to run frontend and e2e tests
+### How to run frontend and e2e tests
 
 The tests can be run from the root of the repository by:
 
 - Frontend: `cd frontend && npm run test` (Vitest + Testing Library)
 - End to end: `npm run e2e-test`
-
-All three run automatically in CI on every push and pull request.
