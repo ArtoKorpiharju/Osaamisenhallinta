@@ -37,10 +37,33 @@ docker compose up --build
 
 ## Tests
 
-There are three different test categories. Unit tests for frontend and backend and end to end tests which boot the full stack. The tests can be run from the root of the repository by:
+Backend, frontend and e2e tests run automatically when pushing to Github.
+
+### How to run backend tests
+
+All commands assume the current working directory is /backend
+
+```bash
+cd backend
+```
+
+1. Start the database and wait that it's running:
+
+```bash
+docker compose up -d db
+```
+
+2. Run Maven tests using the local spring boot properties:
+
+```bash
+.\mvnw.cmd test "-Dspring.profiles.active=local"
+```
+
+3. See test results in terminal.
+
+### How to run frontend and e2e tests
+
+The tests can be run from the root of the repository by:
 
 - Frontend: `cd frontend && npm run test` (Vitest + Testing Library)
-- Backend: `cd backend && ./mvnw test` or `cd backend && mvnw test` on Windows (Maven)
 - End to end: `npm run e2e-test`
-
-All three run automatically in CI on every push and pull request.
