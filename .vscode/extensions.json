@@ -1,5 +1,7 @@
 {
     "recommendations": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "shengchen.vscode-checkstyle"

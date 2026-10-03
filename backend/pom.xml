@@ -30,20 +30,56 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
+		<!-- JPA + Hibernate for database access -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		 <!-- Flyway database migrations -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
+		</dependency>
+		<!-- PostgreSQL support for Flyway -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		 <!-- PostgreSQL JDBC driver -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- REST API / Spring MVC -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-
+		<!--needed for testing Spring MVC endpoints-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<!-- Health endpoint used by Docker -->
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- Generates boilerplate Java code such as getters and setters at compile time -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Automatic Spring Boot restart during development -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
