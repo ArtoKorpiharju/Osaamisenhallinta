@@ -1,11 +1,11 @@
 import "./Card.css";
 
-function Card() {
+function Card(toAdd) {
   return (
     <div className="card">
       <div className="row">
-        <p className="title">Total Certificates</p>
-        <p className="icon">B</p>
+        <p className="title">Total {toAdd.item}</p>
+        <img className="icon" src={toAdd.icon} alt="svg" />
       </div>
       <p className="amount">29</p>
     </div>
