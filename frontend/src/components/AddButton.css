@@ -1,0 +1,27 @@
+button .row {
+  display: flex;
+  gap: 10px;
+  max-width: 250px;
+  margin-top: -5px;
+  font-weight: bold;
+}
+
+button .title {
+  overflow-wrap: break-word;
+}
+
+button {
+  background-color: white;
+  display: inline-block;
+  padding: 5px 40px 0px 15px;
+  border-radius: 4px;
+  flex: 1 1 0px;
+  appearance: none;
+  border: none;
+  box-shadow: none;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #C9CFD5;
+}
