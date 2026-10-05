@@ -61,8 +61,6 @@ export default function Navigation({ role }: NavigationProps) {
 
       <List sx={{ px: 1, pb: 1 }}>
         <ListItemButton
-          component={NavLink}
-          to={`/${role}/settings`}
           sx={{
             borderRadius: 1,
             '&.active': {

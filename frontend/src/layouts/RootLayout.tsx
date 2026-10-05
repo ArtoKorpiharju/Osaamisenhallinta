@@ -22,12 +22,10 @@ function getRoleFromPath(pathname: string): Role {
 }
 
 // Get the path for a given role based on the current path.
-// Keep shared settings or the current section if available to the new role.
-// Otherwise use overview.
+// Keep the current section if available to the new role. Otherwise use overview.
 function getRolePath(role: Role, pathname: string): string {
   const section = pathname.split('/')[2] || 'overview'
   const destinationSection =
-    section === 'settings' ||
     pagesPerRole[role].some((page) => page.path.endsWith(`/${section}`))
       ? section
       : 'overview'

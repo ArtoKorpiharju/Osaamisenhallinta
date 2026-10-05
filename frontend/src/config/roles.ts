@@ -15,9 +15,9 @@ export const roles = [
 export type Role = (typeof roles)[number]['value']
 
 interface Page {
-  label: string
-  path: string
-  icon: ComponentType<SvgIconProps>
+  label: string // The label of the page displayed in the navigation menu.
+  path: string // The path of the page used for routing.
+  icon: ComponentType<SvgIconProps> // The icon of the page displayed in the navigation menu.
 }
 
 export const pagesPerRole: Record<Role, Page[]> = {
