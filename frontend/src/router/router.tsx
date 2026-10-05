@@ -7,8 +7,8 @@ import EmployeeQualifications from '../pages/employee/Qualifications'
 import EmployeeCompetencies from '../pages/employee/Competencies'
 import EmployeeRenewals from '../pages/employee/Renewals'
 
-import ManagerOverview from '../pages/manager/Overview'
-import ManagerRenewals from '../pages/manager/Renewals'
+import SupervisorOverview from '../pages/supervisor/Overview'
+import SupervisorRenewals from '../pages/supervisor/Renewals'
 
 import AdminOverview from '../pages/admin/Overview'
 import AdminQualifications from '../pages/admin/Qualifications'
@@ -34,13 +34,13 @@ export default function AppRouter() {
             <Route path="competencies" element={<EmployeeCompetencies />} />
             <Route path="renewals" element={<EmployeeRenewals />} />
           </Route>
-          <Route path="manager">
+          <Route path="supervisor">
             <Route
               index
-              element={<Navigate to="/manager/overview" replace />}
+              element={<Navigate to="/supervisor/overview" replace />}
             />
-            <Route path="overview" element={<ManagerOverview />} />
-            <Route path="renewals" element={<ManagerRenewals />} />
+            <Route path="overview" element={<SupervisorOverview />} />
+            <Route path="renewals" element={<SupervisorRenewals />} />
           </Route>
           <Route path="admin">
             <Route index element={<Navigate to="/admin/overview" replace />} />

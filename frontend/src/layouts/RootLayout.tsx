@@ -10,8 +10,8 @@ import { type Role, pagesPerRole } from '../config/roles'
 // Get the role from the current path.
 // If the path doesn't match any role, default to employee.
 function getRoleFromPath(pathname: string): Role {
-  if (pathname.startsWith('/manager')) {
-    return 'manager'
+  if (pathname.startsWith('/supervisor')) {
+    return 'supervisor'
   }
 
   if (pathname.startsWith('/admin')) {

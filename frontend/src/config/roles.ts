@@ -8,7 +8,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 export const roles = [
   { value: 'employee', label: 'Employee' },
-  { value: 'manager', label: 'Manager' },
+  { value: 'supervisor', label: 'Supervisor' },
   { value: 'admin', label: 'Admin' },
 ] as const
 
@@ -35,19 +35,19 @@ export const pagesPerRole: Record<Role, Page[]> = {
     },
     { label: 'Renewals', path: '/employee/renewals', icon: EventRepeatIcon },
   ],
-  manager: [
-    { label: 'Overview', path: '/manager/overview', icon: HomeOutlinedIcon },
+  supervisor: [
+    { label: 'Overview', path: '/supervisor/overview', icon: HomeOutlinedIcon },
     {
       label: 'Qualifications',
-      path: '/manager/qualifications',
+      path: '/supervisor/qualifications',
       icon: CheckBoxIcon,
     },
     {
       label: 'Competencies',
-      path: '/manager/competencies',
+      path: '/supervisor/competencies',
       icon: StarBorderIcon,
     },
-    { label: 'Renewals', path: '/manager/renewals', icon: EventRepeatIcon },
+    { label: 'Renewals', path: '/supervisor/renewals', icon: EventRepeatIcon },
   ],
   admin: [
     { label: 'Overview', path: '/admin/overview', icon: HomeOutlinedIcon },
