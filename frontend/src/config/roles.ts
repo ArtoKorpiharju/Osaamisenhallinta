@@ -12,9 +12,9 @@ export const roles = [
   { value: 'admin', label: 'Admin' },
 ] as const
 
-export type Role = (typeof roles[number])['value']
+export type Role = (typeof roles)[number]['value']
 
-type Page = {
+interface Page {
   label: string
   path: string
   icon: ComponentType<SvgIconProps>
@@ -22,9 +22,7 @@ type Page = {
 
 export const pagesPerRole: Record<Role, Page[]> = {
   employee: [
-    { label: 'Overview',
-      path: '/employee/overview',
-      icon: HomeOutlinedIcon },
+    { label: 'Overview', path: '/employee/overview', icon: HomeOutlinedIcon },
     {
       label: 'Qualifications',
       path: '/employee/qualifications',
@@ -35,14 +33,10 @@ export const pagesPerRole: Record<Role, Page[]> = {
       path: '/employee/competencies',
       icon: StarBorderIcon,
     },
-    { label: 'Renewals',
-      path: '/employee/renewals',
-      icon: EventRepeatIcon },
+    { label: 'Renewals', path: '/employee/renewals', icon: EventRepeatIcon },
   ],
   manager: [
-    { label: 'Overview',
-      path: '/manager/overview',
-      icon: HomeOutlinedIcon },
+    { label: 'Overview', path: '/manager/overview', icon: HomeOutlinedIcon },
     {
       label: 'Qualifications',
       path: '/manager/qualifications',
@@ -53,14 +47,10 @@ export const pagesPerRole: Record<Role, Page[]> = {
       path: '/manager/competencies',
       icon: StarBorderIcon,
     },
-    { label: 'Renewals',
-      path: '/manager/renewals',
-      icon: EventRepeatIcon },
+    { label: 'Renewals', path: '/manager/renewals', icon: EventRepeatIcon },
   ],
   admin: [
-    { label: 'Overview',
-      path: '/admin/overview',
-      icon: HomeOutlinedIcon },
+    { label: 'Overview', path: '/admin/overview', icon: HomeOutlinedIcon },
     {
       label: 'Qualifications',
       path: '/admin/qualifications',
@@ -71,8 +61,6 @@ export const pagesPerRole: Record<Role, Page[]> = {
       path: '/admin/competencies',
       icon: StarBorderIcon,
     },
-    { label: 'Log',
-      path: '/admin/log',
-      icon: HistoryIcon },
+    { label: 'Log', path: '/admin/log', icon: HistoryIcon },
   ],
 }

@@ -66,9 +66,7 @@ export default function RootLayout() {
       />
 
       <Box sx={{ flex: 1, display: 'flex', minHeight: 0 }}>
-        {navigationOpen && (
-          <Navigation role={role} />
-        )}
+        {navigationOpen && <Navigation role={role} />}
 
         <Box
           component="main"

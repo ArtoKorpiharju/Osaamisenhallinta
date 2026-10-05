@@ -29,7 +29,10 @@ export default function AppRouter() {
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Navigate to="/employee/overview" replace />} />
           <Route path="employee">
-            <Route index element={<Navigate to="/employee/overview" replace />} />
+            <Route
+              index
+              element={<Navigate to="/employee/overview" replace />}
+            />
             <Route path="overview" element={<EmployeeOverview />} />
             <Route path="qualifications" element={<EmployeeQualifications />} />
             <Route path="competencies" element={<EmployeeCompetencies />} />
@@ -37,7 +40,10 @@ export default function AppRouter() {
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="manager">
-            <Route index element={<Navigate to="/manager/overview" replace />} />
+            <Route
+              index
+              element={<Navigate to="/manager/overview" replace />}
+            />
             <Route path="overview" element={<ManagerOverview />} />
             <Route path="qualifications" element={<ManagerQualifications />} />
             <Route path="competencies" element={<ManagerCompetencies />} />

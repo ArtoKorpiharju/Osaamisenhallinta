@@ -43,8 +43,9 @@ export default function TopBar({
   const [language, setLanguage] = useState<Language>('en')
   const [languageAnchor, setLanguageAnchor] = useState<HTMLElement | null>(null)
   const [profileAnchor, setProfileAnchor] = useState<HTMLElement | null>(null)
-  const [switchRoleAnchor, setSwitchRoleAnchor] =
-    useState<HTMLElement | null>(null)
+  const [switchRoleAnchor, setSwitchRoleAnchor] = useState<HTMLElement | null>(
+    null
+  )
 
   return (
     <AppBar
@@ -130,8 +131,7 @@ export default function TopBar({
               color: '#174f83',
               fontSize: 13,
             }}
-          >
-          </Avatar>
+          ></Avatar>
           <Box sx={{ textAlign: 'left' }}>
             <Typography sx={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2 }}>
               Matti Mattinen
