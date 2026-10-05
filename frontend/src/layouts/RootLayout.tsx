@@ -25,10 +25,11 @@ function getRoleFromPath(pathname: string): Role {
 // Keep the current section if available to the new role. Otherwise use overview.
 function getRolePath(role: Role, pathname: string): string {
   const section = pathname.split('/')[2] || 'overview'
-  const destinationSection =
-    pagesPerRole[role].some((page) => page.path.endsWith(`/${section}`))
-      ? section
-      : 'overview'
+  const destinationSection = pagesPerRole[role].some((page) =>
+    page.path.endsWith(`/${section}`)
+  )
+    ? section
+    : 'overview'
 
   return `/${role}/${destinationSection}`
 }

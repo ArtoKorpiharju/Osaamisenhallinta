@@ -8,6 +8,7 @@ import {
   Divider,
   IconButton,
   ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
   Toolbar,
@@ -110,7 +111,7 @@ export default function TopBar({
                 setLanguageAnchor(null)
               }}
             >
-              {lang.label}
+              <ListItemText primary={lang.label} />
             </MenuItem>
           ))}
         </Menu>
@@ -160,7 +161,7 @@ export default function TopBar({
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            Show profile
+            <ListItemText primary="Show profile" />
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -170,7 +171,7 @@ export default function TopBar({
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            Sign out
+            <ListItemText primary="Sign out" />
           </MenuItem>
 
           <Divider />
@@ -183,7 +184,7 @@ export default function TopBar({
             <ListItemIcon>
               <MenuIcon />
             </ListItemIcon>
-            Switch role
+            <ListItemText primary="Switch role" />
           </MenuItem>
         </Menu>
         {/* Keep role choices in a separate popup anchored to the switch-role item. */}
@@ -204,7 +205,7 @@ export default function TopBar({
                 setProfileAnchor(null)
               }}
             >
-              {item.label}
+              <ListItemText primary={item.label} />
             </MenuItem>
           ))}
         </Menu>
