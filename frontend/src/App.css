@@ -6,12 +6,3 @@
 body {
   background-color: #F2F5FB;
 }
-
-.cards {
-  display: flex;
-  gap: 25px;
-}
-
-.quickActions {
-  margin-top: 25px;
-}
