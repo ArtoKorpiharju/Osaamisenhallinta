@@ -1,8 +1,14 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import AbcIcon from "@mui/icons-material/Abc";
+import type { SvgIconComponent } from "@mui/icons-material";
 
-function Card(toAdd) {
+type CardProps = {
+  item: string;
+  icon: SvgIconComponent;
+};
+
+function Card({ item, icon: Icon }: CardProps) {
   return (
     <Box
       sx={{
@@ -22,8 +28,8 @@ function Card(toAdd) {
           marginBottom: "10px",
         }}
       >
-        <Typography sx={{ fontWeight: 700 }}>Total {toAdd.item}</Typography>
-        <AbcIcon />
+        <Typography sx={{ fontWeight: 700 }}>Total {item}</Typography>
+        <Icon />
       </Box>
 
       <Typography sx={{ fontSize: 21 }}>29</Typography>
