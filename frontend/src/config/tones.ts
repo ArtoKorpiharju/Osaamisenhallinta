@@ -12,5 +12,5 @@ export const tones: Record<Tone, ToneColors> = {
   info: { main: '#034182', text: '#000000', background: '#e0e3e8' },
   success: { main: '#339C9C', text: '#000000', background: '#92CC8A' },
   renewal: { main: '#034182', text: '#000000', background: '#e0e3e8' },
-  star: { main: '#ffee00' }
+  star: { main: '#ffee00', text: '#000000', background: '#ffee00'  }
 }
