@@ -1,4 +1,4 @@
-export type Tone = 'danger' | 'warning' | 'info' | 'success' | 'renewal' | 'Star'
+export type Tone = 'danger' | 'warning' | 'info' | 'success' | 'renewal' | 'star'
 
 interface ToneColors {
   main: string
