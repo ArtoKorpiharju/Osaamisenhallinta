@@ -64,6 +64,7 @@ export default function StatCard({
         </Box>
       </Box>
 
+
       {actionLabel !== undefined && onAction !== undefined && (
         <Link
           component="button"
