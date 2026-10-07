@@ -18,6 +18,7 @@ function Card({ item, icon: Icon }: CardProps) {
         borderLeft: "3px solid #034182",
         borderRadius: "4px",
         minWidth: "160px",
+        maxWidth: "200px",
         flex: "1 1 0px",
       }}
     >
