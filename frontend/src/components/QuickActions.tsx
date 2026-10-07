@@ -5,29 +5,27 @@ import AddIcon from "@mui/icons-material/Add";
 
 function Actions() {
   const addButtons: string[] = ["Competence", "Qualification"];
-  const buttonComponents = [];
-  addButtons.forEach((button) => {
-    buttonComponents.push(
-      <Button
-        sx={{
-          textTransform: "none",
-          color: "black",
-          backgroundColor: "white",
-          padding: "10px 40px 10px 15px",
-          maxWidth: "250px",
-          borderRadius: "4px",
-          display: "flex",
-          gap: "10px",
-          "&:hover": {
-            backgroundColor: "#C9CFD5",
-          },
-        }}
-      >
-        <AddIcon />
-        <Typography sx={{ fontWeight: 700 }}>Add {button}</Typography>
-      </Button>,
-    );
-  });
+  const buttonComponents = addButtons.map((button) => (
+    <Button
+      key={button}
+      sx={{
+        textTransform: "none",
+        color: "black",
+        backgroundColor: "white",
+        padding: "10px 40px 10px 15px",
+        maxWidth: "250px",
+        borderRadius: "4px",
+        display: "flex",
+        gap: "10px",
+        "&:hover": {
+          backgroundColor: "#C9CFD5",
+        },
+      }}
+    >
+      <AddIcon />
+      <Typography sx={{ fontWeight: 700 }}>Add {button}</Typography>
+    </Button>
+  ));
 
   return (
     <Box

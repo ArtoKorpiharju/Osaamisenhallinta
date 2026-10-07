@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import AbcIcon from "@mui/icons-material/Abc";
 import type { SvgIconComponent } from "@mui/icons-material";
 
 type CardProps = {
