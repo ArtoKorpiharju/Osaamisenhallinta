@@ -43,7 +43,7 @@ export default function SummaryCards({
         {...actionFor('outdated')}
       />
       <StatCard
-        title="Expiring"
+        title="Expiring soon"
         value={summary.expiring}
         description="Expiring within 90 days"
         tone="warning"

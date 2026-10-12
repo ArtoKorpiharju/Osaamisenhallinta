@@ -2,7 +2,7 @@ import { type Tone } from '../config/tones'
 
 export type QualificationStatus =
   | 'expired'
-  | 'requirements_incomplete'
+  | 'expiring'
   | 'qualified'
 
 export interface Qualification {

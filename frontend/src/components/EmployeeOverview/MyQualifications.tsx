@@ -18,7 +18,7 @@ interface MyQualificationsProps {
 const statusDisplay: Record<QualificationStatus, { label: string; tone: Tone }> =
   {
     expired: { label: 'Invalid', tone: 'danger' },
-    expiring: { label: 'Expiring', tone: 'warning' },
+    expiring: { label: 'Expiring soon', tone: 'warning' },
     qualified: { label: 'Qualified', tone: 'success' },
   }
 
