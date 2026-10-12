@@ -17,10 +17,16 @@ interface MyQualificationsProps {
 
 const statusDisplay: Record<QualificationStatus, { label: string; tone: Tone }> =
   {
-    expired: { label: 'Expired', tone: 'danger' },
-    requirements_incomplete: { label: 'Requirements incomplete', tone: 'warning' },
+    expired: { label: 'Invalid', tone: 'danger' },
+    expiring: { label: 'Expiring', tone: 'warning' },
     qualified: { label: 'Qualified', tone: 'success' },
   }
+
+const statusOrder: Record<QualificationStatus, number> = {
+  expired: 0,
+  expiring: 1,
+  qualified: 2,
+}
 
 const columns: DataTableColumn<Qualification>[] = [
   {
@@ -101,7 +107,9 @@ export default function MyQualifications({
     >
       <GenericTable
         columns={columns}
-        rows={[...qualifications]}
+        rows={[...qualifications].sort(
+          (a, b) => statusOrder[a.status] - statusOrder[b.status],
+        )}
         getRowId={(qualification) => qualification.id}
         onRowClick={onQualificationClick}
       />

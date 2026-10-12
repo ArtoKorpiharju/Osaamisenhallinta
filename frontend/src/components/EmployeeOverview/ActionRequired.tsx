@@ -9,7 +9,15 @@ interface ActionRequiredProps {
   onAction?: (item: ActionRequiredItem, actionId: string) => void
 }
 
+const statusOrder: Record<string, number> = {
+  danger: 0,
+  warning: 1,
+}
+
 export default function ActionRequired({ items, onAction }: ActionRequiredProps) {
+  const sortedItems = [...items].sort(
+    (a,b) => statusOrder[a.status.tone] - statusOrder[b.status.tone],
+  )
   return (
     <Panel title="Action required">
       {items.length === 0 ? (
@@ -19,7 +27,7 @@ export default function ActionRequired({ items, onAction }: ActionRequiredProps)
       ) : (
         <Box
           sx={{
-            height: 400,
+            height: 420,
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
@@ -27,7 +35,7 @@ export default function ActionRequired({ items, onAction }: ActionRequiredProps)
             pr: 1,
           }}
         >
-          {items.map((item) => (
+          {sortedItems.map((item) => (
             <ActionCard
               key={item.id}
               title={item.title}

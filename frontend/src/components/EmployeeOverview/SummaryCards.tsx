@@ -35,7 +35,7 @@ export default function SummaryCards({
       }}
     >
       <StatCard
-        title="Outdated"
+        title="Invalid"
         value={summary.outdated}
         description="Expired competencies"
         highlight="Requires attention"
