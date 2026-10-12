@@ -103,7 +103,7 @@ export default function EmployeeOverview() {
         component="h1"
         sx={{ fontSize: 18, fontWeight: 700, color: tones.info.main }}
       >
-        Overview
+        Employee Overview
       </Typography>
 
       <SummaryCards
