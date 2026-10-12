@@ -9,7 +9,7 @@ import {
   type OverviewSummary,
   type Qualification,
 } from '../../types/overview'
-import { type Tone, tones } from '../../config/tones'
+import { tones } from '../../config/tones'
 
 
 const paths = {
