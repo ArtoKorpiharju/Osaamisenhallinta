@@ -13,3 +13,6 @@ frontend/*.tsbuildinfo
 # Logs
 logs/
 *.log
+
+# DS store
+.DS_Store
