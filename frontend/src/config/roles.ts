@@ -7,12 +7,13 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 export const roles = [
-  { value: 'employee', label: 'Employee' },
-  { value: 'supervisor', label: 'Supervisor' },
-  { value: 'admin', label: 'Admin' },
+  { value: 'employee', label: 'Employee', apiRole: 'EMPLOYEE' },
+  { value: 'supervisor', label: 'Supervisor', apiRole: 'SUPERVISOR' },
+  { value: 'admin', label: 'Admin', apiRole: 'ADMINISTRATOR' },
 ] as const
 
 export type Role = (typeof roles)[number]['value']
+export type ApiRole = (typeof roles)[number]['apiRole']
 
 interface Page {
   label: string // The label of the page displayed in the navigation menu.
