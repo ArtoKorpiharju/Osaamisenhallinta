@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.backend.user;
+package com.osaamisenhallinta.user;
 
 /** The single role assigned to a user. */
 public enum UserRole {

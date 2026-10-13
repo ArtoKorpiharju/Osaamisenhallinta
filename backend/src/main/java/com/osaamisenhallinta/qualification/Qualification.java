@@ -1,7 +1,7 @@
-package com.osaamisenhallinta.backend.qualification;
+package com.osaamisenhallinta.qualification;
 
-import com.osaamisenhallinta.backend.competency.Competency;
-import com.osaamisenhallinta.backend.employee.EmployeeQualification;
+import com.osaamisenhallinta.competency.Competency;
+import com.osaamisenhallinta.employee.EmployeeQualification;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,8 +15,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
 
+/**
+ * Represents a qualification that an employee can possess, which may require certain competencies.
+ */
 @Entity
+@Getter
 @Table(name = "qualification")
 public class Qualification {
 

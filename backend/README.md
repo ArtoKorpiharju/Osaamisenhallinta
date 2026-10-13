@@ -52,8 +52,16 @@ On Linux/macOS (Not tested):
 
 On Windows:
 
+Using git Bash:
+
 ```bash
-mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+Or cmd / Powershell:
+
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
 ```
 
 5. Open http://localhost:8080.

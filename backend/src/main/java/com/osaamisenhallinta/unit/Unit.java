@@ -1,6 +1,6 @@
-package com.osaamisenhallinta.backend.unit;
+package com.osaamisenhallinta.unit;
 
-import com.osaamisenhallinta.backend.user.User;
+import com.osaamisenhallinta.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

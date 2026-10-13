@@ -1,9 +1,8 @@
-package com.osaamisenhallinta.backend.user;
+package com.osaamisenhallinta.user;
 
-import com.osaamisenhallinta.backend.unit.Unit;
-import com.osaamisenhallinta.backend.employeecompetency.EmployeeCompetency;
-import com.osaamisenhallinta.backend.employeequalification.EmployeeQualification;
-
+import com.osaamisenhallinta.employee.EmployeeCompetency;
+import com.osaamisenhallinta.employee.EmployeeQualification;
+import com.osaamisenhallinta.unit.Unit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

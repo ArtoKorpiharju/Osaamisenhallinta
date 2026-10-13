@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.backend.supervisor;
+package com.osaamisenhallinta.supervisor;
 
 /**
  * Supervisor overview information returned by the REST API. Does not include heavy information such

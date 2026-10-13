@@ -1,6 +1,6 @@
-package com.osaamisenhallinta.backend.employee;
+package com.osaamisenhallinta.employee;
 
-import com.osaamisenhallinta.backend.user.UserRole;
+import com.osaamisenhallinta.user.UserRole;
 
 /** User information returned by the REST API. */
 public record EmployeeOverviewDto(

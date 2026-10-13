@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.backend.user;
+package com.osaamisenhallinta.user;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.osaamisenhallinta.backend.competency;
+package com.osaamisenhallinta.competency;
 
-import com.osaamisenhallinta.backend.employee.EmployeeCompetency;
-import com.osaamisenhallinta.backend.qualification.Qualification;
+import com.osaamisenhallinta.employee.EmployeeCompetency;
+import com.osaamisenhallinta.qualification.Qualification;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,10 +15,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * Represents a competency that an employee can possess.
+ */
 @Entity
+@Getter
 @Table(name = "competency")
 public class Competency {
 
@@ -31,8 +36,8 @@ public class Competency {
 
   @Enumerated(EnumType.STRING)
   @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-  @Column(name = "type", nullable = false, columnDefinition = "credential_type")
-  private CredentialType type;
+  @Column(name = "type", nullable = false, columnDefinition = "competency_type")
+  private CompetencyType type;
 
   @Column(name = "validity_months", nullable = true)
   private Integer validityMonths;
@@ -44,47 +49,5 @@ public class Competency {
   private Set<EmployeeCompetency> employeeCompetencies = new HashSet<>();
 
   protected Competency() {
-  }
-
-  public Competency(String name, CredentialType type, Integer validityMonths) {
-    this.name = name;
-    this.type = type;
-    this.validityMonths = validityMonths;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CredentialType getType() {
-    return type;
-  }
-
-  public void setType(CredentialType type) {
-    this.type = type;
-  }
-
-  public Integer getValidityMonths() {
-    return validityMonths;
-  }
-
-  public void setValidityMonths(Integer validityMonths) {
-    this.validityMonths = validityMonths;
-  }
-
-  public Set<Qualification> getQualifications() {
-    return qualifications;
-  }
-
-  public Set<EmployeeCompetency> getEmployeeCompetencies() {
-    return employeeCompetencies;
   }
 }

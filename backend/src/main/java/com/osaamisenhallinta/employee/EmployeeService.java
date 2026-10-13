@@ -1,7 +1,7 @@
-package com.osaamisenhallinta.backend.employee;
+package com.osaamisenhallinta.employee;
 
-import com.osaamisenhallinta.backend.user.User;
-import com.osaamisenhallinta.backend.user.UserRepository;
+import com.osaamisenhallinta.user.User;
+import com.osaamisenhallinta.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

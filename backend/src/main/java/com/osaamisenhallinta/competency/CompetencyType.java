@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.backend.competency;
+package com.osaamisenhallinta.competency;
 
 /**
  * The type of a competency.
