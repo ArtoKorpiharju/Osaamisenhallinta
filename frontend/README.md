@@ -26,15 +26,39 @@ node --version
 npm --version
 ```
 
-## Setup
+## Setup frontend locally
 
-1. Install dependencies:
+1. Start the database and backend application.
+
+```bash
+cd backend
+```
+
+```bash
+docker compose up -d db
+```
+
+On Linux/macOS (MacOS not tested):
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+On Windows:
+
+```bash
+mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+2. Open a new terminal window and start the frontend development server:
+
+```bash
+cd frontend
+```
 
 ```bash
 npm install
 ```
-
-2. Start development server:
 
 ```bash
 npm run dev
