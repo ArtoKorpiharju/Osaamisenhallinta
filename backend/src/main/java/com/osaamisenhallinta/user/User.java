@@ -23,7 +23,6 @@ import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-
 /** Basic user information stored in PostgreSQL. */
 @Entity
 @Getter
@@ -49,13 +48,16 @@ public class User {
   private UserRole role;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "employee_unit",
+  @JoinTable(
+      name = "employee_unit",
       joinColumns = @JoinColumn(name = "employee_id", nullable = false),
       inverseJoinColumns = @JoinColumn(name = "unit_id", nullable = false))
   private Set<Unit> units = new HashSet<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinTable(name = "supervisor_unit", joinColumns = @JoinColumn(name = "supervisor_id"),
+  @JoinTable(
+      name = "supervisor_unit",
+      joinColumns = @JoinColumn(name = "supervisor_id"),
       inverseJoinColumns = @JoinColumn(name = "unit_id"))
   private Unit supervisedUnit;
 
@@ -65,6 +67,5 @@ public class User {
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private Set<EmployeeQualification> employeeQualifications = new HashSet<>();
 
-  protected User() {
-  }
+  protected User() {}
 }

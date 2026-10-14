@@ -12,9 +12,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
-/**
- * Represents a plan for renewing an employee's competency.
- */
+/** Represents a plan for renewing an employee's competency. */
 @Entity
 @Table(name = "renewal_plan")
 public class RenewalPlan {
@@ -33,7 +31,5 @@ public class RenewalPlan {
   @Column(name = "renewal_comment", nullable = true, length = 500)
   private String renewalComment;
 
-  protected RenewalPlan() {
-  }
-
+  protected RenewalPlan() {}
 }

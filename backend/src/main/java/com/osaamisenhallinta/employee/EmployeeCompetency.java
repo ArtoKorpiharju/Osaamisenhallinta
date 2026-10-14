@@ -17,14 +17,15 @@ import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import lombok.Getter;
 
-/**
- * Represents the relationship between an employee and a competency.
- */
+/** Represents the relationship between an employee and a competency. */
 @Entity
 @Getter
-@Table(name = "employee_competency",
-    uniqueConstraints = @UniqueConstraint(name = "uq_employee_competency_user_competency",
-        columnNames = {"user_id", "competency_id"}))
+@Table(
+    name = "employee_competency",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "uq_employee_competency_user_competency",
+            columnNames = {"user_id", "competency_id"}))
 public class EmployeeCompetency {
 
   @Id
@@ -48,6 +49,5 @@ public class EmployeeCompetency {
   @OneToOne(mappedBy = "employeeCompetency", fetch = FetchType.LAZY)
   private RenewalPlan renewalPlan;
 
-  protected EmployeeCompetency() {
-  }
+  protected EmployeeCompetency() {}
 }

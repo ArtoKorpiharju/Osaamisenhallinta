@@ -1,6 +1,7 @@
 package com.osaamisenhallinta.employee;
 
 import com.osaamisenhallinta.user.UserRole;
+import java.util.List;
 
 /** User information returned by the REST API. */
 public record EmployeeOverviewDto(
@@ -9,6 +10,5 @@ public record EmployeeOverviewDto(
     String lastName,
     String email,
     UserRole role,
-    String[] credentials,
-    String[] qualifications) {
-}
+    List<EmployeeCompetencyDto> competencies,
+    List<EmployeeQualificationDto> qualifications) {}

@@ -5,9 +5,4 @@ package com.osaamisenhallinta.supervisor;
  * as employee specific information
  */
 public record SupervisorOverviewDto(
-    Long id,
-    String firstName,
-    String lastName,
-    String email,
-    String[] employees) {
-}
+    Long id, String firstName, String lastName, String email, String[] employees) {}

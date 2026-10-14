@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-/**
- * Service for generic user related operations, independent of their roles.
- */
+/** Service for generic user related operations, independent of their roles. */
 @Service
 @Transactional(readOnly = true)
 public class UserService {
@@ -43,13 +41,16 @@ public class UserService {
 
   private User getFirstUserByRole(UserRole role) {
     // 1 test user of each role is created with this email format.
-    return userRepository.findByEmail("test_" + role + "@email.com").orElseThrow(
-        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-            "No test user found for role " + role));
+    return userRepository
+        .findByEmail("test_" + role + "@email.com")
+        .orElseThrow(
+            () ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "No test user found for role " + role));
   }
 
   private SeedUserResponseDto mapToDto(User user) {
-    return new SeedUserResponseDto(user.getId(), user.getFirstName(), user.getLastName(),
-        user.getRole());
+    return new SeedUserResponseDto(
+        user.getId(), user.getFirstName(), user.getLastName(), user.getRole());
   }
 }

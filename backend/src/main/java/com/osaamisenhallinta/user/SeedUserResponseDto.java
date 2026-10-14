@@ -1,5 +1,4 @@
 package com.osaamisenhallinta.user;
 
 /** A DTO for representing a test user. */
-public record SeedUserResponseDto(Long id, String firstName, String lastName, UserRole role) {
-}
+public record SeedUserResponseDto(Long id, String firstName, String lastName, UserRole role) {}

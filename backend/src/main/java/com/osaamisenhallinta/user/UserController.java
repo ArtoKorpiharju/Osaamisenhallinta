@@ -19,5 +19,4 @@ public class UserController {
   public List<SeedUserResponseDto> getSeedUsers() {
     return userService.getSeedUsers();
   }
-
 }

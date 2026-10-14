@@ -14,9 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 
-/**
- * Represents a unit in the organization.
- */
+/** Represents a unit in the organization. */
 @Entity
 @Getter
 @Table(name = "unit")
@@ -35,6 +33,5 @@ public class Unit {
   @OneToMany(mappedBy = "supervisedUnit", fetch = FetchType.LAZY)
   private Set<User> supervisors = new HashSet<>();
 
-  protected Unit() {
-  }
+  protected Unit() {}
 }

@@ -20,7 +20,7 @@ If you want to run the backend locally, you need:
 
 The project uses Maven Wrapper, so Maven does not need to be installed separately.
 
-## Setup Backend locally
+## Run Backend locally
 
 1. Create `.env` in the repository root if it does not already exist (use `.env.example` as a template):
 
@@ -65,6 +65,12 @@ Or cmd / Powershell:
 ```
 
 5. Open http://localhost:8080.
+
+## REST API Swagger documentation
+
+1. Run the backend.
+
+2. Visit http://localhost:8080/v3/api-docs
 
 ## Useful commands
 

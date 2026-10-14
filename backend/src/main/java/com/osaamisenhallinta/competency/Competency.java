@@ -19,9 +19,7 @@ import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-/**
- * Represents a competency that an employee can possess.
- */
+/** Represents a competency that an employee can possess. */
 @Entity
 @Getter
 @Table(name = "competency")
@@ -48,6 +46,5 @@ public class Competency {
   @OneToMany(mappedBy = "competency", fetch = FetchType.LAZY)
   private Set<EmployeeCompetency> employeeCompetencies = new HashSet<>();
 
-  protected Competency() {
-  }
+  protected Competency() {}
 }

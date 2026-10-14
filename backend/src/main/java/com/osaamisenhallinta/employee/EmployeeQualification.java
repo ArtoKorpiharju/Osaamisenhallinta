@@ -14,14 +14,12 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 
-/**
- * Represents the relationship between an employee and a qualification.
- */
+/** Represents the relationship between an employee and a qualification. */
 @Entity
 @Getter
-@Table(name = "employee_qualification",
+@Table(
+    name = "employee_qualification",
     uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "qualification_id"}))
-
 public class EmployeeQualification {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +39,5 @@ public class EmployeeQualification {
   @Column(name = "critical", nullable = false)
   private boolean critical;
 
-  protected EmployeeQualification() {
-  }
+  protected EmployeeQualification() {}
 }
