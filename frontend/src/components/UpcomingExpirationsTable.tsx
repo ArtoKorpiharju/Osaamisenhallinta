@@ -68,7 +68,11 @@ const columns: DataTableColumn<ExpirationItem>[] = [
     id: 'expires',
     label: 'Expires',
     minWidth: 130,
-    render: (item) => item.expires,
+    render: (item) => (
+      <Typography component="span" sx={{ fontWeight: 600 }}>
+        {item.expires}
+      </Typography>
+    ),
   },
   {
     id: 'urgency',
@@ -90,7 +94,7 @@ const columns: DataTableColumn<ExpirationItem>[] = [
     label: 'Renewal plan',
     minWidth: 140,
     render: (item) =>
-      item.renewalPlan ?? (
+      item.renewalPlan === null ? (
         <Chip
           label="Not planned"
           size="small"
@@ -99,7 +103,11 @@ const columns: DataTableColumn<ExpirationItem>[] = [
             color: '#e53935',
           }}
         />
-      ),
+      ) : (
+    <Typography component="span" sx={{ fontWeight: 600 }}>
+      {item.renewalPlan}
+    </Typography>
+  ),
   },
 ]
 
