@@ -1,7 +1,7 @@
 import { Chip, Typography } from '@mui/material'
 import DataTable, { type DataTableColumn } from './DataTable'
 
-type ExpirationItem = {
+export interface ExpirationItem {
   id: number
   employee: string
   competency: string
@@ -9,66 +9,6 @@ type ExpirationItem = {
   urgencyDays: number
   renewalPlan: string | null
 }
-
-//Temporary frontend examples//
-const expirationItems: ExpirationItem[] = [
-  {
-    id: 1,
-    employee: 'Emma Johnson',
-    competency: 'Magnetic Flux Leakage (MFL)',
-    expires: '17.10.2026',
-    urgencyDays: 14,
-    renewalPlan: null,
-  },
-  {
-    id: 2,
-    employee: 'Alex Smith',
-    competency: 'First Aid Training',
-    expires: '26.10.2026',
-    urgencyDays: 23,
-    renewalPlan: '20.10.2026',
-  },
-  {
-    id: 3,
-    employee: 'Mia Wilson',
-    competency: 'Safety Card',
-    expires: '06.11.2026',
-    urgencyDays: 34,
-    renewalPlan: null,
-  },
-  {
-    id: 4,
-    employee: 'Jessica Wilson',
-    competency: 'Forklift Licence',
-    expires: '23.11.2026',
-    urgencyDays: 51,
-    renewalPlan: '11.11.2026',
-  },
-  {
-    id: 5,
-    employee: 'Zara Lopez',
-    competency: 'Guided Wave Testing (GWT)',
-    expires: '28.11.2026',
-    urgencyDays: 56,
-    renewalPlan: null,
-  },
-  {
-    id: 6,
-    employee: 'Ashley Jones',
-    competency: 'Leak Testing (LT)',
-    expires: '02.12.2026',
-    urgencyDays: 60,
-    renewalPlan: null,
-  },
-  {
-    id: 7,
-    employee: 'Noah Carlsen',
-    competency: 'Through Transmission Ultrasound',
-    expires: '14.12.2026',
-    urgencyDays: 72,
-    renewalPlan: null,
-  },
-]
 
 const getUrgencyStyles = (days: number) => {
   if (days <= 30) {
@@ -136,7 +76,7 @@ const columns: DataTableColumn<ExpirationItem>[] = [
     minWidth: 110,
     render: (item) => (
       <Chip
-        label={`${item.urgencyDays}d`}
+        label={String(item.urgencyDays) + 'd'}
         size="small"
         sx={{
           ...getUrgencyStyles(item.urgencyDays),
@@ -150,9 +90,7 @@ const columns: DataTableColumn<ExpirationItem>[] = [
     label: 'Renewal plan',
     minWidth: 140,
     render: (item) =>
-      item.renewalPlan ? (
-        item.renewalPlan
-      ) : (
+      item.renewalPlan ?? (
         <Chip
           label="Not planned"
           size="small"
@@ -165,18 +103,20 @@ const columns: DataTableColumn<ExpirationItem>[] = [
   },
 ]
 
-type UpcomingExpirationsTableProps = {
+interface UpcomingExpirationsTableProps {
+  items: ExpirationItem[]
   onItemClick?: (item: ExpirationItem) => void
 }
 
 function UpcomingExpirationsTable({
+  items,
   onItemClick,
 }: UpcomingExpirationsTableProps) {
   return (
     <DataTable
       title="Upcoming Expirations"
       columns={columns}
-      rows={expirationItems}
+      rows={items}
       getRowId={(item) => item.id}
       onRowClick={onItemClick}
     />

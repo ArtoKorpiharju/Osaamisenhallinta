@@ -3,10 +3,11 @@ import { Paper, Typography } from '@mui/material'
 import {
   DataGrid,
   type GridColDef,
+  type GridRowParams,
   type GridValidRowModel,
 } from '@mui/x-data-grid'
 
-export type DataTableColumn<T extends GridValidRowModel> = {
+export interface DataTableColumn<T extends GridValidRowModel>  {
   id: string
   label: string
   align?: 'left' | 'center' | 'right'
@@ -14,7 +15,7 @@ export type DataTableColumn<T extends GridValidRowModel> = {
   render: (row: T) => ReactNode
 }
 
-type DataTableProps<T extends GridValidRowModel> = {
+interface DataTableProps<T extends GridValidRowModel>  {
   title?: string
   columns: DataTableColumn<T>[]
   rows: T[]
@@ -29,14 +30,14 @@ function DataTable<T extends GridValidRowModel>({
   getRowId,
   onRowClick,
 }: DataTableProps<T>) {
-  const gridColumns: GridColDef[] = columns.map((column) => ({
+  const gridColumns: GridColDef<T>[] = columns.map((column) => ({
     field: column.id,
     headerName: column.label,
     minWidth: column.minWidth,
     flex: 1,
     align: column.align ?? 'left',
     headerAlign: column.align ?? 'left',
-    renderCell: (params) => column.render(params.row as T),
+    renderCell: (params) => column.render(params.row),
   }))
 
   return (
@@ -74,7 +75,7 @@ function DataTable<T extends GridValidRowModel>({
         columnHeaderHeight={56}
         onRowClick={
           onRowClick
-            ? (params) => {
+            ? (params: GridRowParams<T>) => {
                 onRowClick(params.row)
               }
             : undefined
