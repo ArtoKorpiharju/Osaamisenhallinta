@@ -15,42 +15,42 @@ export const roles = [
 export type Role = (typeof roles)[number]['value']
 
 interface Page {
-  label: string // The label of the page displayed in the navigation menu.
+  labelKey: string // Translation key for the page label
   path: string // The path of the page used for routing.
   icon: ComponentType<SvgIconProps> // The icon of the page displayed in the navigation menu.
 }
 
 export const pagesPerRole: Record<Role, Page[]> = {
   employee: [
-    { label: 'Overview', path: '/employee/overview', icon: HomeOutlinedIcon },
+    { labelKey: 'navigation.overview', path: '/employee/overview', icon: HomeOutlinedIcon },
     {
-      label: 'Qualifications',
+      labelKey: 'navigation.qualifications',
       path: '/employee/qualifications',
       icon: CheckBoxIcon,
     },
     {
-      label: 'Competencies',
+      labelKey: 'navigation.competencies',
       path: '/employee/competencies',
       icon: StarBorderIcon,
     },
-    { label: 'Renewals', path: '/employee/renewals', icon: EventRepeatIcon },
+    { labelKey: 'navigation.renewals', path: '/employee/renewals', icon: EventRepeatIcon },
   ],
   supervisor: [
-    { label: 'Overview', path: '/supervisor/overview', icon: HomeOutlinedIcon },
-    { label: 'Renewals', path: '/supervisor/renewals', icon: EventRepeatIcon },
+    { labelKey: 'navigation.overview', path: '/supervisor/overview', icon: HomeOutlinedIcon },
+    { labelKey: 'navigation.renewals', path: '/supervisor/renewals', icon: EventRepeatIcon },
   ],
   admin: [
-    { label: 'Overview', path: '/admin/overview', icon: HomeOutlinedIcon },
+    { labelKey: 'navigation.overview', path: '/admin/overview', icon: HomeOutlinedIcon },
     {
-      label: 'Qualifications',
+      labelKey: 'navigation.qualifications',
       path: '/admin/qualifications',
       icon: CheckBoxIcon,
     },
     {
-      label: 'Competencies',
+      labelKey: 'navigation.competencies',
       path: '/admin/competencies',
       icon: StarBorderIcon,
     },
-    { label: 'Log', path: '/admin/log', icon: HistoryIcon },
+    { labelKey: 'navigation.log', path: '/admin/log', icon: HistoryIcon },
   ],
 }
