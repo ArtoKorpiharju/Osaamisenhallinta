@@ -1,13 +1,8 @@
-package com.osaamisenhallinta.backend.supervisor;
+package com.osaamisenhallinta.supervisor;
 
 /**
  * Supervisor overview information returned by the REST API. Does not include heavy information such
  * as employee specific information
  */
 public record SupervisorOverviewDto(
-    Long id,
-    String firstName,
-    String lastName,
-    String email,
-    String[] employees) {
-}
+    Long id, String firstName, String lastName, String email, String[] employees) {}
