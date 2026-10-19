@@ -1,4 +1,4 @@
-export type Tone = 'danger' | 'warning' | 'info' | 'success' | 'renewal'
+export type Tone = 'danger' | 'warning' | 'info' | 'success' | 'renewal' | 'star' | 'criticalBadge'
 
 interface ToneColors {
   main: string
@@ -11,5 +11,7 @@ export const tones: Record<Tone, ToneColors> = {
   warning: { main: '#E17A14', text: '#000000', background: '#F0A356' },
   info: { main: '#034182', text: '#000000', background: '#e0e3e8' },
   success: { main: '#339C9C', text: '#000000', background: '#92CC8A' },
-  renewal: { main: '#034182', text: '#000000', background: '#e0e3e8' }
+  renewal: { main: '#034182', text: '#000000', background: '#e0e3e8' },
+  star: { main: '#ffee00', text: '#000000', background: '#ffee00' },
+  criticalBadge: { main: '#c9a227', text: '#8a6d00', background: '#fdf3c8' }
 }
