@@ -37,16 +37,6 @@ export const pagesPerRole: Record<Role, Page[]> = {
   ],
   supervisor: [
     { label: 'Overview', path: '/supervisor/overview', icon: HomeOutlinedIcon },
-    {
-      label: 'Qualifications',
-      path: '/supervisor/qualifications',
-      icon: CheckBoxIcon,
-    },
-    {
-      label: 'Competencies',
-      path: '/supervisor/competencies',
-      icon: StarBorderIcon,
-    },
     { label: 'Renewals', path: '/supervisor/renewals', icon: EventRepeatIcon },
   ],
   admin: [

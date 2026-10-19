@@ -20,7 +20,7 @@
 
   "[java]": {
     "editor.defaultFormatter": "redhat.java",
-    "editor.formatOnSave": true,
+    //"editor.formatOnSave": true,
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "editor.tabSize": 2
@@ -34,5 +34,4 @@
   "java.checkstyle.configuration": "/google_checks.xml",
 
   "java.configuration.updateBuildConfiguration": "interactive",
-  "java.compile.nullAnalysis.mode": "disabled"
 }
