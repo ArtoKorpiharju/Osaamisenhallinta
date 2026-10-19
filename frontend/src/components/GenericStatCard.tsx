@@ -64,7 +64,10 @@ export default function StatCard({
         </Box>
       </Box>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
       {actionLabel !== undefined && onAction !== undefined && (
         <Link
           component="button"
