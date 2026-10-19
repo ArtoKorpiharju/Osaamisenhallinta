@@ -1,8 +1,9 @@
-import { Box, Button } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 
 import StarIcon from '@mui/icons-material/Star'
 
-import GenericTable, { type DataTableColumn } from '../GenericTable'
+import CriticalBadge from '../CriticalBadge'
+import GenericTable, { type DataTableColumn } from '../DataTable'
 import Panel from '../Panel'
 import StatusChip from '../StatusChip'
 import { type Tone, tones } from '../../config/tones'
@@ -32,24 +33,26 @@ const columns: DataTableColumn<Qualification>[] = [
   {
     id: 'name',
     label: 'Qualification',
-    minWidth: 200,
+    minWidth: 360,
     render: (qualification) => (
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
           gap: 1,
           width: '100%',
-          fontWeight: 400,
+          fontWeight: 600,
         }}
       >
+        <Box sx={{ flexShrink: 0, width: 88 }}>
+          {qualification.isCritical === true && <CriticalBadge />}
+        </Box>
         {qualification.name}
         {qualification.isPrimary === true && (
           <StarIcon
             fontSize="small"
             titleAccess="Primary qualification"
-            sx={{ flexShrink: 0, color: tones.star.main, stroke: 'black', strokeWidth: 0.5, }}
+            sx={{ flexShrink: 0, color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
           />
         )}
       </Box>
@@ -58,7 +61,7 @@ const columns: DataTableColumn<Qualification>[] = [
   {
     id: 'status',
     label: 'Status',
-    minWidth: 170,
+    minWidth: 120,
     render: (qualification) => (
       <StatusChip
         label={statusDisplay[qualification.status].label}
@@ -70,18 +73,48 @@ const columns: DataTableColumn<Qualification>[] = [
     id: 'requirements',
     label: 'Requirements',
     align: 'center',
-    minWidth: 140,
-    render: (qualification) =>
-      `${qualification.requirementsMet}/${qualification.requirementsTotal}`,
+    minWidth: 120,
+    render: (qualification) => (
+      <Box sx={{ fontWeight: 600 }}>
+        {qualification.requirementsMet}/{qualification.requirementsTotal}
+      </Box>
+    ),
   },
   {
     id: 'validUntil',
     label: 'Valid until',
     align: 'right',
-    minWidth: 110,
-    render: (qualification) => formatDate(qualification.validUntil),
+    minWidth: 100,
+    render: (qualification) => (
+      <Box sx={{ fontWeight: 600 }}>
+        {formatDate(qualification.validUntil)}
+      </Box>
+    ),
   },
 ]
+
+function Legend() {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: '8px 24px',
+        color: '#174f83',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <StarIcon fontSize="small" sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }} />
+        <Typography sx={{ fontSize: 13 }}>= My favorite</Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <CriticalBadge />
+        <Typography sx={{ fontSize: 13 }}>= Employer requirement</Typography>
+      </Box>
+    </Box>
+  )
+}
 
 export default function MyQualifications({
   qualifications,
@@ -98,21 +131,28 @@ export default function MyQualifications({
             size="small"
             color="inherit"
             onClick={onViewAll}
-            sx={{ textTransform: 'none', color: 'text.secondary' }}
+            sx={{ textTransform: 'none', color: 'tones.info.main' }}
           >
             View All
           </Button>
         )
       }
     >
-      <GenericTable
-        columns={columns}
-        rows={[...qualifications].sort(
-          (a, b) => statusOrder[a.status] - statusOrder[b.status],
-        )}
-        getRowId={(qualification) => qualification.id}
-        onRowClick={onQualificationClick}
-      />
+      <Box
+        sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%' }}
+      >
+        <Legend />
+        <Box sx={{ flex: 1, minHeight: 0 }}>
+          <GenericTable
+            columns={columns}
+            rows={[...qualifications].sort(
+              (a, b) => statusOrder[a.status] - statusOrder[b.status],
+            )}
+            getRowId={(qualification) => qualification.id}
+            onRowClick={onQualificationClick}
+          />
+        </Box>
+      </Box>
     </Panel>
   )
 }
