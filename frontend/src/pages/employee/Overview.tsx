@@ -36,7 +36,7 @@ const summary: OverviewSummary = {
 
 // Replace with API calls
 const qualifications: Qualification[] = [
-  { id: '1', name: 'Magnetic Flux Leakage (MFL)', status: 'expired', requirementsMet: 0, requirementsTotal: 2, validUntil: '2026-03-16' },
+  { id: '1', name: 'Magnetic Flux Leakage (MFL)', status: 'expired', requirementsMet: 0, requirementsTotal: 2, validUntil: '2026-03-16', isCritical: true },
   { id: '2', name: 'First Aid Training', status: 'expired', requirementsMet: 3, requirementsTotal: 4, validUntil: '2026-03-26', isPrimary: true },
   { id: '3', name: 'Safety Card', status: 'expiring', requirementsMet: 3, requirementsTotal: 3, validUntil: '2026-06-06' },
   { id: '4', name: 'Forklift Licence', status: 'expiring', requirementsMet: 2, requirementsTotal: 2, validUntil: '2026-06-23' },

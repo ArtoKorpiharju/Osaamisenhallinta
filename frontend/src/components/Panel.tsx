@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 import { Box, Paper, Typography } from '@mui/material'
+import { tones } from '../config/tones'
 
 interface PanelProps {
   title: string
@@ -40,7 +41,7 @@ export default function Panel({ title, headerAction, children }: PanelProps) {
       >
         <Typography
           component="h2"
-          sx={{ fontSize: 18, fontWeight: 700, color: '#6b7685' }}
+          sx={{ fontSize: 18, fontWeight: 700, color: tones.info.main }}
         >
           {title}
         </Typography>

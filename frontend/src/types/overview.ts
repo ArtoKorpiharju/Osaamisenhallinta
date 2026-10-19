@@ -14,6 +14,7 @@ export interface Qualification {
   validUntil: string
   // Star symbol in table if primary
   isPrimary?: boolean
+  isCritical?: boolean
 }
 
 export interface OverviewSummary {
