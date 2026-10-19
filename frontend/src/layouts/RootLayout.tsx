@@ -73,6 +73,7 @@ export default function RootLayout() {
             flex: 1,
             p: 1,
             pl: 3,
+            pr: 3,
             overflow: 'auto',
           }}
         >
