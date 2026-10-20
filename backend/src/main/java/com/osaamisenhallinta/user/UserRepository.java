@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.backend.user;
+package com.osaamisenhallinta.user;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

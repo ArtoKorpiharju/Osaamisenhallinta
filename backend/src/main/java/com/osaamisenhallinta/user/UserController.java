@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.backend.user;
+package com.osaamisenhallinta.user;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,5 +19,4 @@ public class UserController {
   public List<SeedUserResponseDto> getSeedUsers() {
     return userService.getSeedUsers();
   }
-
 }

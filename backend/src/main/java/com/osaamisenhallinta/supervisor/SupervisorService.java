@@ -1,15 +1,13 @@
-package com.osaamisenhallinta.backend.supervisor;
+package com.osaamisenhallinta.supervisor;
 
-import com.osaamisenhallinta.backend.user.User;
-import com.osaamisenhallinta.backend.user.UserRepository;
+import com.osaamisenhallinta.user.User;
+import com.osaamisenhallinta.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-/**
- * Service for managing supervisor-related operations.
- */
+/** Service for managing supervisor-related operations. */
 @Service
 @Transactional(readOnly = true)
 public class SupervisorService {
@@ -21,8 +19,10 @@ public class SupervisorService {
 
   /** Returns a user or reports that the user does not exist. */
   public SupervisorOverviewDto getSupervisorById(Long id) {
-    User supervisor = userRepository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    User supervisor =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
     SupervisorOverviewDto response = mapToDto(supervisor);
     return response;
@@ -31,7 +31,11 @@ public class SupervisorService {
   private SupervisorOverviewDto mapToDto(User supervisor) {
     String[] mockUnit = {"Jessie", "James"}; // Placeholder for actual credentials
 
-    return new SupervisorOverviewDto(supervisor.getId(), supervisor.getFirstName(),
-        supervisor.getLastName(), supervisor.getEmail(), mockUnit);
+    return new SupervisorOverviewDto(
+        supervisor.getId(),
+        supervisor.getFirstName(),
+        supervisor.getLastName(),
+        supervisor.getEmail(),
+        mockUnit);
   }
 }
