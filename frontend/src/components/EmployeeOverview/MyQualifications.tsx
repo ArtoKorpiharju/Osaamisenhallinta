@@ -50,10 +50,10 @@ const columns: DataTableColumn<Qualification>[] = [
         }}
       >
         <Box sx={{ flexShrink: 0, width: 88 }}>
-          {qualification.isCritical === true && <CriticalBadge />}
+          {qualification.isCritical && <CriticalBadge />}
         </Box>
         {qualification.name}
-        {qualification.isPrimary === true && (
+        {qualification.isFavourite && (
           <StarIcon
             fontSize="small"
             titleAccess="Primary qualification"

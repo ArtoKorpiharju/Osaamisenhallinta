@@ -139,7 +139,11 @@ export default function RootLayout() {
 
           {/** Display an info alert while seed users are being fetched. */}
           {usersLoading && <Alert severity="info">Fetching seed users…</Alert>}
-          <Outlet />
+          <Outlet
+            context={{
+              userId: getUserForRole(seedUsers, role)?.id,
+            }}
+          />
         </Box>
       </Box>
     </Box>

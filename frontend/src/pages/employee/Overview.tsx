@@ -1,5 +1,6 @@
-import { Box, Typography } from '@mui/material'
-import { useNavigate } from 'react-router'
+import { Alert, Box, Typography } from '@mui/material'
+import { useNavigate, useOutletContext } from 'react-router'
+import { useEffect, useState } from 'react'
 
 import ActionRequired from '../../components/EmployeeOverview/ActionRequired'
 import MyQualifications from '../../components/EmployeeOverview/MyQualifications'
@@ -7,9 +8,9 @@ import SummaryCards from '../../components/EmployeeOverview/SummaryCards'
 import {
   type ActionRequiredItem,
   type OverviewSummary,
-  type Qualification,
 } from '../../types/overview'
 import { tones } from '../../config/tones'
+import { fetchEmployeeOverview } from '../../services/employee'
 
 const paths = {
   qualifications: '/employee/Qualifications',
@@ -32,76 +33,6 @@ const summary: OverviewSummary = {
   renewals: 4,
   planned: 3,
 }
-
-// Replace with API calls
-const qualifications: Qualification[] = [
-  {
-    id: '1',
-    name: 'Magnetic Flux Leakage (MFL)',
-    status: 'expired',
-    requirementsMet: 0,
-    requirementsTotal: 2,
-    validUntil: '2026-03-16',
-    isCritical: true,
-  },
-  {
-    id: '2',
-    name: 'First Aid Training',
-    status: 'expired',
-    requirementsMet: 3,
-    requirementsTotal: 4,
-    validUntil: '2026-03-26',
-    isPrimary: true,
-  },
-  {
-    id: '3',
-    name: 'Safety Card',
-    status: 'expiring',
-    requirementsMet: 3,
-    requirementsTotal: 3,
-    validUntil: '2026-06-06',
-  },
-  {
-    id: '4',
-    name: 'Forklift Licence',
-    status: 'expiring',
-    requirementsMet: 2,
-    requirementsTotal: 2,
-    validUntil: '2026-06-23',
-  },
-  {
-    id: '5',
-    name: 'Guided wave Testing (GWT)',
-    status: 'qualified',
-    requirementsMet: 3,
-    requirementsTotal: 3,
-    validUntil: '2026-06-28',
-  },
-  {
-    id: '6',
-    name: 'Leak Testing (LT)',
-    status: 'qualified',
-    requirementsMet: 3,
-    requirementsTotal: 3,
-    validUntil: '2026-07-02',
-  },
-  {
-    id: '7',
-    name: 'Through Transmission Ultrasound',
-    status: 'qualified',
-    requirementsMet: 3,
-    requirementsTotal: 3,
-    validUntil: '2026-07-14',
-  },
-  {
-    id: '8',
-    name: 'Fire Safety',
-    status: 'expiring',
-    requirementsMet: 3,
-    requirementsTotal: 3,
-    validUntil: '2026-07-19',
-  },
-]
 
 // Replace with API calls
 const actionItems: ActionRequiredItem[] = [
@@ -154,6 +85,31 @@ const actionItems: ActionRequiredItem[] = [
 export default function EmployeeOverview() {
   const navigate = useNavigate()
 
+  const { userId } = useOutletContext<{ userId: number | undefined }>()
+
+  const [employeeOverview, setEmployeeOverview] = useState<Awaited<
+    ReturnType<typeof fetchEmployeeOverview>
+  > | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (userId === undefined) return
+
+    fetchEmployeeOverview(userId)
+      .then(setEmployeeOverview)
+      .catch((err: unknown) => {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Could not load employee overview'
+        )
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [userId])
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, p: 3 }}>
       <Typography
@@ -162,6 +118,12 @@ export default function EmployeeOverview() {
       >
         Employee Overview
       </Typography>
+
+      {/** Display an error alert if there was an error fetching employee overview. */}
+      {error && <Alert severity="error">{error}</Alert>}
+
+      {/** Display an info alert while employee overview is being fetched. */}
+      {loading && <Alert severity="info">Fetching data…</Alert>}
 
       <SummaryCards
         summary={summary}
@@ -182,12 +144,12 @@ export default function EmployeeOverview() {
         }}
       >
         <MyQualifications
-          qualifications={qualifications}
+          qualifications={employeeOverview?.qualifications ?? []}
           onViewAll={() => {
             void navigate(paths.qualifications)
           }}
           onQualificationClick={(qualification) => {
-            void navigate(`${paths.qualifications}/${qualification.id}`)
+            void navigate(`${paths.qualifications}/${String(qualification.id)}`)
           }}
         />
         <ActionRequired
