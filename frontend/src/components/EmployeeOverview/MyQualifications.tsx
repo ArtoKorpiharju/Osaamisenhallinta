@@ -7,7 +7,10 @@ import GenericTable, { type DataTableColumn } from '../DataTable'
 import Panel from '../Panel'
 import StatusChip from '../StatusChip'
 import { type Tone, tones } from '../../config/tones'
-import { type Qualification, type QualificationStatus } from '../../types/overview'
+import {
+  type Qualification,
+  type QualificationStatus,
+} from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'
 
 interface MyQualificationsProps {
@@ -16,12 +19,14 @@ interface MyQualificationsProps {
   onQualificationClick?: (qualification: Qualification) => void
 }
 
-const statusDisplay: Record<QualificationStatus, { label: string; tone: Tone }> =
-  {
-    expired: { label: 'Invalid', tone: 'danger' },
-    expiring: { label: 'Expiring soon', tone: 'warning' },
-    qualified: { label: 'Qualified', tone: 'success' },
-  }
+const statusDisplay: Record<
+  QualificationStatus,
+  { label: string; tone: Tone }
+> = {
+  expired: { label: 'Invalid', tone: 'danger' },
+  expiring: { label: 'Expiring soon', tone: 'warning' },
+  qualified: { label: 'Qualified', tone: 'success' },
+}
 
 const statusOrder: Record<QualificationStatus, number> = {
   expired: 0,
@@ -52,7 +57,12 @@ const columns: DataTableColumn<Qualification>[] = [
           <StarIcon
             fontSize="small"
             titleAccess="Primary qualification"
-            sx={{ flexShrink: 0, color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
+            sx={{
+              flexShrink: 0,
+              color: tones.star.main,
+              stroke: 'black',
+              strokeWidth: 0.5,
+            }}
           />
         )}
       </Box>
@@ -86,9 +96,7 @@ const columns: DataTableColumn<Qualification>[] = [
     align: 'right',
     minWidth: 100,
     render: (qualification) => (
-      <Box sx={{ fontWeight: 600 }}>
-        {formatDate(qualification.validUntil)}
-      </Box>
+      <Box sx={{ fontWeight: 600 }}>{formatDate(qualification.validUntil)}</Box>
     ),
   },
 ]
@@ -105,7 +113,10 @@ function Legend() {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <StarIcon fontSize="small" sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }} />
+        <StarIcon
+          fontSize="small"
+          sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
+        />
         <Typography sx={{ fontSize: 13 }}>= My favorite</Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
@@ -139,14 +150,19 @@ export default function MyQualifications({
       }
     >
       <Box
-        sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+          height: '100%',
+        }}
       >
         <Legend />
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <GenericTable
             columns={columns}
             rows={[...qualifications].sort(
-              (a, b) => statusOrder[a.status] - statusOrder[b.status],
+              (a, b) => statusOrder[a.status] - statusOrder[b.status]
             )}
             getRowId={(qualification) => qualification.id}
             onRowClick={onQualificationClick}

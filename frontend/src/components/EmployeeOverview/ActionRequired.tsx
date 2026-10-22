@@ -14,9 +14,12 @@ const statusOrder: Record<string, number> = {
   warning: 1,
 }
 
-export default function ActionRequired({ items, onAction }: ActionRequiredProps) {
+export default function ActionRequired({
+  items,
+  onAction,
+}: ActionRequiredProps) {
   const sortedItems = [...items].sort(
-    (a,b) => statusOrder[a.status.tone] - statusOrder[b.status.tone],
+    (a, b) => statusOrder[a.status.tone] - statusOrder[b.status.tone]
   )
   return (
     <Panel title="Action required">

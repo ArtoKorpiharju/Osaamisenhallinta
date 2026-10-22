@@ -1,9 +1,6 @@
 import { type Tone } from '../config/tones'
 
-export type QualificationStatus =
-  | 'expired'
-  | 'expiring'
-  | 'qualified'
+export type QualificationStatus = 'expired' | 'expiring' | 'qualified'
 
 export interface Qualification {
   id: string

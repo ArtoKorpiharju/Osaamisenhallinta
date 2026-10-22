@@ -11,7 +11,6 @@ import {
 } from '../../types/overview'
 import { tones } from '../../config/tones'
 
-
 const paths = {
   qualifications: '/employee/Qualifications',
   renewals: '/employee/Renewals',
@@ -36,14 +35,72 @@ const summary: OverviewSummary = {
 
 // Replace with API calls
 const qualifications: Qualification[] = [
-  { id: '1', name: 'Magnetic Flux Leakage (MFL)', status: 'expired', requirementsMet: 0, requirementsTotal: 2, validUntil: '2026-03-16', isCritical: true },
-  { id: '2', name: 'First Aid Training', status: 'expired', requirementsMet: 3, requirementsTotal: 4, validUntil: '2026-03-26', isPrimary: true },
-  { id: '3', name: 'Safety Card', status: 'expiring', requirementsMet: 3, requirementsTotal: 3, validUntil: '2026-06-06' },
-  { id: '4', name: 'Forklift Licence', status: 'expiring', requirementsMet: 2, requirementsTotal: 2, validUntil: '2026-06-23' },
-  { id: '5', name: 'Guided wave Testing (GWT)', status: 'qualified', requirementsMet: 3, requirementsTotal: 3, validUntil: '2026-06-28' },
-  { id: '6', name: 'Leak Testing (LT)', status: 'qualified', requirementsMet: 3, requirementsTotal: 3, validUntil: '2026-07-02' },
-  { id: '7', name: 'Through Transmission Ultrasound', status: 'qualified', requirementsMet: 3, requirementsTotal: 3, validUntil: '2026-07-14' },
-  { id: '8', name: 'Fire Safety', status: 'expiring', requirementsMet: 3, requirementsTotal: 3, validUntil: '2026-07-19' },
+  {
+    id: '1',
+    name: 'Magnetic Flux Leakage (MFL)',
+    status: 'expired',
+    requirementsMet: 0,
+    requirementsTotal: 2,
+    validUntil: '2026-03-16',
+    isCritical: true,
+  },
+  {
+    id: '2',
+    name: 'First Aid Training',
+    status: 'expired',
+    requirementsMet: 3,
+    requirementsTotal: 4,
+    validUntil: '2026-03-26',
+    isPrimary: true,
+  },
+  {
+    id: '3',
+    name: 'Safety Card',
+    status: 'expiring',
+    requirementsMet: 3,
+    requirementsTotal: 3,
+    validUntil: '2026-06-06',
+  },
+  {
+    id: '4',
+    name: 'Forklift Licence',
+    status: 'expiring',
+    requirementsMet: 2,
+    requirementsTotal: 2,
+    validUntil: '2026-06-23',
+  },
+  {
+    id: '5',
+    name: 'Guided wave Testing (GWT)',
+    status: 'qualified',
+    requirementsMet: 3,
+    requirementsTotal: 3,
+    validUntil: '2026-06-28',
+  },
+  {
+    id: '6',
+    name: 'Leak Testing (LT)',
+    status: 'qualified',
+    requirementsMet: 3,
+    requirementsTotal: 3,
+    validUntil: '2026-07-02',
+  },
+  {
+    id: '7',
+    name: 'Through Transmission Ultrasound',
+    status: 'qualified',
+    requirementsMet: 3,
+    requirementsTotal: 3,
+    validUntil: '2026-07-14',
+  },
+  {
+    id: '8',
+    name: 'Fire Safety',
+    status: 'expiring',
+    requirementsMet: 3,
+    requirementsTotal: 3,
+    validUntil: '2026-07-19',
+  },
 ]
 
 // Replace with API calls
@@ -116,7 +173,10 @@ export default function EmployeeOverview() {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 2fr) minmax(0, 1fr)' },
+          gridTemplateColumns: {
+            xs: '1fr',
+            md: 'minmax(0, 2fr) minmax(0, 1fr)',
+          },
           gap: 2,
           alignItems: 'start',
         }}

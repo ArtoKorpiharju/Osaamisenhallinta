@@ -29,7 +29,7 @@ export default function Panel({ title, headerAction, children }: PanelProps) {
         sx={{
           display: 'flex',
           flexShrink: 0,
-          minHeight:35,
+          minHeight: 35,
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 1.5,
