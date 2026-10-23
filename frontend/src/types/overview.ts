@@ -33,6 +33,14 @@ export interface EmployeeOverview {
   qualifications: Qualification[]
 }
 
+export interface SupervisorOverview {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  employees: string[]
+}
+
 export interface OverviewSummary {
   outdated: number
   expiring: number
