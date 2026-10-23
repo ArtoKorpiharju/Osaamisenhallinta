@@ -1,5 +1,6 @@
 package com.osaamisenhallinta.employee;
 
+import com.osaamisenhallinta.competency.CompetencyStatus;
 import com.osaamisenhallinta.competency.CompetencyType;
 import java.time.LocalDate;
 
@@ -10,4 +11,5 @@ public record EmployeeCompetencyDto(
     String competencyName,
     CompetencyType competencyType,
     LocalDate issueDate,
-    LocalDate expirationDate) {}
+    LocalDate expirationDate,
+    CompetencyStatus status) {}
