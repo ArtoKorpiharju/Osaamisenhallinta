@@ -6,11 +6,13 @@ import ActionRequired from '../../components/EmployeeOverview/ActionRequired'
 import MyQualifications from '../../components/EmployeeOverview/MyQualifications'
 import SummaryCards from '../../components/EmployeeOverview/SummaryCards'
 import {
+  type EmployeeOverview,
   type ActionRequiredItem,
   type OverviewSummary,
 } from '../../types/overview'
 import { tones } from '../../config/tones'
 import { fetchEmployeeOverview } from '../../services/employee'
+import { getApiErrorMessage } from '../../services/api'
 
 const paths = {
   qualifications: '/employee/Qualifications',
@@ -87,9 +89,7 @@ export default function EmployeeOverview() {
 
   const { userId } = useOutletContext<{ userId: number | undefined }>()
 
-  const [employeeOverview, setEmployeeOverview] = useState<Awaited<
-    ReturnType<typeof fetchEmployeeOverview>
-  > | null>(null)
+  const [employeeOverview, setEmployeeOverview] = useState<EmployeeOverview>()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -100,9 +100,9 @@ export default function EmployeeOverview() {
       .then(setEmployeeOverview)
       .catch((err: unknown) => {
         setError(
-          err instanceof Error
-            ? err.message
-            : 'Could not load employee overview'
+          getApiErrorMessage(err, 'Could not load employee overview data', {
+            404: 'Employee overview data could not be found',
+          })
         )
       })
       .finally(() => {
@@ -123,7 +123,9 @@ export default function EmployeeOverview() {
       {error && <Alert severity="error">{error}</Alert>}
 
       {/** Display an info alert while employee overview is being fetched. */}
-      {loading && <Alert severity="info">Fetching data…</Alert>}
+      {loading && userId !== undefined && (
+        <Alert severity="info">Fetching employee overview data…</Alert>
+      )}
 
       <SummaryCards
         summary={summary}

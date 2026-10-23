@@ -7,6 +7,7 @@ import TopBar from '../components/TopBar'
 
 import { type Role, roles, pagesPerRole } from '../config/roles'
 import { fetchSeedUsers, type SeedUser } from '../services/seedUsers'
+import { getApiErrorMessage } from '../services/api'
 
 // Get the role from the current path.
 // If the path doesn't match any role, default to employee.
@@ -76,7 +77,9 @@ export default function RootLayout() {
       .then(setSeedUsers)
       .catch((err: unknown) => {
         setUsersError(
-          err instanceof Error ? err.message : 'Could not load users'
+          getApiErrorMessage(err, 'Could not load seed users', {
+            404: 'Seed users could not be found',
+          })
         )
       })
       .finally(() => {
