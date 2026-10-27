@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import lombok.Getter;
 import org.springframework.data.annotation.Transient;
 
-
 /** Represents the relationship between an employee and a competency. */
 @Entity
 @Getter
@@ -55,7 +54,8 @@ public class EmployeeCompetency {
   private RenewalPlan renewalPlan;
 
   /** Constructor for creating a new EmployeeCompetency. */
-  public EmployeeCompetency(User employee, Competency competency, LocalDate issueDate, LocalDate expirationDate) {
+  public EmployeeCompetency(
+      User employee, Competency competency, LocalDate issueDate, LocalDate expirationDate) {
     this.employee = employee;
     this.competency = competency;
     this.issueDate = issueDate;
@@ -86,8 +86,9 @@ public class EmployeeCompetency {
   }
 
   /**
-   * Removes the bidirectional association between the employee competency and its renewal plan, if it exists.
-   * This method ensures that both sides of the relationship are updated to prevent dangling references.
+   * Removes the bidirectional association between the employee competency and its renewal plan, if
+   * it exists. This method ensures that both sides of the relationship are updated to prevent
+   * dangling references.
    */
   public void removeRenewalPlan() {
     if (this.renewalPlan != null) {
@@ -107,18 +108,17 @@ public class EmployeeCompetency {
     if (this.expirationDate == null) {
       return CompetencyStatus.VALID; // Non-expiring competencies
     }
-    
+
     if (this.expirationDate.isBefore(today)) {
       return CompetencyStatus.EXPIRED;
     }
-    
+
     if (!this.expirationDate.isAfter(today.plusDays(WARNING_DAYS_THRESHOLD))) {
       return CompetencyStatus.EXPIRING_SOON;
     }
-    
+
     return CompetencyStatus.VALID;
   }
-
 
   protected EmployeeCompetency() {}
 }

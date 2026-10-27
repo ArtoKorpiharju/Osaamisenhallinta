@@ -15,7 +15,7 @@ import lombok.Getter;
 
 /** Represents a plan for renewing an employee's competency. */
 @Entity
-@Getter 
+@Getter
 @Table(name = "renewal_plan")
 public class RenewalPlan {
 

@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-
-
 /** Service for managing renewal plans associated with employee competencies. */
 @Service
 @RequiredArgsConstructor
@@ -19,7 +17,8 @@ public class RenewalPlanService {
   private final RenewalPlanRepository renewalPlanRepository;
 
   /**
-   * Adds or updates a renewal plan for a specific employee competency depending on whether one already exists.
+   * Adds or updates a renewal plan for a specific employee competency depending on whether one
+   * already exists.
    *
    * @param employeeId The ID of the employee.
    * @param empCompId The ID of the employee competency.
@@ -30,11 +29,12 @@ public class RenewalPlanService {
   @Transactional
   public RenewalPlanDto addOrUpdateRenewalPlan(
       Long employeeId, Long empCompId, RenewalPlanRequestDto request) {
-    
-    EmployeeCompetency empComp = employeeCompetencyService.getEmployeeCompetencyOrThrow(employeeId, empCompId);
-    
+
+    EmployeeCompetency empComp =
+        employeeCompetencyService.getEmployeeCompetencyOrThrow(employeeId, empCompId);
+
     RenewalPlan existingPlan = empComp.getRenewalPlan();
-    
+
     if (existingPlan == null) {
       RenewalPlan newPlan = new RenewalPlan(request.renewalDate(), request.renewalComment());
       empComp.setRenewalPlan(newPlan);
@@ -55,13 +55,14 @@ public class RenewalPlanService {
    */
   @Transactional
   public void deleteRenewalPlan(Long employeeId, Long empCompId) {
-    EmployeeCompetency empComp = employeeCompetencyService.getEmployeeCompetencyOrThrow(employeeId, empCompId);
+    EmployeeCompetency empComp =
+        employeeCompetencyService.getEmployeeCompetencyOrThrow(employeeId, empCompId);
     RenewalPlan existingPlan = empComp.getRenewalPlan();
-    
+
     if (existingPlan != null) {
-      empComp.removeRenewalPlan(); 
-      
-      renewalPlanRepository.delete(existingPlan); 
+      empComp.removeRenewalPlan();
+
+      renewalPlanRepository.delete(existingPlan);
     }
     return;
   }
@@ -71,7 +72,6 @@ public class RenewalPlanService {
         plan.getId(),
         plan.getEmployeeCompetency().getId(),
         plan.getRenewalDate(),
-        plan.getRenewalComment()
-    );
+        plan.getRenewalComment());
   }
 }

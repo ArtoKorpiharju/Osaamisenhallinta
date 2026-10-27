@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/employees/{employeeId}/competencies")
 @RequiredArgsConstructor
-@Tag(name = "Employee Competencies", description = "Endpoints for managing the competencies assigned to an employee")
+@Tag(
+    name = "Employee Competencies",
+    description = "Endpoints for managing the competencies assigned to an employee")
 public class EmployeeCompetencyController {
 
   private final EmployeeCompetencyService employeeCompetencyService;
@@ -33,14 +35,26 @@ public class EmployeeCompetencyController {
   @ResponseStatus(HttpStatus.CREATED)
   @Operation(
       summary = "Assign a competency to an employee",
-      description = "Creates a new record linking a competency to a specific employee with an issue date."
-  )
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Competency successfully assigned to the employee"),
-      @ApiResponse(responseCode = "400", description = "Invalid request payload (e.g., missing issue date)", content = @Content),
-      @ApiResponse(responseCode = "404", description = "Employee or Competency ID not found", content = @Content),
-      @ApiResponse(responseCode = "409", description = "Employee already has this competency", content = @Content)
-  })
+      description =
+          "Creates a new record linking a competency to a specific employee with an issue date.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Competency successfully assigned to the employee"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid request payload (e.g., missing issue date)",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Employee or Competency ID not found",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Employee already has this competency",
+            content = @Content)
+      })
   public EmployeeCompetencyDto addCompetency(
       @PathVariable Long employeeId, @Valid @RequestBody AddEmployeeCompetencyRequestDto request) {
     return employeeCompetencyService.addCompetency(employeeId, request);
@@ -48,13 +62,22 @@ public class EmployeeCompetencyController {
 
   @Operation(
       summary = "Update an employee's competency",
-      description = "Updates the issue date of an existing employee competency. The expiration date is automatically recalculated."
-  )
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Employee competency successfully updated"),
-      @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content),
-      @ApiResponse(responseCode = "404", description = "EmployeeCompetency not found, or employee ID mismatch", content = @Content)
-  })
+      description =
+          "Updates the issue date of an existing employee competency. The expiration date is automatically recalculated.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Employee competency successfully updated"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid request payload",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "404",
+            description = "EmployeeCompetency not found, or employee ID mismatch",
+            content = @Content)
+      })
   @PutMapping("/{empCompId}")
   @ResponseStatus(HttpStatus.OK)
   public EmployeeCompetencyDto updateCompetency(
@@ -68,14 +91,19 @@ public class EmployeeCompetencyController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Operation(
       summary = "Remove a competency from an employee",
-      description = "Deletes the employee competency record. This will also cascade and delete any associated renewal plans."
-  )
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Employee competency successfully deleted"),
-      @ApiResponse(responseCode = "404", description = "EmployeeCompetency not found, or employee ID mismatch", content = @Content)
-  })
-  public void deleteCompetency(
-      @PathVariable Long employeeId, @PathVariable Long empCompId) {
+      description =
+          "Deletes the employee competency record. This will also cascade and delete any associated renewal plans.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "204",
+            description = "Employee competency successfully deleted"),
+        @ApiResponse(
+            responseCode = "404",
+            description = "EmployeeCompetency not found, or employee ID mismatch",
+            content = @Content)
+      })
+  public void deleteCompetency(@PathVariable Long employeeId, @PathVariable Long empCompId) {
     employeeCompetencyService.deleteCompetency(employeeId, empCompId);
     return;
   }

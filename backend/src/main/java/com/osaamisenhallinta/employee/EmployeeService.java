@@ -62,8 +62,7 @@ public class EmployeeService {
         employeeQualificationsDto);
   }
 
-  private EmployeeCompetencyDto mapEmployeeCompetencyToDto(
-      EmployeeCompetency assignment) {
+  private EmployeeCompetencyDto mapEmployeeCompetencyToDto(EmployeeCompetency assignment) {
     Competency competency = assignment.getCompetency();
     CompetencyStatus competencyStatus = assignment.getStatus();
 

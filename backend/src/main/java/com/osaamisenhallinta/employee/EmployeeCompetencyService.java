@@ -5,12 +5,10 @@ import com.osaamisenhallinta.competency.CompetencyRepository;
 import com.osaamisenhallinta.employee.dto.AddEmployeeCompetencyRequestDto;
 import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
 import com.osaamisenhallinta.employee.dto.UpdateEmployeeCompetencyRequestDto;
-import com.osaamisenhallinta.renewal.RenewalPlan;
-import com.osaamisenhallinta.renewal.dto.RenewalPlanRequestDto;
 import com.osaamisenhallinta.user.User;
 import com.osaamisenhallinta.user.UserRepository;
-import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,16 +36,24 @@ public class EmployeeCompetencyService {
   @Transactional
   public EmployeeCompetencyDto addCompetency(
       Long employeeId, AddEmployeeCompetencyRequestDto request) {
-        
-    if (employeeCompetencyRepository.existsByEmployeeIdAndCompetencyId(employeeId, request.competencyId())) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Employee already has this competency");
+
+    if (employeeCompetencyRepository.existsByEmployeeIdAndCompetencyId(
+        employeeId, request.competencyId())) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT, "Employee already has this competency");
     }
 
     User employee = userRepository.getEmployeeByIdOrThrow(employeeId);
-    Competency competencyToBeAdded = competencyRepository.findById(request.competencyId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
-    LocalDate newExpirationDate = calculateCompetencyExpirationDate(competencyToBeAdded, request.issueDate());
+    Competency competencyToBeAdded =
+        competencyRepository
+            .findById(request.competencyId())
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
+    LocalDate newExpirationDate =
+        calculateCompetencyExpirationDate(competencyToBeAdded, request.issueDate());
     EmployeeCompetency newEmployeeCompetency =
-        new EmployeeCompetency(employee, competencyToBeAdded, request.issueDate(), newExpirationDate);
+        new EmployeeCompetency(
+            employee, competencyToBeAdded, request.issueDate(), newExpirationDate);
     newEmployeeCompetency = employeeCompetencyRepository.save(newEmployeeCompetency);
     return mapEmployeeCompetencyToDto(newEmployeeCompetency);
   }
@@ -66,7 +72,8 @@ public class EmployeeCompetencyService {
     EmployeeCompetency empComp = getEmployeeCompetencyOrThrow(empCompId, employeeId);
 
     LocalDate newIssueDate = request.issueDate();
-    LocalDate newExpirationDate = calculateCompetencyExpirationDate(empComp.getCompetency(), newIssueDate);
+    LocalDate newExpirationDate =
+        calculateCompetencyExpirationDate(empComp.getCompetency(), newIssueDate);
 
     empComp.updateIssueAndExpirationDates(request.issueDate(), newExpirationDate);
     return mapEmployeeCompetencyToDto(empComp);
@@ -85,15 +92,18 @@ public class EmployeeCompetencyService {
   }
 
   /**
-   * Retrieves an employee competency by employee ID and employee's competency ID, or throws a NOT_FOUND exception if not found.
+   * Retrieves an employee competency by employee ID and employee's competency ID, or throws a
+   * NOT_FOUND exception if not found.
    *
    * @param employeeId The ID of the employee.
    * @param empCompId The ID of the employee competency.
    * @return The employee competency.
    */
   public EmployeeCompetency getEmployeeCompetencyOrThrow(Long employeeId, Long empCompId) {
-    return employeeCompetencyRepository.findByIdAndEmployeeId(empCompId, employeeId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMP_COMP_NOT_FOUND_MESSAGE));
+    return employeeCompetencyRepository
+        .findByIdAndEmployeeId(empCompId, employeeId)
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMP_COMP_NOT_FOUND_MESSAGE));
   }
 
   private LocalDate calculateCompetencyExpirationDate(Competency competency, LocalDate issueDate) {
@@ -115,7 +125,6 @@ public class EmployeeCompetencyService {
         competency.getType(),
         entity.getIssueDate(),
         entity.getExpirationDate(),
-        entity.getStatus()
-    );
+        entity.getStatus());
   }
 }
