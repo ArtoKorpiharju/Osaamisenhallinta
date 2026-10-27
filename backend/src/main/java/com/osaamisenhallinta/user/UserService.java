@@ -27,10 +27,10 @@ public class UserService {
   public List<SeedUserResponseDto> getSeedUsers() {
     List<SeedUserResponseDto> testUsers = new ArrayList<>();
 
-    User employee = getFirstUserByRole(UserRole.EMPLOYEE);
-    User supervisor = getFirstUserByRole(UserRole.SUPERVISOR);
+    User employee = getTestUserByRole(UserRole.EMPLOYEE);
+    User supervisor = getTestUserByRole(UserRole.SUPERVISOR);
 
-    User administrator = getFirstUserByRole(UserRole.ADMINISTRATOR);
+    User administrator = getTestUserByRole(UserRole.ADMINISTRATOR);
 
     testUsers.add(mapToDto(employee));
     testUsers.add(mapToDto(supervisor));
@@ -39,7 +39,7 @@ public class UserService {
     return testUsers;
   }
 
-  private User getFirstUserByRole(UserRole role) {
+  private User getTestUserByRole(UserRole role) {
     // 1 test user of each role is created with this email format.
     return userRepository
         .findByEmail("test_" + role + "@email.com")

@@ -175,7 +175,7 @@ JOIN competency c ON c.name = v.competency_name;
 -- WITH scenarios creates a temporary table about the data to be inserted.
 WITH scenarios(email, competency_name, expiration_offset_days) AS (
     VALUES
-        -- John Doe: cover multiple employee frontend scenarios
+        -- John Employee: cover multiple employee frontend scenarios
 
         -- Warehouse Operator: valid with expiring soon competencies
         ('test_EMPLOYEE@email.com',

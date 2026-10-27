@@ -20,7 +20,7 @@
 
   "[java]": {
     "editor.defaultFormatter": "redhat.java",
-    //"editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "editor.tabSize": 2
