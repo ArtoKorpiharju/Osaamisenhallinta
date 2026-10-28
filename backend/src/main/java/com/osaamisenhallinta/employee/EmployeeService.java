@@ -1,7 +1,9 @@
 package com.osaamisenhallinta.employee;
 
-import com.osaamisenhallinta.competency.Competency;
-import com.osaamisenhallinta.competency.CompetencyStatus;
+import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
+import com.osaamisenhallinta.employee.dto.EmployeeOverviewDto;
+import com.osaamisenhallinta.employee.dto.EmployeeQualificationDto;
+import com.osaamisenhallinta.employee.mapper.EmployeeCompetencyMapper;
 import com.osaamisenhallinta.qualification.Qualification;
 import com.osaamisenhallinta.qualification.QualificationEvaluationResult;
 import com.osaamisenhallinta.qualification.QualificationEvaluator;
@@ -42,7 +44,7 @@ public class EmployeeService {
   private EmployeeOverviewDto mapEmployeeOverviewToDto(User employee) {
     List<EmployeeCompetencyDto> employeeCompetenciesDto =
         employee.getEmployeeCompetencies().stream()
-            .map(assignment -> mapEmployeeCompetencyToDto(assignment))
+            .map(assignment -> EmployeeCompetencyMapper.mapToDto(assignment))
             .toList();
 
     List<EmployeeQualificationDto> employeeQualificationsDto =
@@ -60,20 +62,6 @@ public class EmployeeService {
         employee.getRole(),
         employeeCompetenciesDto,
         employeeQualificationsDto);
-  }
-
-  private EmployeeCompetencyDto mapEmployeeCompetencyToDto(EmployeeCompetency assignment) {
-    Competency competency = assignment.getCompetency();
-    CompetencyStatus competencyStatus = assignment.getStatus();
-
-    return new EmployeeCompetencyDto(
-        assignment.getId(),
-        competency.getId(),
-        competency.getName(),
-        competency.getType(),
-        assignment.getIssueDate(),
-        assignment.getExpirationDate(),
-        competencyStatus);
   }
 
   private EmployeeQualificationDto mapEmployeeQualificationToDto(

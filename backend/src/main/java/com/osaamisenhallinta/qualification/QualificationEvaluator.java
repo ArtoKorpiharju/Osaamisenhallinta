@@ -2,6 +2,7 @@ package com.osaamisenhallinta.qualification;
 
 import com.osaamisenhallinta.competency.Competency;
 import com.osaamisenhallinta.employee.EmployeeCompetency;
+import com.osaamisenhallinta.qualification.dto.RequirementStatusDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

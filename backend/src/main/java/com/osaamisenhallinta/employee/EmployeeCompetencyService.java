@@ -5,6 +5,9 @@ import com.osaamisenhallinta.competency.CompetencyRepository;
 import com.osaamisenhallinta.employee.dto.AddEmployeeCompetencyRequestDto;
 import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
 import com.osaamisenhallinta.employee.dto.UpdateEmployeeCompetencyRequestDto;
+import com.osaamisenhallinta.employee.mapper.EmployeeCompetencyMapper;
+import com.osaamisenhallinta.renewal.RenewalPlan;
+import com.osaamisenhallinta.renewal.dto.RenewalPlanDto;
 import com.osaamisenhallinta.user.User;
 import com.osaamisenhallinta.user.UserRepository;
 import java.time.LocalDate;
@@ -55,7 +58,7 @@ public class EmployeeCompetencyService {
         new EmployeeCompetency(
             employee, competencyToBeAdded, request.issueDate(), newExpirationDate);
     newEmployeeCompetency = employeeCompetencyRepository.save(newEmployeeCompetency);
-    return mapEmployeeCompetencyToDto(newEmployeeCompetency);
+    return EmployeeCompetencyMapper.mapToDto(newEmployeeCompetency);
   }
 
   /**
@@ -76,7 +79,7 @@ public class EmployeeCompetencyService {
         calculateCompetencyExpirationDate(empComp.getCompetency(), newIssueDate);
 
     empComp.updateIssueAndExpirationDates(request.issueDate(), newExpirationDate);
-    return mapEmployeeCompetencyToDto(empComp);
+    return EmployeeCompetencyMapper.mapToDto(empComp);
   }
 
   /**
@@ -114,17 +117,5 @@ public class EmployeeCompetencyService {
     }
     expirationDate = issueDate.plusMonths(validityMonths);
     return expirationDate;
-  }
-
-  private EmployeeCompetencyDto mapEmployeeCompetencyToDto(EmployeeCompetency entity) {
-    Competency competency = entity.getCompetency();
-    return new EmployeeCompetencyDto(
-        entity.getId(),
-        competency.getId(),
-        competency.getName(),
-        competency.getType(),
-        entity.getIssueDate(),
-        entity.getExpirationDate(),
-        entity.getStatus());
   }
 }
