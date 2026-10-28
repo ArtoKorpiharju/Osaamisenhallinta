@@ -5,4 +5,4 @@ public record CompetencyDto(
     Long competencyId,
     String competencyName,
     CompetencyType competencyType,
-    Long validityMonths) {}
+    Integer validityMonths) {}
