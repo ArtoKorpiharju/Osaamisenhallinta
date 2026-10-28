@@ -39,10 +39,12 @@ public class RenewalPlan {
     this.renewalComment = renewalComment;
   }
 
+  /** Sets the associated EmployeeCompetency for this RenewalPlan. */
   public void setEmployeeCompetency(EmployeeCompetency employeeCompetency) {
     this.employeeCompetency = employeeCompetency;
   }
 
+  /** Updates the renewal date and comment for this RenewalPlan. */
   public void update(LocalDate renewalDate, String renewalComment) {
     this.renewalDate = renewalDate;
     this.renewalComment = renewalComment;
