@@ -31,8 +31,6 @@ public class EmployeeCompetencyController {
 
   private final EmployeeCompetencyService employeeCompetencyService;
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
   @Operation(
       summary = "Assign a competency to an employee",
       description =
@@ -55,6 +53,8 @@ public class EmployeeCompetencyController {
             description = "Employee already has this competency",
             content = @Content)
       })
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   public EmployeeCompetencyDto addCompetency(
       @PathVariable Long employeeId, @Valid @RequestBody AddEmployeeCompetencyRequestDto request) {
     return employeeCompetencyService.addCompetency(employeeId, request);
@@ -78,17 +78,15 @@ public class EmployeeCompetencyController {
             description = "EmployeeCompetency not found, or employee ID mismatch",
             content = @Content)
       })
-  @PutMapping("/{empCompId}")
+  @PutMapping("/{employeeCompetencyId}")
   @ResponseStatus(HttpStatus.OK)
   public EmployeeCompetencyDto updateCompetency(
       @PathVariable Long employeeId,
-      @PathVariable Long empCompId,
+      @PathVariable Long employeeCompetencyId,
       @Valid @RequestBody UpdateEmployeeCompetencyRequestDto request) {
-    return employeeCompetencyService.updateCompetency(employeeId, empCompId, request);
+    return employeeCompetencyService.updateCompetency(employeeId, employeeCompetencyId, request);
   }
 
-  @DeleteMapping("/{empCompId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
   @Operation(
       summary = "Remove a competency from an employee",
       description =
@@ -103,8 +101,11 @@ public class EmployeeCompetencyController {
             description = "EmployeeCompetency not found, or employee ID mismatch",
             content = @Content)
       })
-  public void deleteCompetency(@PathVariable Long employeeId, @PathVariable Long empCompId) {
-    employeeCompetencyService.deleteCompetency(employeeId, empCompId);
+  @DeleteMapping("/{employeeCompetencyId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteCompetency(
+      @PathVariable Long employeeId, @PathVariable Long employeeCompetencyId) {
+    employeeCompetencyService.deleteCompetency(employeeId, employeeCompetencyId);
     return;
   }
 }

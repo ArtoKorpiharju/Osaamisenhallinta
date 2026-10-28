@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Controller for managing renewal plans. */
 @RestController
-@RequestMapping("/api/employees/{employeeId}/competencies/{empCompId}/renewal-plan")
+@RequestMapping("/api/employees/{employeeId}/competencies/{employeeCompetencyId}/renewal-plan")
 @RequiredArgsConstructor
 @Tag(
     name = "Renewal Plans",
@@ -34,7 +34,7 @@ public class RenewalPlanController {
   @Operation(
       summary = "Create or update a renewal plan",
       description =
-          "Adds a new renewal plan or updates an existing one for a specific employee competency. Acts as an upsert.")
+          "Adds a new renewal plan if one does not exist, or updates an existing one for a specific employee competency. Acts as an upsert.")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -51,9 +51,9 @@ public class RenewalPlanController {
       })
   public RenewalPlanDto createOrUpdateRenewalPlan(
       @PathVariable Long employeeId,
-      @PathVariable Long empCompId,
+      @PathVariable Long empCompetencyId,
       @Valid @RequestBody RenewalPlanRequestDto request) {
-    return renewalPlanService.addOrUpdateRenewalPlan(employeeId, empCompId, request);
+    return renewalPlanService.addOrUpdateRenewalPlan(employeeId, empCompetencyId, request);
   }
 
   @DeleteMapping
@@ -69,8 +69,8 @@ public class RenewalPlanController {
             description = "Employee or EmployeeCompetency not found, or ID mismatch",
             content = @Content)
       })
-  public void deleteRenewalPlan(@PathVariable Long employeeId, @PathVariable Long empCompId) {
-    renewalPlanService.deleteRenewalPlan(employeeId, empCompId);
+  public void deleteRenewalPlan(@PathVariable Long employeeId, @PathVariable Long empCompetencyId) {
+    renewalPlanService.deleteRenewalPlan(employeeId, empCompetencyId);
     return;
   }
 }

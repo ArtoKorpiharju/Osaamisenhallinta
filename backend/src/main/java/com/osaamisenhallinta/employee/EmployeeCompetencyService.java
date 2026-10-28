@@ -99,7 +99,7 @@ public class EmployeeCompetencyService {
    * @param empCompId The ID of the employee competency.
    * @return The employee competency.
    */
-  public EmployeeCompetency getEmployeeCompetencyOrThrow(Long employeeId, Long empCompId) {
+  public EmployeeCompetency getEmployeeCompetencyOrThrow(Long empCompId, Long employeeId) {
     return employeeCompetencyRepository
         .findByIdAndEmployeeId(empCompId, employeeId)
         .orElseThrow(
