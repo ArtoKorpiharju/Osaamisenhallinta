@@ -23,14 +23,14 @@ const statusDisplay: Record<
   QualificationStatus,
   { label: string; tone: Tone }
 > = {
-  expired: { label: 'Invalid', tone: 'danger' },
-  expiring: { label: 'Expiring soon', tone: 'warning' },
+  notQualified: { label: 'Invalid', tone: 'danger' },
+  expiringSoon: { label: 'Expiring soon', tone: 'warning' },
   qualified: { label: 'Qualified', tone: 'success' },
 }
 
 const statusOrder: Record<QualificationStatus, number> = {
-  expired: 0,
-  expiring: 1,
+  notQualified: 0,
+  expiringSoon: 1,
   qualified: 2,
 }
 
@@ -96,7 +96,11 @@ const columns: DataTableColumn<Qualification>[] = [
     align: 'right',
     minWidth: 100,
     render: (qualification) => (
-      <Box sx={{ fontWeight: 600 }}>{formatDate(qualification.validUntil)}</Box>
+      <Box sx={{ fontWeight: 600 }}>
+        {qualification.validUntil
+          ? formatDate(qualification.validUntil)
+          : 'No expiry date'}
+      </Box>
     ),
   },
 ]

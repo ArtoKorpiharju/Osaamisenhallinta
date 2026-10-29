@@ -2,17 +2,14 @@ import { fetchApiData } from './api'
 import { isRecord } from '../utils/validators'
 import {
   type Competency,
+  type Requirement,
   type Qualification,
   type EmployeeOverview,
+  type QualificationStatus,
 } from '../types/overview'
 
-interface QualificationApiResponse {
-  employeeQualificationId: number
-  qualificationId: number
-  qualificationName: string
-  favourite: boolean
-  critical: boolean
-}
+type QualificationStatusApiResponse =
+  'NOT_QUALIFIED' | 'EXPIRING_SOON' | 'QUALIFIED'
 
 interface CompetencyApiResponse {
   employeeCompetencyId: number
@@ -21,6 +18,28 @@ interface CompetencyApiResponse {
   competencyType: string
   issueDate: string
   expirationDate: string | null
+  status: string
+}
+
+interface RequirementApiResponse {
+  competencyId: number
+  competencyName: string
+  competencyType: string
+  isMet: boolean
+  expirationDate: string | null
+}
+
+interface QualificationApiResponse {
+  employeeQualificationId: number
+  qualificationId: number
+  qualificationName: string
+  favourite: boolean
+  critical: boolean
+  validUntil: string | null
+  status: QualificationStatusApiResponse
+  totalRequirementsCount: number
+  metRequirementsCount: number
+  requirements: RequirementApiResponse[]
 }
 
 interface EmployeeOverviewApiResponse {
@@ -31,6 +50,17 @@ interface EmployeeOverviewApiResponse {
   role: 'EMPLOYEE'
   competencies: CompetencyApiResponse[]
   qualifications: QualificationApiResponse[]
+}
+
+// Check if an API response value contains valid qualification status.
+function isQualificationStatusApiResponse(
+  value: unknown
+): value is QualificationStatusApiResponse {
+  return (
+    value === 'NOT_QUALIFIED' ||
+    value === 'EXPIRING_SOON' ||
+    value === 'QUALIFIED'
+  )
 }
 
 // Check if an API response value contains valid competency.
@@ -47,6 +77,24 @@ function isCompetencyApiResponse(
     typeof value.competencyName === 'string' &&
     typeof value.competencyType === 'string' &&
     typeof value.issueDate === 'string' &&
+    (typeof value.expirationDate === 'string' ||
+      value.expirationDate === null) &&
+    typeof value.status === 'string'
+  )
+}
+
+// Check if an API response value contains valid requirement.
+function isRequirementApiResponse(
+  value: unknown
+): value is RequirementApiResponse {
+  if (!isRecord(value)) return false
+
+  return (
+    typeof value.competencyId === 'number' &&
+    Number.isInteger(value.competencyId) &&
+    typeof value.competencyName === 'string' &&
+    typeof value.competencyType === 'string' &&
+    typeof value.isMet === 'boolean' &&
     (typeof value.expirationDate === 'string' || value.expirationDate === null)
   )
 }
@@ -64,8 +112,29 @@ function isQualificationApiResponse(
     Number.isInteger(value.qualificationId) &&
     typeof value.qualificationName === 'string' &&
     typeof value.favourite === 'boolean' &&
-    typeof value.critical === 'boolean'
+    typeof value.critical === 'boolean' &&
+    (typeof value.validUntil === 'string' || value.validUntil === null) &&
+    isQualificationStatusApiResponse(value.status) &&
+    typeof value.totalRequirementsCount === 'number' &&
+    Number.isInteger(value.totalRequirementsCount) &&
+    typeof value.metRequirementsCount === 'number' &&
+    Number.isInteger(value.metRequirementsCount) &&
+    Array.isArray(value.requirements) &&
+    value.requirements.every(isRequirementApiResponse)
   )
+}
+
+function mapQualificationStatus(
+  status: QualificationStatusApiResponse
+): QualificationStatus {
+  switch (status) {
+    case 'NOT_QUALIFIED':
+      return 'notQualified'
+    case 'EXPIRING_SOON':
+      return 'expiringSoon'
+    case 'QUALIFIED':
+      return 'qualified'
+  }
 }
 
 // Maps a competency from the API response to the frontend Competency type.
@@ -77,6 +146,18 @@ function mapCompetency(value: CompetencyApiResponse): Competency {
     name: value.competencyName,
     type: value.competencyType,
     issueDate: value.issueDate,
+    expirationDate: value.expirationDate,
+    status: value.status,
+  }
+}
+
+// Maps a requirement from the API response to the frontend Requirement type.
+function mapRequirement(value: RequirementApiResponse): Requirement {
+  return {
+    competencyId: value.competencyId,
+    competencyName: value.competencyName,
+    competencyType: value.competencyType,
+    isMet: value.isMet,
     expirationDate: value.expirationDate,
   }
 }
@@ -91,10 +172,11 @@ function mapQualification(value: QualificationApiResponse): Qualification {
     name: value.qualificationName,
     isFavourite: value.favourite,
     isCritical: value.critical,
-    status: 'qualified', // Edit this once the API returns it
-    requirementsMet: 0, // Edit this once the API returns it
-    requirementsTotal: 0, // Edit this once the API returns it
-    validUntil: '2027-12-31', // Edit this once the API returns it
+    validUntil: value.validUntil,
+    status: mapQualificationStatus(value.status),
+    requirementsTotal: value.totalRequirementsCount,
+    requirementsMet: value.metRequirementsCount,
+    requirements: value.requirements.map(mapRequirement),
   }
 }
 

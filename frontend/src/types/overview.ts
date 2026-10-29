@@ -1,18 +1,6 @@
 import { type Tone } from '../config/tones'
 
-export type QualificationStatus = 'expired' | 'expiring' | 'qualified'
-
-export interface Qualification {
-  id: number // id = employeeQualificationId in backend
-  qualificationId: number
-  name: string
-  isFavourite: boolean // Star symbol in table if favourite
-  isCritical: boolean
-  status: QualificationStatus
-  requirementsMet: number
-  requirementsTotal: number
-  validUntil: string
-}
+export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
 
 export interface Competency {
   id: number // id = employeeCompetencyId in backend
@@ -21,6 +9,28 @@ export interface Competency {
   type: string
   issueDate: string
   expirationDate: string | null
+  status: string
+}
+
+export interface Requirement {
+  competencyId: number
+  competencyName: string
+  competencyType: string
+  isMet: boolean
+  expirationDate: string | null
+}
+
+export interface Qualification {
+  id: number // id = employeeQualificationId in backend
+  qualificationId: number
+  name: string
+  isFavourite: boolean // Star symbol in table if favourite
+  isCritical: boolean
+  validUntil: string | null
+  status: QualificationStatus
+  requirementsTotal: number
+  requirementsMet: number
+  requirements: Requirement[]
 }
 
 export interface EmployeeOverview {
