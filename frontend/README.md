@@ -41,13 +41,21 @@ docker compose up -d db
 On Linux/macOS (MacOS not tested):
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+./mvnw clean spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 On Windows:
 
+Using git Bash:
+
 ```bash
-mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
+./mvnw clean spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+Or cmd / Powershell:
+
+```powershell
+.\mvnw.cmd clean spring-boot:run "-Dspring-boot.run.profiles=local"
 ```
 
 2. Open a new terminal window and start the frontend development server:
