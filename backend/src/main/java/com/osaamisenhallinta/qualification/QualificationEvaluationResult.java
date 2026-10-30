@@ -1,5 +1,6 @@
 package com.osaamisenhallinta.qualification;
 
+import com.osaamisenhallinta.qualification.dto.RequirementStatusDto;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.osaamisenhallinta.employee;
 
+import com.osaamisenhallinta.employee.dto.EmployeeOverviewDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

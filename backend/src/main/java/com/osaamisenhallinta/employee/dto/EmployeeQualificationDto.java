@@ -1,7 +1,7 @@
-package com.osaamisenhallinta.employee;
+package com.osaamisenhallinta.employee.dto;
 
 import com.osaamisenhallinta.qualification.QualificationStatus;
-import com.osaamisenhallinta.qualification.RequirementStatusDto;
+import com.osaamisenhallinta.qualification.dto.RequirementStatusDto;
 import java.time.LocalDate;
 import java.util.List;
 

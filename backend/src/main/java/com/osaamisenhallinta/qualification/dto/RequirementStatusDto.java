@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.qualification;
+package com.osaamisenhallinta.qualification.dto;
 
 import com.osaamisenhallinta.competency.CompetencyType;
 import java.time.LocalDate;
