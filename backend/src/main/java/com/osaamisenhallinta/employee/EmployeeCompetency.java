@@ -16,10 +16,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import lombok.Getter;
-import org.springframework.data.annotation.Transient;
 
 /** Represents the relationship between an employee and a competency. */
 @Entity

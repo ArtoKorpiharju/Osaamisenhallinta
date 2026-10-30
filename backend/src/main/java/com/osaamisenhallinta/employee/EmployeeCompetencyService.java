@@ -6,8 +6,7 @@ import com.osaamisenhallinta.employee.dto.AddEmployeeCompetencyRequestDto;
 import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
 import com.osaamisenhallinta.employee.dto.UpdateEmployeeCompetencyRequestDto;
 import com.osaamisenhallinta.employee.mapper.EmployeeCompetencyMapper;
-import com.osaamisenhallinta.renewal.RenewalPlan;
-import com.osaamisenhallinta.renewal.dto.RenewalPlanDto;
+import com.osaamisenhallinta.renewal.RenewalPlanRepository;
 import com.osaamisenhallinta.user.User;
 import com.osaamisenhallinta.user.UserRepository;
 import java.time.LocalDate;
@@ -25,6 +24,7 @@ public class EmployeeCompetencyService {
   private final EmployeeCompetencyRepository employeeCompetencyRepository;
   private final UserRepository userRepository;
   private final CompetencyRepository competencyRepository;
+  private final RenewalPlanRepository renewalPlanRepository;
 
   private static final String EMP_COMP_NOT_FOUND_MESSAGE = "Employee's competency not found";
 
@@ -91,6 +91,12 @@ public class EmployeeCompetencyService {
   @Transactional
   public void deleteCompetency(Long employeeId, Long empCompId) {
     EmployeeCompetency empComp = getEmployeeCompetencyOrThrow(empCompId, employeeId);
+
+    if (empComp.getRenewalPlan() != null) {
+      renewalPlanRepository.delete(empComp.getRenewalPlan());
+      empComp.setRenewalPlan(null);
+    }
+
     employeeCompetencyRepository.delete(empComp);
   }
 

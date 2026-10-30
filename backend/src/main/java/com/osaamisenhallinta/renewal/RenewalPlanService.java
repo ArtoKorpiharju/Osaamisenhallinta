@@ -31,7 +31,7 @@ public class RenewalPlanService {
       Long employeeId, Long empCompId, RenewalPlanRequestDto request) {
 
     EmployeeCompetency empComp =
-        employeeCompetencyService.getEmployeeCompetencyOrThrow(employeeId, empCompId);
+        employeeCompetencyService.getEmployeeCompetencyOrThrow(empCompId, employeeId);
 
     RenewalPlan existingPlan = empComp.getRenewalPlan();
 
@@ -56,7 +56,7 @@ public class RenewalPlanService {
   @Transactional
   public void deleteRenewalPlan(Long employeeId, Long empCompId) {
     EmployeeCompetency empComp =
-        employeeCompetencyService.getEmployeeCompetencyOrThrow(employeeId, empCompId);
+        employeeCompetencyService.getEmployeeCompetencyOrThrow(empCompId, employeeId);
     RenewalPlan existingPlan = empComp.getRenewalPlan();
 
     if (existingPlan != null) {

@@ -51,9 +51,9 @@ public class RenewalPlanController {
       })
   public RenewalPlanDto createOrUpdateRenewalPlan(
       @PathVariable Long employeeId,
-      @PathVariable Long empCompetencyId,
+      @PathVariable Long employeeCompetencyId,
       @Valid @RequestBody RenewalPlanRequestDto request) {
-    return renewalPlanService.addOrUpdateRenewalPlan(employeeId, empCompetencyId, request);
+    return renewalPlanService.addOrUpdateRenewalPlan(employeeId, employeeCompetencyId, request);
   }
 
   @DeleteMapping
@@ -69,8 +69,8 @@ public class RenewalPlanController {
             description = "Employee or EmployeeCompetency not found, or ID mismatch",
             content = @Content)
       })
-  public void deleteRenewalPlan(@PathVariable Long employeeId, @PathVariable Long empCompetencyId) {
-    renewalPlanService.deleteRenewalPlan(employeeId, empCompetencyId);
+  public void deleteRenewalPlan(@PathVariable Long employeeId, @PathVariable Long employeeCompetencyId) {
+    renewalPlanService.deleteRenewalPlan(employeeId, employeeCompetencyId);
     return;
   }
 }
