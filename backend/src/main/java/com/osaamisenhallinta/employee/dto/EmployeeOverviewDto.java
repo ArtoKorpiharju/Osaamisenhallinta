@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.employee;
+package com.osaamisenhallinta.employee.dto;
 
 import com.osaamisenhallinta.user.UserRole;
 import java.util.List;

@@ -72,7 +72,7 @@ Or cmd / Powershell:
 
 1. Run the backend.
 
-2. Visit http://localhost:8080/v3/api-docs
+2. Visit http://localhost:8080/swagger-ui/index.html#/
 
 ## Useful commands
 

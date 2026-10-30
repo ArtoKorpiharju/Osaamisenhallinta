@@ -61,10 +61,10 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "unit_id"))
   private Unit supervisedUnit;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
   private Set<EmployeeCompetency> employeeCompetencies = new HashSet<>();
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
   private Set<EmployeeQualification> employeeQualifications = new HashSet<>();
 
   protected User() {}
