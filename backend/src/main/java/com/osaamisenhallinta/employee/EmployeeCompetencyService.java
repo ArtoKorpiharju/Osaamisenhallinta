@@ -83,7 +83,8 @@ public class EmployeeCompetencyService {
   }
 
   /**
-   * Deletes an employee competency.
+   * Deletes an employee competency. If a renewal plan is associated with the competency, it will
+   * also be deleted.
    *
    * @param employeeId The ID of the employee.
    * @param empCompId The ID of the employee competency to delete.

@@ -36,9 +36,8 @@ public class EmployeeCompetencyMapper {
     }
     return new RenewalPlanDto(
         plan.getId(),
-        plan.getEmployeeCompetency().getId(), 
+        plan.getEmployeeCompetency().getId(),
         plan.getRenewalDate(),
-        plan.getRenewalComment()
-    );
+        plan.getRenewalComment());
   }
 }

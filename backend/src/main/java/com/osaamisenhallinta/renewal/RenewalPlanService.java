@@ -20,8 +20,8 @@ public class RenewalPlanService {
    * Adds or updates a renewal plan for a specific employee competency depending on whether one
    * already exists.
    *
-   * @param employeeId The ID of the employee.
    * @param empCompId The ID of the employee competency.
+   * @param employeeId The ID of the employee.
    * @param request The request DTO containing renewal plan details.
    * @return The created or updated renewal plan.
    * @throws ResponseStatusException NOT_FOUND if the employee competency is not found.
@@ -49,8 +49,8 @@ public class RenewalPlanService {
   /**
    * Deletes the renewal plan associated with a specific employee competency.
    *
-   * @param employeeId The ID of the employee.
    * @param empCompId The ID of the employee competency.
+   * @param employeeId The ID of the employee.
    * @throws ResponseStatusException NOT_FOUND if the employee competency is not found.
    */
   @Transactional

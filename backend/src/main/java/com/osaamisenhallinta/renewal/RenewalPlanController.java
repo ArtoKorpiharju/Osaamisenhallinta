@@ -69,7 +69,8 @@ public class RenewalPlanController {
             description = "Employee or EmployeeCompetency not found, or ID mismatch",
             content = @Content)
       })
-  public void deleteRenewalPlan(@PathVariable Long employeeId, @PathVariable Long employeeCompetencyId) {
+  public void deleteRenewalPlan(
+      @PathVariable Long employeeId, @PathVariable Long employeeCompetencyId) {
     renewalPlanService.deleteRenewalPlan(employeeId, employeeCompetencyId);
     return;
   }
