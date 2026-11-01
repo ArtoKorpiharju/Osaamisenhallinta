@@ -3,6 +3,10 @@ import QuickActions from '../../components/QuickActions'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import type { SvgIconComponent } from '@mui/icons-material'
+import PageTitle from '../../components/PageTitle'
+import { useTranslation } from 'react-i18next'
+import PageContainer from '../../components/PageContainer'
+
 
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
@@ -11,47 +15,50 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied'
 
 export default function AdminOverview() {
+  const { t } = useTranslation()
+
   const cards = new Map<string, SvgIconComponent>([
-    ['Certificates', AttachFileIcon],
-    ['Skills', DirectionsWalkIcon],
-    ['Trainings', Diversity1Icon],
-    ['Licenses', FolderOpenIcon],
-    ['Qualifications', SensorOccupiedIcon],
+    [t('adminOverview.cards.certificates'), AttachFileIcon],
+    [t('adminOverview.cards.skills'), DirectionsWalkIcon],
+    [t('adminOverview.cards.trainings'), Diversity1Icon],
+    [t('adminOverview.cards.licenses'), FolderOpenIcon],
+    [t('adminOverview.cards.qualifications'), SensorOccupiedIcon],
   ])
   const cardComponents = Array.from(cards).map(([item, Icon]) => (
     <Card key={item} item={item} icon={Icon} />
   ))
 
   return (
-    <div>
+  <PageContainer gap={2}>
+    <Box>
+      <PageTitle>{t('adminOverview.title')}</PageTitle>
+
       <Typography
         sx={{
-          fontSize: '32px',
-          fontWeight: '700',
-          marginTop: '25px',
-          color: '#034182',
+          mt: 0.5,
+          fontSize: 13,
+          color: 'text.secondary',
         }}
       >
-        Admin Center
+        {t('adminOverview.description')}
       </Typography>
-      <Typography>
-        Manage competency definitions and qualification requirements.
-      </Typography>
-      <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '25px',
-            marginTop: '25px',
-          }}
-        >
-          {cardComponents}
-        </Box>
-        <Box sx={{ marginTop: '25px' }}>
-          <QuickActions />
-        </Box>
+    </Box>
+
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '25px',
+        }}
+      >
+        {cardComponents}
       </Box>
-    </div>
-  )
+
+      <Box>
+        <QuickActions />
+      </Box>
+    </Box>
+  </PageContainer>
+)
 }

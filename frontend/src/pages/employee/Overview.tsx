@@ -1,5 +1,8 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import PageTitle from '../../components/PageTitle'
+import PageContainer from '../../components/PageContainer'
 
 import ActionRequired from '../../components/EmployeeOverview/ActionRequired'
 import MyQualifications from '../../components/EmployeeOverview/MyQualifications'
@@ -9,7 +12,6 @@ import {
   type OverviewSummary,
   type Qualification,
 } from '../../types/overview'
-import { tones } from '../../config/tones'
 
 
 const paths = {
@@ -95,16 +97,14 @@ const actionItems: ActionRequiredItem[] = [
 ]
 
 export default function EmployeeOverview() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, p: 3 }}>
-      <Typography
-        component="h1"
-        sx={{ fontSize: 18, fontWeight: 700, color: tones.info.main }}
-      >
-        Employee Overview
-      </Typography>
+    <PageContainer>
+      <PageTitle>
+        {t('employeeOverview.title')}
+      </PageTitle>
 
       <SummaryCards
         summary={summary}
@@ -137,6 +137,6 @@ export default function EmployeeOverview() {
           }}
         />
       </Box>
-    </Box>
+    </PageContainer>
   )
 }

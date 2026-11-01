@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import StarIcon from '@mui/icons-material/Star'
 
@@ -16,23 +17,70 @@ interface MyQualificationsProps {
   onQualificationClick?: (qualification: Qualification) => void
 }
 
-const statusDisplay: Record<QualificationStatus, { label: string; tone: Tone }> =
-  {
-    expired: { label: 'Invalid', tone: 'danger' },
-    expiring: { label: 'Expiring soon', tone: 'warning' },
-    qualified: { label: 'Qualified', tone: 'success' },
-  }
-
 const statusOrder: Record<QualificationStatus, number> = {
   expired: 0,
   expiring: 1,
   qualified: 2,
 }
 
-const columns: DataTableColumn<Qualification>[] = [
+function Legend() {
+  const { t } = useTranslation()
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: '8px 24px',
+        color: '#174f83',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <StarIcon fontSize="small" sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }} />
+        <Typography sx={{ fontSize: 13 }}>
+          = {t('employeeOverview.qualifications.favorite')}
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <CriticalBadge />
+        <Typography sx={{ fontSize: 13 }}>
+          = {t('employeeOverview.qualifications.employerRequirement')}
+          </Typography>
+      </Box>
+    </Box>
+  )
+}
+
+export default function MyQualifications({
+  qualifications,
+  onViewAll,
+  onQualificationClick,
+}: MyQualificationsProps) {
+  const { t } = useTranslation()
+
+  const statusDisplay: Record<
+    QualificationStatus,
+    { label: string; tone: Tone }
+  > = {
+    expired: {
+      label: t('employeeOverview.qualifications.statuses.invalid'),
+      tone: 'danger',
+    },
+    expiring: {
+      label: t('employeeOverview.qualifications.statuses.expiringSoon'),
+      tone: 'warning',
+    },
+    qualified: {
+      label: t('employeeOverview.qualifications.statuses.qualified'),
+      tone: 'success',
+    },
+  }
+
+  const columns: DataTableColumn<Qualification>[] = [
   {
     id: 'name',
-    label: 'Qualification',
+    label: t('employeeOverview.qualifications.columns.qualification'),
     minWidth: 360,
     render: (qualification) => (
       <Box
@@ -47,11 +95,13 @@ const columns: DataTableColumn<Qualification>[] = [
         <Box sx={{ flexShrink: 0, width: 88 }}>
           {qualification.isCritical === true && <CriticalBadge />}
         </Box>
+
         {qualification.name}
+
         {qualification.isPrimary === true && (
           <StarIcon
             fontSize="small"
-            titleAccess="Primary qualification"
+            titleAccess={t('employeeOverview.qualifications.primaryQualification',)}
             sx={{ flexShrink: 0, color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
           />
         )}
@@ -60,7 +110,7 @@ const columns: DataTableColumn<Qualification>[] = [
   },
   {
     id: 'status',
-    label: 'Status',
+    label: t('employeeOverview.qualifications.columns.status'),
     minWidth: 120,
     render: (qualification) => (
       <StatusChip
@@ -71,7 +121,7 @@ const columns: DataTableColumn<Qualification>[] = [
   },
   {
     id: 'requirements',
-    label: 'Requirements',
+    label: t('employeeOverview.qualifications.columns.requirements'),
     align: 'center',
     minWidth: 120,
     render: (qualification) => (
@@ -82,7 +132,7 @@ const columns: DataTableColumn<Qualification>[] = [
   },
   {
     id: 'validUntil',
-    label: 'Valid until',
+    label: t('employeeOverview.qualifications.columns.validUntil'),
     align: 'right',
     minWidth: 100,
     render: (qualification) => (
@@ -93,66 +143,39 @@ const columns: DataTableColumn<Qualification>[] = [
   },
 ]
 
-function Legend() {
-  return (
+return (
+  <Panel
+    title={t('employeeOverview.qualifications.title')}
+    headerAction={
+      onViewAll && (
+        <Button
+          variant="outlined"
+          size="small"
+          color="inherit"
+          onClick={onViewAll}
+          sx={{ textTransform: 'none', color: 'tones.info.main' }}
+        >
+          {t('employeeOverview.qualifications.viewAll')}
+        </Button>
+      )
+    }
+  >
     <Box
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        gap: '8px 24px',
-        color: '#174f83',
-      }}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%' }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <StarIcon fontSize="small" sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }} />
-        <Typography sx={{ fontSize: 13 }}>= My favorite</Typography>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <CriticalBadge />
-        <Typography sx={{ fontSize: 13 }}>= Employer requirement</Typography>
+      <Legend />
+
+      <Box sx={{ flex: 1, minHeight: 0 }}>
+        <GenericTable
+          columns={columns}
+          rows={[...qualifications].sort(
+            (a, b) => statusOrder[a.status] - statusOrder[b.status],
+          )}
+          getRowId={(qualification) => qualification.id}
+          onRowClick={onQualificationClick}
+        />
       </Box>
     </Box>
-  )
-}
-
-export default function MyQualifications({
-  qualifications,
-  onViewAll,
-  onQualificationClick,
-}: MyQualificationsProps) {
-  return (
-    <Panel
-      title="My Qualifications"
-      headerAction={
-        onViewAll && (
-          <Button
-            variant="outlined"
-            size="small"
-            color="inherit"
-            onClick={onViewAll}
-            sx={{ textTransform: 'none', color: 'tones.info.main' }}
-          >
-            View All
-          </Button>
-        )
-      }
-    >
-      <Box
-        sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%' }}
-      >
-        <Legend />
-        <Box sx={{ flex: 1, minHeight: 0 }}>
-          <GenericTable
-            columns={columns}
-            rows={[...qualifications].sort(
-              (a, b) => statusOrder[a.status] - statusOrder[b.status],
-            )}
-            getRowId={(qualification) => qualification.id}
-            onRowClick={onQualificationClick}
-          />
-        </Box>
-      </Box>
-    </Panel>
-  )
+  </Panel>
+ )
 }

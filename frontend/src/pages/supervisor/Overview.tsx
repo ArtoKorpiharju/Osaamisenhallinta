@@ -1,5 +1,8 @@
 import { Box } from '@mui/material'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import PageTitle from '../../components/PageTitle'
+import PageContainer from '../../components/PageContainer'
 
 import GenericStatCard from '../../components/GenericStatCard'
 import UpcomingExpirationsTable, {
@@ -67,6 +70,7 @@ const expirationItems: ExpirationItem[] = [
 ]
 
 export default function SupervisorOverview() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const openRenewals = () => {
@@ -74,15 +78,10 @@ export default function SupervisorOverview() {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 3,
-        width: '100%',
-      }}
-    >
-      <h1>Supervisor Overview</h1>
+    <PageContainer>
+      <PageTitle>
+        {t('supervisorOverview.title')}
+        </PageTitle>
 
       <Box
         sx={{
@@ -96,39 +95,39 @@ export default function SupervisorOverview() {
         }}
       >
         <GenericStatCard
-          title="Outdated"
+          title={t('supervisorOverview.summary.outdated.title')}
           value={2}
-          description="Expired competencies"
-          highlight="Requires attention"
+          description={t('supervisorOverview.summary.outdated.description')}
+          highlight={t('supervisorOverview.summary.outdated.highlight')}
           tone="danger"
-          actionLabel="View all details"
+          actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openRenewals}
         />
 
         <GenericStatCard
-          title="Expiring"
+          title={t('supervisorOverview.summary.expiring.title')}
           value={6}
-          description="Expiring within 90 days"
+          description={t('supervisorOverview.summary.expiring.description')}
           tone="warning"
-          actionLabel="View all details"
+          actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openRenewals}
         />
 
         <GenericStatCard
-          title="Renewals"
+          title={t('supervisorOverview.summary.renewals.title')}
           value={4}
-          description="Missing renewals"
+          description={t('supervisorOverview.summary.renewals.description')}
           tone="renewal"
-          actionLabel="View all details"
+          actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openRenewals}
         />
 
         <GenericStatCard
-          title="Planned"
+          title={t('supervisorOverview.summary.planned.title')}
           value={3}
-          description="Planned renewals"
+          description={t('supervisorOverview.summary.planned.description')}
           tone="success"
-          actionLabel="View all details"
+          actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openRenewals}
         />
       </Box>
@@ -139,6 +138,6 @@ export default function SupervisorOverview() {
           void navigate('/supervisor/renewals')
         }}
       />
-    </Box>
+    </PageContainer>
   )
 }

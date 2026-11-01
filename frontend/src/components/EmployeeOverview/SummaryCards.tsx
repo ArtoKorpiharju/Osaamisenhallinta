@@ -1,4 +1,5 @@
 import { Box } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import StatCard from '../GenericStatCard'
 import { type OverviewSummary } from '../../types/overview'
@@ -12,10 +13,11 @@ export default function SummaryCards({
   summary,
   onViewDetails,
 }: SummaryCardsProps) {
+  const { t } = useTranslation()
   const actionFor = (key: keyof OverviewSummary) =>
     onViewDetails
       ? {
-          actionLabel: 'View all details',
+          actionLabel: t('employeeOverview.viewAllDetails'),
           onAction: () => {
             onViewDetails(key)
           },
@@ -35,31 +37,31 @@ export default function SummaryCards({
       }}
     >
       <StatCard
-        title="Invalid"
+        title={t('employeeOverview.summary.invalid.title')}
         value={summary.outdated}
-        description="Expired competencies"
-        highlight="Requires attention"
+        description={t('employeeOverview.summary.invalid.description')}
+        highlight={t('employeeOverview.summary.invalid.highlight')}
         tone="danger"
         {...actionFor('outdated')}
       />
       <StatCard
-        title="Expiring soon"
+        title={t('employeeOverview.summary.expiringSoon.title')}
         value={summary.expiring}
-        description="Expiring within 90 days"
+        description={t('employeeOverview.summary.expiringSoon.description')}
         tone="warning"
         {...actionFor('expiring')}
       />
       <StatCard
-        title="Renewals"
+        title={t('employeeOverview.summary.renewals.title')}
         value={summary.renewals}
-        description="Missing Renewals"
+        description={t('employeeOverview.summary.renewals.description')}
         tone="renewal"
         {...actionFor('renewals')}
       />
       <StatCard
-        title="Planned"
+        title={t('employeeOverview.summary.planned.title')}
         value={summary.planned}
-        description="Planned Renewals"
+        description={t('employeeOverview.summary.planned.description')}
         tone="success"
         {...actionFor('planned')}
       />
