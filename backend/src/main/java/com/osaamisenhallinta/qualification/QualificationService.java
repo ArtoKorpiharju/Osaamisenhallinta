@@ -1,5 +1,6 @@
 package com.osaamisenhallinta.qualification;
 
+import com.osaamisenhallinta.competency.CompetencyDto;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,23 +18,33 @@ public class QualificationService {
     this.qualificationRepository = qualificationRepository;
   }
 
-  /** Returns a qualification or reports that the qualification does not exist. */
-  public QualificationDto getQualificationById(Long id) {
-    Qualification qualification = qualificationRepository.findById(id)
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
-
-    QualificationDto response = mapToDto(qualification);
-    return response;
-  }
-
-  public List<QualificationDto> getAllQualifications() {
-    return qualificationRepository.findAllQualifications();
-  }
-
   private QualificationDto mapToDto(Qualification qualification) {
     return new QualificationDto(
       qualification.getId(),
-      qualification.getName());
+      qualification.getName(),
+      qualification.getRequiredCompetencies().stream()
+        .map(c -> new CompetencyDto(
+          c.getId(), 
+          c.getName(), 
+          String.valueOf(c.getType()), 
+          c.getValidityMonths()))
+        .toList()
+    );
+  }
+
+  /** Returns a qualification or reports that the qualification does not exist. */
+  public QualificationDto getQualificationById(Long id) {
+    return qualificationRepository.findById(id)
+        .map(this::mapToDto)
+        .orElseThrow(
+          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
+  }
+  
+  /** Returns all qualifications. */
+  public List<QualificationDto> getAllQualifications() {
+    return qualificationRepository.findAllQualifications()
+      .stream()
+      .map(this::mapToDto)
+      .toList();
   }
 }
