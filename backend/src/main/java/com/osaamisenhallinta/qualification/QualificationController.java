@@ -28,7 +28,7 @@ public class QualificationController {
           @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
           @ApiResponse(
               responseCode = "404",
-              description = "Supervisor not found",
+              description = "Qualification not found",
               content = @Content),
           @ApiResponse(
               responseCode = "500",
