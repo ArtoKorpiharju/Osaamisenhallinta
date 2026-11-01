@@ -1,5 +1,6 @@
 package com.osaamisenhallinta.qualification;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,10 @@ public class QualificationService {
 
     QualificationDto response = mapToDto(qualification);
     return response;
+  }
+
+  public List<QualificationDto> getAllQualifications() {
+    return qualificationRepository.findAllQualifications();
   }
 
   private QualificationDto mapToDto(Qualification qualification) {

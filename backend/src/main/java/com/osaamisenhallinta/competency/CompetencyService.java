@@ -18,25 +18,22 @@ public class CompetencyService {
   }
 
   /** Returns a competency. */
-  public CompetencyDto getCompetencyById(Long id) {
+  /*public CompetencyDto getCompetencyById(Long id) {
     Competency competency = competencyRepository.findById(id)
         .orElseThrow(
           () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
 
     CompetencyDto response = mapToDto(competency);
     return response;
-  }
+  }*/
 
   /** Return all competencies as DTOs. */
   public List<CompetencyDto> getAllCompetencies() {
-    // Find all competency entities
-    List<Competency> competencies = competencyRepository.findAll();
-    return competencies.stream()
-      .map(this::mapToDto)
-      .toList();
+    return competencyRepository.getAllCompetencies();
   }
 
   /** Map to a DTO. */
+  /* 
   private CompetencyDto mapToDto(Competency competency) {
     return new CompetencyDto(
       competency.getId(), 
@@ -44,4 +41,5 @@ public class CompetencyService {
       competency.getType(),
       competency.getValidityMonths());
   }
+      */
 }
