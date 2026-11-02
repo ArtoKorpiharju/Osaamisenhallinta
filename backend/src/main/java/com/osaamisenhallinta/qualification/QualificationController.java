@@ -24,8 +24,7 @@ public class QualificationController {
   @Operation(summary = "Get a qualification by ID")
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = "200", description = "Successful operation"),
-          @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+          @ApiResponse(responseCode = "200", description = "Successful operation"),
           @ApiResponse(
               responseCode = "404",
               description = "Qualification not found",
@@ -40,6 +39,15 @@ public class QualificationController {
     return qualificationService.getQualificationById(id);
   }
 
+  @Operation(summary = "Get all qualifications")
+  @ApiResponses(
+      value = {
+          @ApiResponse(responseCode = "200", description = "Successful operation"),
+          @ApiResponse(
+              responseCode = "500",
+              description = "Internal server error",
+              content = @Content)
+      })
   @GetMapping("/")
   public List<QualificationDto> getAllQualifications() {
     return qualificationService.getAllQualifications();

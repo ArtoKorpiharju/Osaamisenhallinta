@@ -8,4 +8,22 @@ import org.springframework.data.jpa.repository.Query;
 public interface CompetencyRepository extends JpaRepository<Competency, Long> {
   @Query(value = "SELECT * FROM competency", nativeQuery = true)
   List<CompetencyDto> getAllCompetencies();
+
+  @Query(value = """
+      SELECT EXISTS (
+          SELECT 1
+          FROM qualification_requirement
+          WHERE competency_id = :id
+      )
+      """, nativeQuery = true)
+  boolean isUsedByQualification(Long id);
+
+  @Query(value = """
+      SELECT EXISTS (
+          SELECT 1
+          FROM competency c
+          WHERE c.name = :name
+      )
+      """, nativeQuery = true)
+  boolean doesExist(String name);
 }
