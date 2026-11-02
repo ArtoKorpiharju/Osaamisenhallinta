@@ -1,8 +1,10 @@
 package com.osaamisenhallinta.qualification;
 
 import com.osaamisenhallinta.competency.Competency;
+import com.osaamisenhallinta.competency.CompetencyStatus;
 import com.osaamisenhallinta.employee.EmployeeCompetency;
-import com.osaamisenhallinta.qualification.dto.RequirementStatusDto;
+import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
+import com.osaamisenhallinta.renewal.mapper.RenewalPlanMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class QualificationEvaluator {
     boolean expiringSoon = false;
     boolean allRequirementsMet = false;
     QualificationStatus qualificationStatus = QualificationStatus.NOT_QUALIFIED;
-    List<RequirementStatusDto> requirementStatuses = new ArrayList<>();
+    List<EmployeeCompetencyDto> requirementStatuses = new ArrayList<>();
 
     if (requiredCompetencies == null || requiredCompetencies.isEmpty()) {
       return new QualificationEvaluationResult(
@@ -56,34 +58,40 @@ public class QualificationEvaluator {
     LocalDate today = LocalDate.now();
     LocalDate warningDate = today.plusDays(WARNING_DAYS_THRESHOLD);
 
-    // Filter out expired competencies.
-    List<EmployeeCompetency> activeEmployeeCompetencies =
-        employeeCompetencies.stream()
-            .filter(ec -> ec.getExpirationDate() == null || !ec.getExpirationDate().isBefore(today))
-            .toList();
-
     // Loop through each required competency and check if the employee has it and if it's expiring
     // soon.
     for (Competency required : requiredCompetencies) {
       Long requiredId = required.getId();
       LocalDate expDate = null;
-
-      Optional<EmployeeCompetency> match =
-          activeEmployeeCompetencies.stream()
+      Optional<EmployeeCompetency> employeeCompetencyMatch =
+          employeeCompetencies.stream()
               .filter(uc -> uc.getCompetency().getId().equals(requiredId))
               .findFirst();
 
-      boolean isMet = match.isPresent();
+      boolean hasRecord = employeeCompetencyMatch.isPresent();
 
-      if (isMet) {
-        expDate = match.get().getExpirationDate();
-        metRequirementsCount++;
+      if (hasRecord) {
+        expDate = employeeCompetencyMatch.get().getExpirationDate();
+        if (employeeCompetencyMatch.get().getStatus() != CompetencyStatus.EXPIRED) {
+          metRequirementsCount++;
+        }
       }
 
       requirementStatuses.add(
-          new RequirementStatusDto(
-              requiredId, required.getName(), required.getType(), isMet, expDate));
+          new EmployeeCompetencyDto(
+              hasRecord ? employeeCompetencyMatch.get().getId() : null,
+              requiredId,
+              required.getName(),
+              required.getType(),
+              hasRecord ? employeeCompetencyMatch.get().getIssueDate() : null,
+              hasRecord ? expDate : null,
+              hasRecord ? employeeCompetencyMatch.get().getStatus() : CompetencyStatus.MISSING,
+              hasRecord
+                  ? RenewalPlanMapper.mapToDto(employeeCompetencyMatch.get().getRenewalPlan())
+                  : null));
 
+      boolean isMet =
+          hasRecord && employeeCompetencyMatch.get().getStatus() != CompetencyStatus.EXPIRED;
       if (!isMet) {
         continue;
       }
