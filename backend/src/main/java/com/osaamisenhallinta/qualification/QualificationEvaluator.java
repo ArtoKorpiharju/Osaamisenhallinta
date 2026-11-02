@@ -2,11 +2,9 @@ package com.osaamisenhallinta.qualification;
 
 import com.osaamisenhallinta.competency.Competency;
 import com.osaamisenhallinta.competency.CompetencyStatus;
-import com.osaamisenhallinta.competency.CompetencyType;
 import com.osaamisenhallinta.employee.EmployeeCompetency;
 import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
-import com.osaamisenhallinta.employee.mapper.EmployeeCompetencyMapper;
-import com.osaamisenhallinta.renewal.dto.RenewalPlanDto;
+import com.osaamisenhallinta.renewal.mapper.RenewalPlanMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,10 +87,11 @@ public class QualificationEvaluator {
               hasRecord ? expDate : null,
               hasRecord ? employeeCompetencyMatch.get().getStatus() : CompetencyStatus.MISSING,
               hasRecord
-                  ? EmployeeCompetencyMapper.mapRenewalPlanToDto(employeeCompetencyMatch.get().getRenewalPlan())
+                  ? RenewalPlanMapper.mapToDto(employeeCompetencyMatch.get().getRenewalPlan())
                   : null));
 
-      boolean isMet = hasRecord && employeeCompetencyMatch.get().getStatus() != CompetencyStatus.EXPIRED;
+      boolean isMet =
+          hasRecord && employeeCompetencyMatch.get().getStatus() != CompetencyStatus.EXPIRED;
       if (!isMet) {
         continue;
       }
