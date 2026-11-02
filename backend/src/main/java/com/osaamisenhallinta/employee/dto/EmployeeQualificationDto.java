@@ -15,4 +15,4 @@ public record EmployeeQualificationDto(
     QualificationStatus status,
     int totalRequirementsCount,
     int metRequirementsCount,
-    List<RequiredCompetencyDto> requiredCompetencies) {}
+    List<EmployeeCompetencyDto> requiredCompetencies) {}
