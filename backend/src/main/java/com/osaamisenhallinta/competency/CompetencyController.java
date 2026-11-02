@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /** A controller for competency information. */
 @RestController
@@ -43,4 +45,11 @@ public class CompetencyController {
   public List<CompetencyDto> getAllCompetencies() {
     return competencyService.getAllCompetencies();
   }
+
+  /** Creates a new competency and returns the created object as a DTO. */
+  @PostMapping("/")
+  public CompetencyDto createCompetency(String name, CompetencyType type, Integer validityMonths) {
+    return competencyService.createCompetency(name, type, validityMonths);
+  }
+  
 }

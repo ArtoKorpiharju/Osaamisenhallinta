@@ -9,7 +9,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 /** Service for managing competency-related operations. */
 @Service
-@Transactional(readOnly = true)
 public class CompetencyService {
   private final CompetencyRepository competencyRepository;
 
@@ -30,6 +29,18 @@ public class CompetencyService {
   /** Return all competencies as DTOs. */
   public List<CompetencyDto> getAllCompetencies() {
     return competencyRepository.getAllCompetencies();
+  }
+  
+  /** Create a competency. */
+  @Transactional
+  public CompetencyDto createCompetency(
+      String name, CompetencyType type, Integer validityMonths) {
+    // Check if following competency already exists in the system
+
+    // Create a new competency object
+    Competency newCompetency = new Competency(name, type, validityMonths);
+    newCompetency = competencyRepository.save(newCompetency);
+    return mapToDto(newCompetency); 
   }
 
   /** Map to a DTO. */
