@@ -6,10 +6,18 @@ import {
   type Qualification,
   type EmployeeOverview,
   type QualificationStatus,
+  type RenewalPlan,
 } from '../types/overview'
 
 type QualificationStatusApiResponse =
   'NOT_QUALIFIED' | 'EXPIRING_SOON' | 'QUALIFIED'
+
+interface RenewalPlanApiResponse {
+  id: number
+  employeeCompetencyId: number
+  renewalDate: string
+  renewalComment: string | null
+}
 
 interface CompetencyApiResponse {
   employeeCompetencyId: number
@@ -19,6 +27,7 @@ interface CompetencyApiResponse {
   issueDate: string
   expirationDate: string | null
   status: string
+  renewalPlan: RenewalPlanApiResponse | null
 }
 
 interface RequirementApiResponse {
@@ -63,6 +72,22 @@ function isQualificationStatusApiResponse(
   )
 }
 
+// Check if an API response value contains valid renewal plan
+function isRenewalPlanApiResponse(
+  value: unknown
+): value is RenewalPlanApiResponse {
+  if (!isRecord(value)) return false
+
+  return (
+    typeof value.id === 'number' &&
+    Number.isInteger(value.id) &&
+    typeof value.employeeCompetencyId === 'number' &&
+    Number.isInteger(value.employeeCompetencyId) &&
+    typeof value.renewalDate === 'string' &&
+    (typeof value.renewalComment === 'string' || value.renewalComment === null)
+  )
+}
+
 // Check if an API response value contains valid competency.
 function isCompetencyApiResponse(
   value: unknown
@@ -79,7 +104,8 @@ function isCompetencyApiResponse(
     typeof value.issueDate === 'string' &&
     (typeof value.expirationDate === 'string' ||
       value.expirationDate === null) &&
-    typeof value.status === 'string'
+    typeof value.status === 'string' &&
+    (value.renewalPlan === null || isRenewalPlanApiResponse(value.renewalPlan))
   )
 }
 
@@ -124,6 +150,8 @@ function isQualificationApiResponse(
   )
 }
 
+// Maps a qualification status from the API response to the frontend
+// QualificationStatus type.
 function mapQualificationStatus(
   status: QualificationStatusApiResponse
 ): QualificationStatus {
@@ -134,6 +162,16 @@ function mapQualificationStatus(
       return 'expiringSoon'
     case 'QUALIFIED':
       return 'qualified'
+  }
+}
+
+// Maps a renewal plan from the API response to the frontend RenewalPlan type.
+function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
+  return {
+    id: value.id,
+    employeeCompetencyId: value.employeeCompetencyId,
+    renewalDate: value.renewalDate,
+    renewalComment: value.renewalComment,
   }
 }
 
@@ -148,6 +186,8 @@ function mapCompetency(value: CompetencyApiResponse): Competency {
     issueDate: value.issueDate,
     expirationDate: value.expirationDate,
     status: value.status,
+    renewalPlan:
+      value.renewalPlan === null ? null : mapRenewalPlan(value.renewalPlan),
   }
 }
 

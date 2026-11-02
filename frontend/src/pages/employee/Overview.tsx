@@ -24,65 +24,9 @@ const paths = {
 const detailPaths: Record<keyof OverviewSummary, string> = {
   outdated: paths.competencies,
   expiring: paths.competencies,
-  renewals: paths.renewals,
-  planned: paths.renewals,
+  missingRenewals: paths.renewals,
+  plannedRenewals: paths.renewals,
 }
-
-// Replace with API calls
-const summary: OverviewSummary = {
-  outdated: 2,
-  expiring: 6,
-  renewals: 4,
-  planned: 3,
-}
-
-// Replace with API calls
-const actionItems: ActionRequiredItem[] = [
-  {
-    id: 'a1',
-    title: 'Occupational Safety Card OSC',
-    dueDate: '2026-06-15',
-    status: { label: 'Expired', tone: 'danger' },
-    actions: [
-      { id: 'plan-renewal', label: 'Plan renewal' },
-      { id: 'upload-certificate', label: 'Upload renewal certificate' },
-    ],
-    note: { text: 'No renewal planned', tone: 'danger' },
-  },
-  {
-    id: 'a2',
-    title: 'FRC First Aid EA 1',
-    dueDate: '2026-10-21',
-    status: { label: 'Expiring soon', tone: 'warning' },
-    actions: [
-      { id: 'plan-renewal', label: 'Plan renewal' },
-      { id: 'upload-certificate', label: 'Upload renewal certificate' },
-    ],
-    note: { text: 'No renewal planned', tone: 'danger' },
-  },
-  {
-    id: 'a3',
-    title: 'Forklift Operator Certificate',
-    dueDate: '2026-10-21',
-    status: { label: 'Expiring soon', tone: 'warning' },
-    actions: [
-      { id: 'plan-renewal', label: 'Plan renewal' },
-      { id: 'upload-certificate', label: 'Upload renewal certificate' },
-    ],
-    note: { text: 'No renewal planned', tone: 'info' },
-  },
-  {
-    id: 'a4',
-    title: 'Fire Safety Training',
-    dueDate: '2026-10-15',
-    status: { label: 'Expired', tone: 'danger' },
-    actions: [
-      { id: 'plan-renewal', label: 'Plan renewal' },
-      { id: 'upload-certificate', label: 'Upload renewal certificate' },
-    ],
-    note: { text: 'No renewal planned', tone: 'info' },
-  },
-]
 
 export default function EmployeeOverview() {
   const navigate = useNavigate()
@@ -92,6 +36,98 @@ export default function EmployeeOverview() {
   const [employeeOverview, setEmployeeOverview] = useState<EmployeeOverview>()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const competencies = employeeOverview?.competencies ?? []
+  const requirements =
+    employeeOverview?.qualifications.flatMap((q) => q.requirements) ?? []
+
+  // Count the number of requirements that are met and not met.
+  function getRequirementsStatusCounts(): Record<string, number> {
+    const counts: Record<string, number> = {}
+
+    for (const requirement of requirements) {
+      const status = requirement.isMet ? 'met' : 'notMet'
+      counts[status] = (counts[status] ?? 0) + 1
+    }
+
+    return counts
+  }
+
+  const requirementStatusCounts = getRequirementsStatusCounts()
+
+  // Get summary-card counts from the employee's competencies.
+  // Missing renewals count only expired or expiring competencies without a plan.
+  // Planned renewals count any competency that has a plan.
+  const summary: OverviewSummary = competencies.reduce(
+    (counts, competency) => {
+      if (requirementStatusCounts.notMet > 0) {
+        counts.outdated = requirementStatusCounts.notMet
+      }
+
+      if (competency.status === 'EXPIRING_SOON') {
+        counts.expiring++
+      }
+
+      if (
+        (competency.status === 'EXPIRED' ||
+          competency.status === 'EXPIRING_SOON') &&
+        competency.renewalPlan === null
+      ) {
+        counts.missingRenewals++
+      }
+
+      if (competency.renewalPlan !== null) {
+        counts.plannedRenewals++
+      }
+
+      return counts
+    },
+    { outdated: 0, expiring: 0, missingRenewals: 0, plannedRenewals: 0 }
+  )
+
+  // Create action cards for expired or expiring soon competencies.
+  // Show renewal details when a plan exists; otherwise offer renewal actions.
+  const actionItems: ActionRequiredItem[] = competencies.flatMap(
+    (competency) => {
+      const isInvalid = competency.status === 'EXPIRED'
+      const isExpiringSoon = competency.status === 'EXPIRING_SOON'
+
+      // Only these statuses need attention, and the card needs an expiration date.
+      if (
+        (!isInvalid && !isExpiringSoon) ||
+        competency.expirationDate === null
+      ) {
+        return []
+      }
+
+      const plan = competency.renewalPlan
+
+      const item: ActionRequiredItem = {
+        id: String(competency.id),
+        title: competency.name,
+        dueDate: competency.expirationDate,
+        status: isInvalid
+          ? { label: 'Invalid', tone: 'danger' }
+          : { label: 'Expiring soon', tone: 'warning' },
+        actions: plan
+          ? [{ id: 'view-renewal-plan', label: 'View renewal plan' }]
+          : [
+              { id: 'plan-renewal', label: 'Plan renewal' },
+              { id: 'upload-certificate', label: 'Upload renewal certificate' },
+            ],
+        note: plan
+          ? {
+              text:
+                plan.renewalComment ??
+                `Renewal planned for ${plan.renewalDate}`,
+              tone: 'info',
+            }
+          : { text: 'No renewal planned', tone: 'danger' },
+      }
+
+      return [item]
+    }
+  )
 
   useEffect(() => {
     if (userId === undefined) return

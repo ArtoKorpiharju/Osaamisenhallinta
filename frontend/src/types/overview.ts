@@ -2,6 +2,13 @@ import { type Tone } from '../config/tones'
 
 export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
 
+export interface RenewalPlan {
+  id: number
+  employeeCompetencyId: number
+  renewalDate: string
+  renewalComment: string | null
+}
+
 export interface Competency {
   id: number // id = employeeCompetencyId in backend
   competencyId: number
@@ -10,6 +17,7 @@ export interface Competency {
   issueDate: string
   expirationDate: string | null
   status: string
+  renewalPlan: RenewalPlan | null
 }
 
 export interface Requirement {
@@ -54,8 +62,8 @@ export interface SupervisorOverview {
 export interface OverviewSummary {
   outdated: number
   expiring: number
-  renewals: number
-  planned: number
+  missingRenewals: number
+  plannedRenewals: number
 }
 
 export interface ActionRequiredItem {
