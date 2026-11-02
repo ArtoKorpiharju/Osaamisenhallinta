@@ -9,6 +9,7 @@ import com.osaamisenhallinta.qualification.QualificationEvaluationResult;
 import com.osaamisenhallinta.qualification.QualificationEvaluator;
 import com.osaamisenhallinta.user.User;
 import com.osaamisenhallinta.user.UserRepository;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -38,34 +39,69 @@ public class EmployeeService {
   public EmployeeOverviewDto getEmployeeById(Long id) {
     User employee = userRepository.getEmployeeByIdOrThrow(id);
 
-    return mapEmployeeOverviewToDto(employee);
+    // To save development time, filter is done here in service. If needed in future, filter in
+    // repository instead to increase performace.
+    List<EmployeeQualification> dashboardQualifications =
+        employee.getEmployeeQualifications().stream()
+            .filter(q -> q.isCritical() || q.isFavourite())
+            .toList();
+
+    List<EmployeeCompetency> employeeCompetencies = List.copyOf(employee.getEmployeeCompetencies());
+
+    return mapEmployeeOverviewToDto(employee, dashboardQualifications, employeeCompetencies);
   }
 
-  private EmployeeOverviewDto mapEmployeeOverviewToDto(User employee) {
-    List<EmployeeCompetencyDto> employeeCompetenciesDto =
-        employee.getEmployeeCompetencies().stream()
-            .map(assignment -> EmployeeCompetencyMapper.mapToDto(assignment))
-            .toList();
+  /**
+   * Returns a list of qualifications for an employee by their ID.
+   *
+   * @param id The ID of the employee whose qualifications are to be retrieved.
+   * @return A list of EmployeeQualificationDto containing the employee's qualifications.
+   * @throws ResponseStatusException if the employee is not found.
+   */
+  public List<EmployeeQualificationDto> getEmployeeQualifications(Long id) {
+    User employee = userRepository.getEmployeeByIdOrThrow(id);
+    Set<EmployeeQualification> employeeQualifications = employee.getEmployeeQualifications();
+    Set<EmployeeCompetency> employeeCompetencies = employee.getEmployeeCompetencies();
+    return mapEmployeeQualificationsToDto(employeeQualifications, employeeCompetencies);
+  }
 
-    List<EmployeeQualificationDto> employeeQualificationsDto =
-        employee.getEmployeeQualifications().stream()
-            .map(
-                assignment ->
-                    mapEmployeeQualificationToDto(assignment, employee.getEmployeeCompetencies()))
-            .toList();
+  /**
+   * Returns a list of competencies for an employee by their ID.
+   *
+   * @param id The ID of the employee whose competencies are to be retrieved.
+   * @return A list of EmployeeCompetencyDto containing the employee's competencies.
+   * @throws ResponseStatusException if the employee is not found.
+   */
+  public List<EmployeeCompetencyDto> getEmployeeCompetencies(Long id) {
+    User employee = userRepository.getEmployeeByIdOrThrow(id);
+    return employee.getEmployeeCompetencies().stream()
+        .map(EmployeeCompetencyMapper::mapToDto)
+        .toList();
+  }
 
+  private EmployeeOverviewDto mapEmployeeOverviewToDto(
+      User employee,
+      List<EmployeeQualification> dashboardQualifications,
+      List<EmployeeCompetency> employeeCompetencies) {
     return new EmployeeOverviewDto(
         employee.getId(),
         employee.getFirstName(),
         employee.getLastName(),
         employee.getEmail(),
         employee.getRole(),
-        employeeCompetenciesDto,
-        employeeQualificationsDto);
+        mapEmployeeQualificationsToDto(dashboardQualifications, employeeCompetencies));
+  }
+
+  private List<EmployeeQualificationDto> mapEmployeeQualificationsToDto(
+      Collection<EmployeeQualification> qualifications,
+      Collection<EmployeeCompetency> competencies) {
+    return qualifications.stream()
+        .map(assignment -> mapEmployeeQualificationToDto(assignment, competencies))
+        .toList();
   }
 
   private EmployeeQualificationDto mapEmployeeQualificationToDto(
-      EmployeeQualification assignment, Set<EmployeeCompetency> employeeCompetencies) {
+      EmployeeQualification assignment, Collection<EmployeeCompetency> employeeCompetencies) {
     Qualification qualification = assignment.getQualification();
 
     QualificationEvaluationResult qualificationEvaluationResult =

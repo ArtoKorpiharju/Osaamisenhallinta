@@ -1,8 +1,10 @@
 package com.osaamisenhallinta.qualification;
 
 import com.osaamisenhallinta.competency.Competency;
+import com.osaamisenhallinta.competency.CompetencyStatus;
 import com.osaamisenhallinta.employee.EmployeeCompetency;
-import com.osaamisenhallinta.qualification.dto.RequirementStatusDto;
+import com.osaamisenhallinta.employee.dto.RequiredCompetencyDto;
+import com.osaamisenhallinta.employee.mapper.EmployeeCompetencyMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class QualificationEvaluator {
     boolean expiringSoon = false;
     boolean allRequirementsMet = false;
     QualificationStatus qualificationStatus = QualificationStatus.NOT_QUALIFIED;
-    List<RequirementStatusDto> requirementStatuses = new ArrayList<>();
+    List<RequiredCompetencyDto> requirementStatuses = new ArrayList<>();
 
     if (requiredCompetencies == null || requiredCompetencies.isEmpty()) {
       return new QualificationEvaluationResult(
@@ -81,8 +83,14 @@ public class QualificationEvaluator {
       }
 
       requirementStatuses.add(
-          new RequirementStatusDto(
-              requiredId, required.getName(), required.getType(), isMet, expDate));
+          new RequiredCompetencyDto(
+              requiredId,
+              required.getName(),
+              isMet ? match.get().getStatus() : CompetencyStatus.MISSING,
+              isMet ? expDate : null,
+              isMet
+                  ? EmployeeCompetencyMapper.mapRenewalPlanToDto(match.get().getRenewalPlan())
+                  : null));
 
       if (!isMet) {
         continue;

@@ -27,10 +27,10 @@ public class EmployeeCompetencyMapper {
         entity.getIssueDate(),
         entity.getExpirationDate(),
         entity.getStatus(),
-        mapToRenewalPlanDto(entity.getRenewalPlan()));
+        mapRenewalPlanToDto(entity.getRenewalPlan()));
   }
 
-  private static RenewalPlanDto mapToRenewalPlanDto(RenewalPlan plan) {
+  public static RenewalPlanDto mapRenewalPlanToDto(RenewalPlan plan) {
     if (plan == null) {
       return null;
     }

@@ -1,6 +1,6 @@
 package com.osaamisenhallinta.qualification;
 
-import com.osaamisenhallinta.qualification.dto.RequirementStatusDto;
+import com.osaamisenhallinta.employee.dto.RequiredCompetencyDto;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,4 +10,4 @@ public record QualificationEvaluationResult(
     LocalDate validUntil,
     int totalRequirementsCount,
     int metRequirementsCount,
-    List<RequirementStatusDto> requirementStatuses) {}
+    List<RequiredCompetencyDto> requirementStatuses) {}
