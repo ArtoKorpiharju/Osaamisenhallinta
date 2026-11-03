@@ -127,6 +127,7 @@ export default function EmployeeOverview() {
       .catch((err: unknown) => {
         setError(
           getApiErrorMessage(err, 'Could not load employee overview data', {
+            400: 'Bad request for employee overview data',
             404: 'Employee overview data could not be found',
           })
         )
