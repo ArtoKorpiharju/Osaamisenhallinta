@@ -55,8 +55,24 @@ docker compose up -d db
 
 2. Run Maven tests using the local spring boot properties:
 
+On Linux/macOS (MacOS not tested):
+
 ```bash
-.\mvnw.cmd test "-Dspring.profiles.active=local"
+./mvnw clean test "-Dspring.profiles.active=local"
+```
+
+On Windows:
+
+Using git Bash:
+
+```bash
+./mvnw clean test "-Dspring.profiles.active=local"
+```
+
+Or cmd / Powershell:
+
+```powershell
+.\mvnw.cmd clean test "-Dspring.profiles.active=local"
 ```
 
 3. See test results in terminal.
