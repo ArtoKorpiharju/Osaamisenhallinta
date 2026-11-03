@@ -11,7 +11,7 @@ import {
   type OverviewSummary,
 } from '../../types/overview'
 import { tones } from '../../config/tones'
-import { fetchEmployeeOverview } from '../../services/employee'
+import { fetchEmployeeOverview } from '../../services/employeeOverview'
 import { getApiErrorMessage } from '../../services/api'
 
 const paths = {
@@ -37,40 +37,27 @@ export default function EmployeeOverview() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const competencies = employeeOverview?.competencies ?? []
-  const requirements =
-    employeeOverview?.qualifications.flatMap((q) => q.requirements) ?? []
-
-  // Count the number of requirements that are met and not met.
-  function getRequirementsStatusCounts(): Record<string, number> {
-    const counts: Record<string, number> = {}
-
-    for (const requirement of requirements) {
-      const status = requirement.isMet ? 'met' : 'notMet'
-      counts[status] = (counts[status] ?? 0) + 1
-    }
-
-    return counts
-  }
-
-  const requirementStatusCounts = getRequirementsStatusCounts()
+  const qualifications = employeeOverview?.qualifications ?? []
+  const competencies = qualifications.flatMap(
+    (qualification) => qualification.requiredCompetencies
+  )
 
   // Get summary-card counts from the employee's competencies.
   // Missing renewals count only expired or expiring competencies without a plan.
   // Planned renewals count any competency that has a plan.
   const summary: OverviewSummary = competencies.reduce(
     (counts, competency) => {
-      if (requirementStatusCounts.notMet > 0) {
-        counts.outdated = requirementStatusCounts.notMet
+      if (competency.status === 'expired' || competency.status === 'missing') {
+        counts.outdated++
       }
 
-      if (competency.status === 'EXPIRING_SOON') {
+      if (competency.status === 'expiringSoon') {
         counts.expiring++
       }
 
       if (
-        (competency.status === 'EXPIRED' ||
-          competency.status === 'EXPIRING_SOON') &&
+        (competency.status === 'expired' ||
+          competency.status === 'expiringSoon') &&
         competency.renewalPlan === null
       ) {
         counts.missingRenewals++
@@ -89,8 +76,8 @@ export default function EmployeeOverview() {
   // Show renewal details when a plan exists; otherwise offer renewal actions.
   const actionItems: ActionRequiredItem[] = competencies.flatMap(
     (competency) => {
-      const isInvalid = competency.status === 'EXPIRED'
-      const isExpiringSoon = competency.status === 'EXPIRING_SOON'
+      const isInvalid = competency.status === 'expired'
+      const isExpiringSoon = competency.status === 'expiringSoon'
 
       // Only these statuses need attention, and the card needs an expiration date.
       if (
