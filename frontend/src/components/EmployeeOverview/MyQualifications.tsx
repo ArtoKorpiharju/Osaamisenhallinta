@@ -8,15 +8,15 @@ import Panel from '../Panel'
 import StatusChip from '../StatusChip'
 import { type Tone, tones } from '../../config/tones'
 import {
-  type Qualification,
+  type EmployeeQualification,
   type QualificationStatus,
 } from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'
 
 interface MyQualificationsProps {
-  qualifications: readonly Qualification[]
+  qualifications: readonly EmployeeQualification[]
   onViewAll?: () => void
-  onQualificationClick?: (qualification: Qualification) => void
+  onQualificationClick?: (qualification: EmployeeQualification) => void
 }
 
 const statusDisplay: Record<
@@ -34,7 +34,7 @@ const statusOrder: Record<QualificationStatus, number> = {
   qualified: 2,
 }
 
-const columns: DataTableColumn<Qualification>[] = [
+const columns: DataTableColumn<EmployeeQualification>[] = [
   {
     id: 'name',
     label: 'Qualification',
@@ -168,7 +168,7 @@ export default function MyQualifications({
             rows={[...qualifications].sort(
               (a, b) => statusOrder[a.status] - statusOrder[b.status]
             )}
-            getRowId={(qualification) => qualification.id}
+            getRowId={(qualification) => qualification.employeeQualificationId}
             onRowClick={onQualificationClick}
           />
         </Box>

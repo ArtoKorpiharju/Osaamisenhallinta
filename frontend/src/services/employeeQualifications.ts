@@ -1,8 +1,8 @@
 import { fetchApiData } from './api'
 import { isRecord } from '../utils/validators'
 import {
-  type Competency,
-  type Qualification,
+  type EmployeeCompetency,
+  type EmployeeQualification,
   type QualificationStatus,
   type RenewalPlan,
   type CompetencyStatus,
@@ -173,11 +173,11 @@ function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
   }
 }
 
-// Maps a competency from the API response to the frontend Competency type.
+// Maps a competency from the API response to the frontend EmployeeCompetency type.
 // Renames API fields to match the frontend model.
-function mapCompetency(value: CompetencyApiResponse): Competency {
+function mapCompetency(value: CompetencyApiResponse): EmployeeCompetency {
   return {
-    id: value.employeeCompetencyId,
+    employeeCompetencyId: value.employeeCompetencyId,
     competencyId: value.competencyId,
     name: value.competencyName,
     type: value.competencyType,
@@ -192,9 +192,11 @@ function mapCompetency(value: CompetencyApiResponse): Competency {
 // Maps a qualification from the API response to the frontend Qualification type.
 // Renames API fields to match the frontend model and provides default values
 // for fields that the API does not currently return.
-function mapQualification(value: QualificationApiResponse): Qualification {
+function mapQualification(
+  value: QualificationApiResponse
+): EmployeeQualification {
   return {
-    id: value.employeeQualificationId,
+    employeeQualificationId: value.employeeQualificationId,
     qualificationId: value.qualificationId,
     name: value.qualificationName,
     isFavourite: value.favourite,
@@ -210,7 +212,7 @@ function mapQualification(value: QualificationApiResponse): Qualification {
 // Fetch the employee qualifications from the backend API.
 export async function fetchEmployeeQualifications(
   id: number
-): Promise<Qualification[]> {
+): Promise<EmployeeQualification[]> {
   const data = await fetchApiData(`/api/employees/${String(id)}/qualifications`)
 
   if (!Array.isArray(data) || !data.every(isQualificationApiResponse)) {

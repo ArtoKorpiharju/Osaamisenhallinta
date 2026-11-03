@@ -11,8 +11,8 @@ export interface RenewalPlan {
   renewalComment: string | null
 }
 
-export interface Competency {
-  id: number | null // id = employeeCompetencyId in backend
+export interface EmployeeCompetency {
+  employeeCompetencyId: number | null
   competencyId: number
   name: string
   type: string
@@ -30,8 +30,8 @@ export interface Requirement {
   expirationDate: string | null
 }
 
-export interface Qualification {
-  id: number // id = employeeQualificationId in backend
+export interface EmployeeQualification {
+  employeeQualificationId: number
   qualificationId: number
   name: string
   isFavourite: boolean // Star symbol in table if favourite
@@ -40,7 +40,7 @@ export interface Qualification {
   status: QualificationStatus
   requirementsTotal: number
   requirementsMet: number
-  requiredCompetencies: Competency[]
+  requiredCompetencies: EmployeeCompetency[]
 }
 
 export interface EmployeeOverview {
@@ -49,7 +49,7 @@ export interface EmployeeOverview {
   lastName: string
   email: string
   role: 'EMPLOYEE'
-  qualifications: Qualification[]
+  qualifications: EmployeeQualification[]
 }
 
 export interface SupervisorOverview {

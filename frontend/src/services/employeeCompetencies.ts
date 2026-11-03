@@ -1,7 +1,7 @@
 import { fetchApiData } from './api'
 import { isRecord } from '../utils/validators'
 import {
-  type Competency,
+  type EmployeeCompetency,
   type RenewalPlan,
   type CompetencyStatus,
 } from '../types/overview'
@@ -104,11 +104,11 @@ function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
   }
 }
 
-// Maps a competency from the API response to the frontend Competency type.
+// Maps a competency from the API response to the frontend EmployeeCompetency type.
 // Renames API fields to match the frontend model.
-function mapCompetency(value: CompetencyApiResponse): Competency {
+function mapCompetency(value: CompetencyApiResponse): EmployeeCompetency {
   return {
-    id: value.employeeCompetencyId,
+    employeeCompetencyId: value.employeeCompetencyId,
     competencyId: value.competencyId,
     name: value.competencyName,
     type: value.competencyType,
@@ -123,7 +123,7 @@ function mapCompetency(value: CompetencyApiResponse): Competency {
 // Fetch the employee competencies from the backend API.
 export async function fetchEmployeeCompetencies(
   id: number
-): Promise<Competency[]> {
+): Promise<EmployeeCompetency[]> {
   const data = await fetchApiData(`/api/employees/${String(id)}/competencies`)
 
   if (!Array.isArray(data) || !data.every(isCompetencyApiResponse)) {

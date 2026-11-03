@@ -90,7 +90,7 @@ export default function EmployeeOverview() {
       const plan = competency.renewalPlan
 
       const item: ActionRequiredItem = {
-        id: String(competency.id),
+        id: String(competency.employeeCompetencyId),
         title: competency.name,
         dueDate: competency.expirationDate,
         status: isInvalid
@@ -174,7 +174,9 @@ export default function EmployeeOverview() {
             void navigate(paths.qualifications)
           }}
           onQualificationClick={(qualification) => {
-            void navigate(`${paths.qualifications}/${String(qualification.id)}`)
+            void navigate(
+              `${paths.qualifications}/${String(qualification.employeeQualificationId)}`
+            )
           }}
         />
         <ActionRequired
