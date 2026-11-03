@@ -1,6 +1,6 @@
-import { fetchApiData } from './api'
-import { isStringArray, isRecord } from '../utils/validators'
-import { type SupervisorOverview } from '../types/overview'
+import { fetchApiData } from '../api'
+import { isStringArray, isRecord } from '../../utils/validators'
+import { type SupervisorOverview } from '../../types/overview'
 
 interface SupervisorOverviewApiResponse {
   id: number

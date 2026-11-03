@@ -9,9 +9,10 @@ import {
   type EmployeeOverview,
   type ActionRequiredItem,
   type OverviewSummary,
+  type EmployeeCompetency,
 } from '../../types/overview'
 import { tones } from '../../config/tones'
-import { fetchEmployeeOverview } from '../../services/employeeOverview'
+import { fetchEmployeeOverview } from '../../services/employee/employeeOverview'
 import { getApiErrorMessage } from '../../services/api'
 
 const paths = {
@@ -28,24 +29,11 @@ const detailPaths: Record<keyof OverviewSummary, string> = {
   plannedRenewals: paths.renewals,
 }
 
-export default function EmployeeOverview() {
-  const navigate = useNavigate()
-
-  const { userId } = useOutletContext<{ userId: number | undefined }>()
-
-  const [employeeOverview, setEmployeeOverview] = useState<EmployeeOverview>()
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  const qualifications = employeeOverview?.qualifications ?? []
-  const competencies = qualifications.flatMap(
-    (qualification) => qualification.requiredCompetencies
-  )
-
-  // Get summary-card counts from the employee's competencies.
-  // Missing renewals count only expired or expiring competencies without a plan.
-  // Planned renewals count any competency that has a plan.
-  const summary: OverviewSummary = competencies.reduce(
+// Get summary-card counts from the employee's competencies.
+// Missing renewals count only expired or expiring competencies without a plan.
+// Planned renewals count any competency that has a plan.
+function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
+  return competencies.reduce(
     (counts, competency) => {
       if (competency.status === 'expired' || competency.status === 'missing') {
         counts.outdated++
@@ -66,55 +54,70 @@ export default function EmployeeOverview() {
       if (competency.renewalPlan !== null) {
         counts.plannedRenewals++
       }
-
       return counts
     },
     { outdated: 0, expiring: 0, missingRenewals: 0, plannedRenewals: 0 }
   )
+}
 
-  // Create action cards for expired or expiring soon competencies.
-  // Show renewal details when a plan exists; otherwise offer renewal actions.
-  const actionItems: ActionRequiredItem[] = competencies.flatMap(
-    (competency) => {
-      const isInvalid = competency.status === 'expired'
-      const isExpiringSoon = competency.status === 'expiringSoon'
+// Create action cards for expired or expiring soon competencies.
+// Show renewal details when a plan exists; otherwise offer renewal actions.
+function createActionItems(
+  competencies: EmployeeCompetency[]
+): ActionRequiredItem[] {
+  return competencies.flatMap((competency) => {
+    const isInvalid = competency.status === 'expired'
+    const isExpiringSoon = competency.status === 'expiringSoon'
 
-      // Only these statuses need attention, and the card needs an expiration date.
-      if (
-        (!isInvalid && !isExpiringSoon) ||
-        competency.expirationDate === null
-      ) {
-        return []
-      }
-
-      const plan = competency.renewalPlan
-
-      const item: ActionRequiredItem = {
-        id: String(competency.employeeCompetencyId),
-        title: competency.name,
-        dueDate: competency.expirationDate,
-        status: isInvalid
-          ? { label: 'Invalid', tone: 'danger' }
-          : { label: 'Expiring soon', tone: 'warning' },
-        actions: plan
-          ? [{ id: 'view-renewal-plan', label: 'View renewal plan' }]
-          : [
-              { id: 'plan-renewal', label: 'Plan renewal' },
-              { id: 'upload-certificate', label: 'Upload renewal certificate' },
-            ],
-        note: plan
-          ? {
-              text:
-                plan.renewalComment ??
-                `Renewal planned for ${plan.renewalDate}`,
-              tone: 'info',
-            }
-          : { text: 'No renewal planned', tone: 'danger' },
-      }
-
-      return [item]
+    // Only these statuses need attention, and the card needs an expiration date.
+    if ((!isInvalid && !isExpiringSoon) || competency.expirationDate === null) {
+      return []
     }
+
+    const plan = competency.renewalPlan
+
+    const item: ActionRequiredItem = {
+      id: String(competency.employeeCompetencyId),
+      title: competency.name,
+      dueDate: competency.expirationDate,
+      status: isInvalid
+        ? { label: 'Invalid', tone: 'danger' }
+        : { label: 'Expiring soon', tone: 'warning' },
+      actions: plan
+        ? [{ id: 'view-renewal-plan', label: 'View renewal plan' }]
+        : [
+            { id: 'plan-renewal', label: 'Plan renewal' },
+            { id: 'upload-certificate', label: 'Upload renewal certificate' },
+          ],
+      note: plan
+        ? {
+            text:
+              plan.renewalComment ?? `Renewal planned for ${plan.renewalDate}`,
+            tone: 'info',
+          }
+        : { text: 'No renewal planned', tone: 'danger' },
+    }
+
+    return [item]
+  })
+}
+
+export default function EmployeeOverview() {
+  const navigate = useNavigate()
+
+  const { userId } = useOutletContext<{ userId: number | undefined }>()
+
+  const [employeeOverview, setEmployeeOverview] = useState<EmployeeOverview>()
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  const qualifications = employeeOverview?.qualifications ?? []
+  const competencies = qualifications.flatMap(
+    (qualification) => qualification.requiredCompetencies
   )
+
+  const summary = calculateSummary(competencies)
+  const actionItems = createActionItems(competencies)
 
   useEffect(() => {
     if (userId === undefined) return

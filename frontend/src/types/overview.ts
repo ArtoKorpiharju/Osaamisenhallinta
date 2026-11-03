@@ -4,6 +4,9 @@ export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
 
 export type CompetencyStatus = 'expired' | 'missing' | 'expiringSoon' | 'valid'
 
+export type CompetencyType =
+  'training' | 'license' | 'certification' | 'skill' | 'other'
+
 export interface RenewalPlan {
   id: number
   employeeCompetencyId: number
@@ -15,10 +18,10 @@ export interface EmployeeCompetency {
   employeeCompetencyId: number | null
   competencyId: number
   name: string
-  type: string
+  type: CompetencyType
   issueDate: string | null
   expirationDate: string | null
-  status: string
+  status: CompetencyStatus
   renewalPlan: RenewalPlan | null
 }
 

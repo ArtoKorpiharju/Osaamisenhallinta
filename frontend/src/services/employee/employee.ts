@@ -1,19 +1,21 @@
-import { fetchApiData } from './api'
-import { isRecord } from '../utils/validators'
+import { isIsoDate, isRecord } from '../../utils/validators'
 import {
   type EmployeeCompetency,
   type EmployeeQualification,
-  type EmployeeOverview,
   type QualificationStatus,
   type RenewalPlan,
   type CompetencyStatus,
-} from '../types/overview'
+  type CompetencyType,
+} from '../../types/overview'
 
 type QualificationStatusApiResponse =
   'NOT_QUALIFIED' | 'EXPIRING_SOON' | 'QUALIFIED'
 
 type CompetencyStatusApiResponse =
   'EXPIRED' | 'MISSING' | 'EXPIRING_SOON' | 'VALID'
+
+type CompetencyTypeApiResponse =
+  'TRAINING' | 'LICENSE' | 'CERTIFICATION' | 'SKILL' | 'OTHER'
 
 interface RenewalPlanApiResponse {
   id: number
@@ -26,14 +28,14 @@ interface CompetencyApiResponse {
   employeeCompetencyId: number | null
   competencyId: number
   competencyName: string
-  competencyType: string
+  competencyType: CompetencyTypeApiResponse
   issueDate: string | null
   expirationDate: string | null
   status: CompetencyStatusApiResponse
   renewalPlan: RenewalPlanApiResponse | null
 }
 
-interface QualificationApiResponse {
+export interface QualificationApiResponse {
   employeeQualificationId: number
   qualificationId: number
   qualificationName: string
@@ -44,15 +46,6 @@ interface QualificationApiResponse {
   totalRequirementsCount: number
   metRequirementsCount: number
   requiredCompetencies: CompetencyApiResponse[]
-}
-
-interface EmployeeOverviewApiResponse {
-  id: number
-  firstName: string
-  lastName: string
-  email: string
-  role: 'EMPLOYEE'
-  qualifications: QualificationApiResponse[]
 }
 
 // Check if an API response value contains valid qualification status.
@@ -78,6 +71,18 @@ function isCompetencyStatusApiResponse(
   )
 }
 
+function isCompetencyTypeApiResponse(
+  value: unknown
+): value is CompetencyTypeApiResponse {
+  return (
+    value === 'TRAINING' ||
+    value === 'LICENSE' ||
+    value === 'CERTIFICATION' ||
+    value === 'SKILL' ||
+    value === 'OTHER'
+  )
+}
+
 // Check if an API response value contains valid renewal plan
 function isRenewalPlanApiResponse(
   value: unknown
@@ -90,12 +95,13 @@ function isRenewalPlanApiResponse(
     typeof value.employeeCompetencyId === 'number' &&
     Number.isInteger(value.employeeCompetencyId) &&
     typeof value.renewalDate === 'string' &&
+    isIsoDate(value.renewalDate) &&
     (typeof value.renewalComment === 'string' || value.renewalComment === null)
   )
 }
 
 // Check if an API response value contains valid competency.
-function isCompetencyApiResponse(
+export function isCompetencyApiResponse(
   value: unknown
 ): value is CompetencyApiResponse {
   if (!isRecord(value)) return false
@@ -107,17 +113,16 @@ function isCompetencyApiResponse(
     typeof value.competencyId === 'number' &&
     Number.isInteger(value.competencyId) &&
     typeof value.competencyName === 'string' &&
-    typeof value.competencyType === 'string' &&
-    (typeof value.issueDate === 'string' || value.issueDate === null) &&
-    (typeof value.expirationDate === 'string' ||
-      value.expirationDate === null) &&
+    isCompetencyTypeApiResponse(value.competencyType) &&
+    (value.issueDate === null || isIsoDate(value.issueDate)) &&
+    (value.expirationDate === null || isIsoDate(value.expirationDate)) &&
     isCompetencyStatusApiResponse(value.status) &&
     (value.renewalPlan === null || isRenewalPlanApiResponse(value.renewalPlan))
   )
 }
 
 // Check if an API response value contains valid qualification.
-function isQualificationApiResponse(
+export function isQualificationApiResponse(
   value: unknown
 ): value is QualificationApiResponse {
   if (!isRecord(value)) return false
@@ -130,7 +135,7 @@ function isQualificationApiResponse(
     typeof value.qualificationName === 'string' &&
     typeof value.favourite === 'boolean' &&
     typeof value.critical === 'boolean' &&
-    (typeof value.validUntil === 'string' || value.validUntil === null) &&
+    (value.validUntil === null || isIsoDate(value.validUntil)) &&
     isQualificationStatusApiResponse(value.status) &&
     typeof value.totalRequirementsCount === 'number' &&
     Number.isInteger(value.totalRequirementsCount) &&
@@ -173,6 +178,21 @@ function mapCompetencyStatus(
   }
 }
 
+function mapCompetencyType(type: CompetencyTypeApiResponse): CompetencyType {
+  switch (type) {
+    case 'TRAINING':
+      return 'training'
+    case 'LICENSE':
+      return 'license'
+    case 'CERTIFICATION':
+      return 'certification'
+    case 'SKILL':
+      return 'skill'
+    case 'OTHER':
+      return 'other'
+  }
+}
+
 // Maps a renewal plan from the API response to the frontend RenewalPlan type.
 function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
   return {
@@ -185,12 +205,14 @@ function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
 
 // Maps a competency from the API response to the frontend EmployeeCompetency type.
 // Renames API fields to match the frontend model.
-function mapCompetency(value: CompetencyApiResponse): EmployeeCompetency {
+export function mapCompetency(
+  value: CompetencyApiResponse
+): EmployeeCompetency {
   return {
     employeeCompetencyId: value.employeeCompetencyId,
     competencyId: value.competencyId,
     name: value.competencyName,
-    type: value.competencyType,
+    type: mapCompetencyType(value.competencyType),
     issueDate: value.issueDate ?? null,
     expirationDate: value.expirationDate ?? null,
     status: mapCompetencyStatus(value.status),
@@ -199,10 +221,10 @@ function mapCompetency(value: CompetencyApiResponse): EmployeeCompetency {
   }
 }
 
-// Maps a qualification from the API response to the frontend EmployeeQualification type.
+// Maps a qualification from the API response to the frontend Qualification type.
 // Renames API fields to match the frontend model and provides default values
 // for fields that the API does not currently return.
-function mapQualification(
+export function mapQualification(
   value: QualificationApiResponse
 ): EmployeeQualification {
   return {
@@ -216,43 +238,5 @@ function mapQualification(
     requirementsTotal: value.totalRequirementsCount,
     requirementsMet: value.metRequirementsCount,
     requiredCompetencies: value.requiredCompetencies.map(mapCompetency),
-  }
-}
-
-// Check if an API response value contains valid employee overview.
-function isEmployeeOverviewApiResponse(
-  value: unknown
-): value is EmployeeOverviewApiResponse {
-  if (!isRecord(value)) return false
-
-  return (
-    typeof value.id === 'number' &&
-    Number.isInteger(value.id) &&
-    typeof value.firstName === 'string' &&
-    typeof value.lastName === 'string' &&
-    typeof value.email === 'string' &&
-    value.role === 'EMPLOYEE' &&
-    Array.isArray(value.qualifications) &&
-    value.qualifications.every(isQualificationApiResponse)
-  )
-}
-
-// Fetch the employee overview from the backend API.
-export async function fetchEmployeeOverview(
-  id: number
-): Promise<EmployeeOverview> {
-  const data = await fetchApiData(`/api/employees/${String(id)}/overview`)
-
-  if (!isEmployeeOverviewApiResponse(data)) {
-    throw new Error('Invalid employee overview data')
-  }
-
-  return {
-    id: data.id,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    email: data.email,
-    role: 'EMPLOYEE',
-    qualifications: data.qualifications.map(mapQualification),
   }
 }
