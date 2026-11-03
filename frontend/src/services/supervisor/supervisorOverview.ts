@@ -39,7 +39,7 @@ export async function fetchSupervisorOverview(
   return {
     id: data.id,
     firstName: data.firstName,
-    lastName: data.firstName,
+    lastName: data.lastName,
     email: data.email,
     employees: data.employees,
   }
