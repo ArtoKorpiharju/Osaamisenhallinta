@@ -18,6 +18,8 @@ If you want to run the backend locally, you need:
 
 - Java 21 (e.g. Eclipse Temurin) ([download](https://adoptium.net/temurin/releases?version=21&os=any&arch=any))
 
+- To run the database, you need [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/).
+
 The project uses Maven Wrapper, so Maven does not need to be installed separately.
 
 ## Run Backend locally
@@ -44,10 +46,10 @@ docker compose up -d db
 
 4. Start the backend application.
 
-On Linux/macOS (Not tested):
+On Linux/macOS (macOS not tested):
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+./mvnw clean spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 On Windows:
@@ -55,13 +57,13 @@ On Windows:
 Using git Bash:
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+./mvnw clean spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 Or cmd / Powershell:
 
 ```powershell
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+.\mvnw.cmd clean spring-boot:run "-Dspring-boot.run.profiles=local"
 ```
 
 5. Open http://localhost:8080.
@@ -70,7 +72,7 @@ Or cmd / Powershell:
 
 1. Run the backend.
 
-2. Visit http://localhost:8080/v3/api-docs
+2. Visit http://localhost:8080/swagger-ui/index.html#/
 
 ## Useful commands
 

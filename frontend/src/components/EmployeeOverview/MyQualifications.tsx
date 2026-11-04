@@ -8,18 +8,21 @@ import GenericTable, { type DataTableColumn } from '../DataTable'
 import Panel from '../Panel'
 import StatusChip from '../StatusChip'
 import { type Tone, tones } from '../../config/tones'
-import { type Qualification, type QualificationStatus } from '../../types/overview'
+import {
+  type EmployeeQualification,
+  type QualificationStatus,
+} from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'
 
 interface MyQualificationsProps {
-  qualifications: readonly Qualification[]
+  qualifications: readonly EmployeeQualification[]
   onViewAll?: () => void
-  onQualificationClick?: (qualification: Qualification) => void
+  onQualificationClick?: (qualification: EmployeeQualification) => void
 }
 
 const statusOrder: Record<QualificationStatus, number> = {
-  expired: 0,
-  expiring: 1,
+  notQualified: 0,
+  expiringSoon: 1,
   qualified: 2,
 }
 
@@ -37,7 +40,10 @@ function Legend() {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <StarIcon fontSize="small" sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }} />
+        <StarIcon
+          fontSize="small"
+          sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
+        />
         <Typography sx={{ fontSize: 13 }}>
           = {t('employeeOverview.qualifications.favorite')}
         </Typography>
@@ -46,7 +52,7 @@ function Legend() {
         <CriticalBadge />
         <Typography sx={{ fontSize: 13 }}>
           = {t('employeeOverview.qualifications.employerRequirement')}
-          </Typography>
+        </Typography>
       </Box>
     </Box>
   )
@@ -63,11 +69,11 @@ export default function MyQualifications({
     QualificationStatus,
     { label: string; tone: Tone }
   > = {
-    expired: {
+    notQualified: {
       label: t('employeeOverview.qualifications.statuses.invalid'),
       tone: 'danger',
     },
-    expiring: {
+    expiringSoon: {
       label: t('employeeOverview.qualifications.statuses.expiringSoon'),
       tone: 'warning',
     },
@@ -77,105 +83,119 @@ export default function MyQualifications({
     },
   }
 
-  const columns: DataTableColumn<Qualification>[] = [
-  {
-    id: 'name',
-    label: t('employeeOverview.qualifications.columns.qualification'),
-    minWidth: 360,
-    render: (qualification) => (
+  const columns: DataTableColumn<EmployeeQualification>[] = [
+    {
+      id: 'name',
+      label: t('employeeOverview.qualifications.columns.qualification'),
+      minWidth: 360,
+      render: (qualification) => (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            width: '100%',
+            fontWeight: 600,
+          }}
+        >
+          <Box sx={{ flexShrink: 0, width: 88 }}>
+            {qualification.isCritical && <CriticalBadge />}
+          </Box>
+
+          {qualification.name}
+
+          {qualification.isFavourite && (
+            <StarIcon
+              fontSize="small"
+              titleAccess={t(
+                'employeeOverview.qualifications.primaryQualification'
+              )}
+              sx={{
+                flexShrink: 0,
+                color: tones.star.main,
+                stroke: 'black',
+                strokeWidth: 0.5,
+              }}
+            />
+          )}
+        </Box>
+      ),
+    },
+    {
+      id: 'status',
+      label: t('employeeOverview.qualifications.columns.status'),
+      minWidth: 120,
+      render: (qualification) => (
+        <StatusChip
+          label={statusDisplay[qualification.status].label}
+          tone={statusDisplay[qualification.status].tone}
+        />
+      ),
+    },
+    {
+      id: 'requirements',
+      label: t('employeeOverview.qualifications.columns.requirements'),
+      align: 'center',
+      minWidth: 120,
+      render: (qualification) => (
+        <Box sx={{ fontWeight: 600 }}>
+          {qualification.requirementsMet}/{qualification.requirementsTotal}
+        </Box>
+      ),
+    },
+    {
+      id: 'validUntil',
+      label: t('employeeOverview.qualifications.columns.validUntil'),
+      align: 'right',
+      minWidth: 100,
+      render: (qualification) => (
+        <Box sx={{ fontWeight: 600 }}>
+          {qualification.validUntil
+            ? formatDate(qualification.validUntil)
+            : 'No expiry date'}
+        </Box>
+      ),
+    },
+  ]
+
+  return (
+    <Panel
+      title={t('employeeOverview.qualifications.title')}
+      headerAction={
+        onViewAll && (
+          <Button
+            variant="outlined"
+            size="small"
+            color="inherit"
+            onClick={onViewAll}
+            sx={{ textTransform: 'none', color: 'tones.info.main' }}
+          >
+            {t('employeeOverview.qualifications.viewAll')}
+          </Button>
+        )
+      }
+    >
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          width: '100%',
-          fontWeight: 600,
+          flexDirection: 'column',
+          gap: 1.5,
+          height: '100%',
         }}
       >
-        <Box sx={{ flexShrink: 0, width: 88 }}>
-          {qualification.isCritical === true && <CriticalBadge />}
-        </Box>
+        <Legend />
 
-        {qualification.name}
-
-        {qualification.isPrimary === true && (
-          <StarIcon
-            fontSize="small"
-            titleAccess={t('employeeOverview.qualifications.primaryQualification',)}
-            sx={{ flexShrink: 0, color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
+        <Box sx={{ flex: 1, minHeight: 0 }}>
+          <GenericTable
+            columns={columns}
+            rows={[...qualifications].sort(
+              (a, b) => statusOrder[a.status] - statusOrder[b.status]
+            )}
+            getRowId={(qualification) => qualification.employeeQualificationId}
+            onRowClick={onQualificationClick}
           />
-        )}
+        </Box>
       </Box>
-    ),
-  },
-  {
-    id: 'status',
-    label: t('employeeOverview.qualifications.columns.status'),
-    minWidth: 120,
-    render: (qualification) => (
-      <StatusChip
-        label={statusDisplay[qualification.status].label}
-        tone={statusDisplay[qualification.status].tone}
-      />
-    ),
-  },
-  {
-    id: 'requirements',
-    label: t('employeeOverview.qualifications.columns.requirements'),
-    align: 'center',
-    minWidth: 120,
-    render: (qualification) => (
-      <Box sx={{ fontWeight: 600 }}>
-        {qualification.requirementsMet}/{qualification.requirementsTotal}
-      </Box>
-    ),
-  },
-  {
-    id: 'validUntil',
-    label: t('employeeOverview.qualifications.columns.validUntil'),
-    align: 'right',
-    minWidth: 100,
-    render: (qualification) => (
-      <Box sx={{ fontWeight: 600 }}>
-        {formatDate(qualification.validUntil)}
-      </Box>
-    ),
-  },
-]
-
-return (
-  <Panel
-    title={t('employeeOverview.qualifications.title')}
-    headerAction={
-      onViewAll && (
-        <Button
-          variant="outlined"
-          size="small"
-          color="inherit"
-          onClick={onViewAll}
-          sx={{ textTransform: 'none', color: 'tones.info.main' }}
-        >
-          {t('employeeOverview.qualifications.viewAll')}
-        </Button>
-      )
-    }
-  >
-    <Box
-      sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%' }}
-    >
-      <Legend />
-
-      <Box sx={{ flex: 1, minHeight: 0 }}>
-        <GenericTable
-          columns={columns}
-          rows={[...qualifications].sort(
-            (a, b) => statusOrder[a.status] - statusOrder[b.status],
-          )}
-          getRowId={(qualification) => qualification.id}
-          onRowClick={onQualificationClick}
-        />
-      </Box>
-    </Box>
-  </Panel>
- )
+    </Panel>
+  )
 }

@@ -31,6 +31,7 @@ interface TopBarProps {
   onRoleChange: (role: Role) => void
   navigationOpen: boolean
   onToggleNavigation: () => void
+  userName?: string
 }
 
 export default function TopBar({
@@ -38,6 +39,7 @@ export default function TopBar({
   onRoleChange,
   navigationOpen,
   onToggleNavigation,
+  userName,
 }: TopBarProps) {
   const { t, i18n } = useTranslation()
 
@@ -136,7 +138,7 @@ export default function TopBar({
           ></Avatar>
           <Box sx={{ textAlign: 'left' }}>
             <Typography sx={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2 }}>
-              Matti Mattinen
+              {userName ?? 'Unknown User'}
             </Typography>
             <Typography
               sx={{ fontSize: 10, color: 'text.secondary', lineHeight: 1.2 }}

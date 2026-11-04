@@ -53,17 +53,17 @@ export default function SummaryCards({
       />
       <StatCard
         title={t('employeeOverview.summary.renewals.title')}
-        value={summary.renewals}
+        value={summary.missingRenewals}
         description={t('employeeOverview.summary.renewals.description')}
         tone="renewal"
-        {...actionFor('renewals')}
+        {...actionFor('missingRenewals')}
       />
       <StatCard
         title={t('employeeOverview.summary.planned.title')}
-        value={summary.planned}
+        value={summary.plannedRenewals}
         description={t('employeeOverview.summary.planned.description')}
         tone="success"
-        {...actionFor('planned')}
+        {...actionFor('plannedRenewals')}
       />
     </Box>
   )

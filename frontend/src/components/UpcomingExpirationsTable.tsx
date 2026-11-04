@@ -89,7 +89,7 @@ function UpcomingExpirationsTable({
       render: (item) => (
         <Chip
           label={`${String(item.urgencyDays)}${t(
-            'supervisorOverview.expirations.dayAbbreviation',
+            'supervisorOverview.expirations.dayAbbreviation'
           )}`}
           size="small"
           sx={{

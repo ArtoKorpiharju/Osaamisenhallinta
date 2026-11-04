@@ -15,40 +15,46 @@ const statusOrder: Record<string, number> = {
   warning: 1,
 }
 
-export default function ActionRequired({ items, onAction }: ActionRequiredProps) {
+export default function ActionRequired({
+  items,
+  onAction,
+}: ActionRequiredProps) {
   const { t } = useTranslation()
 
   const translatedItems = items.map((item) => ({
-  ...item,
-  status: {
-    ...item.status,
-    label:
-      item.status.tone === 'danger'
-        ? t('employeeOverview.actionRequired.statuses.expired')
-        : t('employeeOverview.actionRequired.statuses.expiringSoon'),
-  },
-  actions: item.actions.map((action) => ({
-    ...action,
-    label:
-      action.id === 'plan-renewal'
-        ? t('employeeOverview.actionRequired.actions.planRenewal')
-        : action.id === 'upload-certificate'
-          ? t(
-              'employeeOverview.actionRequired.actions.uploadRenewalCertificate',
-            )
-          : action.label,
-  })),
-  note:
-    item.note === undefined
-      ? undefined
-      : {
-          ...item.note,
-          text: t('employeeOverview.actionRequired.noRenewalPlanned'),
-        },
-}))
+    ...item,
+    status: {
+      ...item.status,
+      label:
+        item.status.tone === 'danger'
+          ? t('employeeOverview.actionRequired.statuses.expired')
+          : t('employeeOverview.actionRequired.statuses.expiringSoon'),
+    },
+    actions: item.actions.map((action) => ({
+      ...action,
+      label:
+        action.id === 'plan-renewal'
+          ? t('employeeOverview.actionRequired.actions.planRenewal')
+          : action.id === 'upload-certificate'
+            ? t(
+                'employeeOverview.actionRequired.actions.uploadRenewalCertificate'
+              )
+            : action.label,
+    })),
+    note:
+      item.note === undefined
+        ? undefined
+        : {
+            ...item.note,
+            text:
+              item.note.tone === 'danger'
+                ? t('employeeOverview.actionRequired.noRenewalPlanned')
+                : item.note.text,
+          },
+  }))
 
   const sortedItems = [...translatedItems].sort(
-    (a,b) => statusOrder[a.status.tone] - statusOrder[b.status.tone],
+    (a, b) => statusOrder[a.status.tone] - statusOrder[b.status.tone]
   )
   return (
     <Panel title={t('employeeOverview.actionRequired.title')}>
