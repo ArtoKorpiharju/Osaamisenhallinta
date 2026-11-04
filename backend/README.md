@@ -46,7 +46,7 @@ docker compose up -d db
 
 4. Start the backend application.
 
-On Linux/macOS (Not tested):
+On Linux/macOS (macOS not tested):
 
 ```bash
 ./mvnw clean spring-boot:run -Dspring-boot.run.profiles=local

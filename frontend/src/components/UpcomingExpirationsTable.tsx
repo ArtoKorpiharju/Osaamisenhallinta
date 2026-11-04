@@ -104,10 +104,10 @@ const columns: DataTableColumn<ExpirationItem>[] = [
           }}
         />
       ) : (
-    <Typography component="span" sx={{ fontWeight: 600 }}>
-      {item.renewalPlan}
-    </Typography>
-  ),
+        <Typography component="span" sx={{ fontWeight: 600 }}>
+          {item.renewalPlan}
+        </Typography>
+      ),
   },
 ]
 

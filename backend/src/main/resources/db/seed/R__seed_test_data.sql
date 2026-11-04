@@ -104,7 +104,8 @@ VALUES
     ('Electrical Safety Training',     'TRAINING',      12),
     ('Maintenance Safety Certificate', 'CERTIFICATION', 36),
     ('Equipment Inspection Skill',     'SKILL',         24),
-    ('Incident Reporting',             'OTHER',         24);
+    ('Incident Reporting',             'OTHER',         24),
+    ('Safety Awareness Training',      'TRAINING',      12);
 
 
 -- ============================================================
@@ -116,7 +117,8 @@ VALUES
     ('Warehouse Operator'),
     ('First Aid Responder'),
     ('Maintenance Technician'),
-    ('Logistics Coordinator');
+    ('Logistics Coordinator'),
+    ('Safety Officer');
 
 
 -- ============================================================
@@ -140,7 +142,9 @@ FROM (
         ('Maintenance Technician', 'Maintenance Safety Certificate'),
 
         ('Logistics Coordinator',  'Incident Reporting'),
-        ('Logistics Coordinator',  'Equipment Inspection Skill')
+        ('Logistics Coordinator',  'Equipment Inspection Skill'),
+
+        ('Safety Officer',         'Safety Awareness Training')
 ) AS v(qualification_name, competency_name)
 JOIN qualification q ON q.name = v.qualification_name
 JOIN competency c ON c.name = v.competency_name;
@@ -198,6 +202,9 @@ WITH scenarios(email, competency_name, expiration_offset_days) AS (
         -- Logistics Coordinator: Invalid due to missing competency (incident reporting)
         ('test_EMPLOYEE@email.com',
          'Equipment Inspection Skill', 150),
+
+         ('test_EMPLOYEE@email.com',
+         'Safety Officer', 150),
 
 
         -- Anna Korhonen: qualified for Warehouse Operator
@@ -349,6 +356,7 @@ FROM (
          'First Aid Responder', FALSE, TRUE),
          ('test_EMPLOYEE@email.com', 'Maintenance Technician', TRUE, FALSE),
          ('test_EMPLOYEE@email.com', 'Logistics Coordinator', FALSE, TRUE),
+         ('test_EMPLOYEE@email.com', 'Safety Officer', FALSE, FALSE),
 
         ('anna.korhonen@example.com',
          'Warehouse Operator', FALSE, TRUE),

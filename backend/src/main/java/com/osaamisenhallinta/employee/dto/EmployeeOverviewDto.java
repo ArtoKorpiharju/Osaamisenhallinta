@@ -10,5 +10,4 @@ public record EmployeeOverviewDto(
     String lastName,
     String email,
     UserRole role,
-    List<EmployeeCompetencyDto> competencies,
     List<EmployeeQualificationDto> qualifications) {}

@@ -72,7 +72,9 @@ export default function ActionCard({
       )}
 
       {actions.length > 0 && (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', mt: 0.5 }}>
+        <Box
+          sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', mt: 0.5 }}
+        >
           {actions.map((action) => (
             <Link
               key={action.id}

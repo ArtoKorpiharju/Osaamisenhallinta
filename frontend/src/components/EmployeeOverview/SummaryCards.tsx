@@ -37,7 +37,7 @@ export default function SummaryCards({
       <StatCard
         title="Invalid"
         value={summary.outdated}
-        description="Expired competencies"
+        description="Invalid competencies"
         highlight="Requires attention"
         tone="danger"
         {...actionFor('outdated')}
@@ -50,18 +50,18 @@ export default function SummaryCards({
         {...actionFor('expiring')}
       />
       <StatCard
-        title="Renewals"
-        value={summary.renewals}
-        description="Missing Renewals"
+        title="Missing renewals"
+        value={summary.missingRenewals}
+        description="Missing renewals"
         tone="renewal"
-        {...actionFor('renewals')}
+        {...actionFor('missingRenewals')}
       />
       <StatCard
-        title="Planned"
-        value={summary.planned}
-        description="Planned Renewals"
+        title="Planned renewals"
+        value={summary.plannedRenewals}
+        description="Planned renewals"
         tone="success"
-        {...actionFor('planned')}
+        {...actionFor('plannedRenewals')}
       />
     </Box>
   )
