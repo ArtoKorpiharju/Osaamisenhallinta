@@ -6,7 +6,10 @@ interface PageContainerProps {
   gap?: number
 }
 
-export default function PageContainer({ children, gap = 4 }: PageContainerProps) {
+export default function PageContainer({
+  children,
+  gap = 4,
+}: PageContainerProps) {
   return (
     <Box
       sx={{

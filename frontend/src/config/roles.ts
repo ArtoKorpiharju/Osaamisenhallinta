@@ -23,7 +23,11 @@ interface Page {
 
 export const pagesPerRole: Record<Role, Page[]> = {
   employee: [
-    { labelKey: 'navigation.overview', path: '/employee/overview', icon: HomeOutlinedIcon },
+    {
+      labelKey: 'navigation.overview',
+      path: '/employee/overview',
+      icon: HomeOutlinedIcon,
+    },
     {
       labelKey: 'navigation.qualifications',
       path: '/employee/qualifications',
@@ -34,14 +38,30 @@ export const pagesPerRole: Record<Role, Page[]> = {
       path: '/employee/competencies',
       icon: StarBorderIcon,
     },
-    { labelKey: 'navigation.renewals', path: '/employee/renewals', icon: EventRepeatIcon },
+    {
+      labelKey: 'navigation.renewals',
+      path: '/employee/renewals',
+      icon: EventRepeatIcon,
+    },
   ],
   supervisor: [
-    { labelKey: 'navigation.overview', path: '/supervisor/overview', icon: HomeOutlinedIcon },
-    { labelKey: 'navigation.renewals', path: '/supervisor/renewals', icon: EventRepeatIcon },
+    {
+      labelKey: 'navigation.overview',
+      path: '/supervisor/overview',
+      icon: HomeOutlinedIcon,
+    },
+    {
+      labelKey: 'navigation.renewals',
+      path: '/supervisor/renewals',
+      icon: EventRepeatIcon,
+    },
   ],
   admin: [
-    { labelKey: 'navigation.overview', path: '/admin/overview', icon: HomeOutlinedIcon },
+    {
+      labelKey: 'navigation.overview',
+      path: '/admin/overview',
+      icon: HomeOutlinedIcon,
+    },
     {
       labelKey: 'navigation.qualifications',
       path: '/admin/qualifications',

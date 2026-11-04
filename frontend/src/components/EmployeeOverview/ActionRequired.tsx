@@ -37,11 +37,11 @@ export default function ActionRequired({
           ? t('employeeOverview.actionRequired.actions.planRenewal')
           : action.id === 'view-renewal-plan'
             ? t('employeeOverview.actionRequired.actions.viewRenewalPlan')
-          : action.id === 'upload-certificate'
-            ? t(
-                'employeeOverview.actionRequired.actions.uploadRenewalCertificate'
-              )
-            : action.label,
+            : action.id === 'upload-certificate'
+              ? t(
+                  'employeeOverview.actionRequired.actions.uploadRenewalCertificate'
+                )
+              : action.label,
     })),
     note:
       item.note === undefined

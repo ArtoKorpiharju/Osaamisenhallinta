@@ -7,7 +7,6 @@ import PageTitle from '../../components/PageTitle'
 import { useTranslation } from 'react-i18next'
 import PageContainer from '../../components/PageContainer'
 
-
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
 import Diversity1Icon from '@mui/icons-material/Diversity1'
@@ -29,36 +28,36 @@ export default function AdminOverview() {
   ))
 
   return (
-  <PageContainer gap={2}>
-    <Box>
-      <PageTitle>{t('adminOverview.title')}</PageTitle>
-
-      <Typography
-        sx={{
-          mt: 0.5,
-          fontSize: 13,
-          color: 'text.secondary',
-        }}
-      >
-        {t('adminOverview.description')}
-      </Typography>
-    </Box>
-
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '25px',
-        }}
-      >
-        {cardComponents}
-      </Box>
-
+    <PageContainer gap={2}>
       <Box>
-        <QuickActions />
+        <PageTitle>{t('adminOverview.title')}</PageTitle>
+
+        <Typography
+          sx={{
+            mt: 0.5,
+            fontSize: 13,
+            color: 'text.secondary',
+          }}
+        >
+          {t('adminOverview.description')}
+        </Typography>
       </Box>
-    </Box>
-  </PageContainer>
-)
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '25px',
+          }}
+        >
+          {cardComponents}
+        </Box>
+
+        <Box>
+          <QuickActions />
+        </Box>
+      </Box>
+    </PageContainer>
+  )
 }

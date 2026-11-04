@@ -79,9 +79,7 @@ export default function SupervisorOverview() {
 
   return (
     <PageContainer>
-      <PageTitle>
-        {t('supervisorOverview.title')}
-        </PageTitle>
+      <PageTitle>{t('supervisorOverview.title')}</PageTitle>
 
       <Box
         sx={{
