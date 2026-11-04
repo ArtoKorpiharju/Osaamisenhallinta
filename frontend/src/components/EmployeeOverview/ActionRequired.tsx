@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import ActionCard from '../ActionCard'
 import Panel from '../Panel'
@@ -18,14 +19,50 @@ export default function ActionRequired({
   items,
   onAction,
 }: ActionRequiredProps) {
-  const sortedItems = [...items].sort(
+  const { t } = useTranslation()
+
+  const translatedItems = items.map((item) => ({
+    ...item,
+    status: {
+      ...item.status,
+      label:
+        item.status.tone === 'danger'
+          ? t('employeeOverview.actionRequired.statuses.expired')
+          : t('employeeOverview.actionRequired.statuses.expiringSoon'),
+    },
+    actions: item.actions.map((action) => ({
+      ...action,
+      label:
+        action.id === 'plan-renewal'
+          ? t('employeeOverview.actionRequired.actions.planRenewal')
+          : action.id === 'view-renewal-plan'
+            ? t('employeeOverview.actionRequired.actions.viewRenewalPlan')
+            : action.id === 'upload-certificate'
+              ? t(
+                  'employeeOverview.actionRequired.actions.uploadRenewalCertificate'
+                )
+              : action.label,
+    })),
+    note:
+      item.note === undefined
+        ? undefined
+        : {
+            ...item.note,
+            text:
+              item.note.tone === 'danger'
+                ? t('employeeOverview.actionRequired.noRenewalPlanned')
+                : item.note.text,
+          },
+  }))
+
+  const sortedItems = [...translatedItems].sort(
     (a, b) => statusOrder[a.status.tone] - statusOrder[b.status.tone]
   )
   return (
-    <Panel title="Action required">
+    <Panel title={t('employeeOverview.actionRequired.title')}>
       {items.length === 0 ? (
         <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-          Nothing needs your attention right now.
+          {t('employeeOverview.actionRequired.empty')}
         </Typography>
       ) : (
         <Box

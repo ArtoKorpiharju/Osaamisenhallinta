@@ -14,7 +14,7 @@ function Card({ item, icon: Icon }: CardProps) {
         backgroundColor: 'white',
         display: 'inline-block',
         padding: '10px 15px 20px',
-        borderLeft: '3px solid #034182',
+        borderLeft: '3px solid ${tones.info.main}',
         borderRadius: '4px',
         minWidth: '160px',
         maxWidth: '200px',
@@ -28,7 +28,7 @@ function Card({ item, icon: Icon }: CardProps) {
           marginBottom: '10px',
         }}
       >
-        <Typography sx={{ fontWeight: 700 }}>Total {item}</Typography>
+        <Typography sx={{ fontWeight: 700 }}>{item}</Typography>
         <Icon />
       </Box>
 

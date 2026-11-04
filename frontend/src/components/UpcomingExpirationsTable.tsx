@@ -1,5 +1,8 @@
 import { Chip, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+
 import DataTable, { type DataTableColumn } from './DataTable'
+import { tones } from '../config/tones'
 
 export interface ExpirationItem {
   id: number
@@ -13,103 +16,23 @@ export interface ExpirationItem {
 const getUrgencyStyles = (days: number) => {
   if (days <= 30) {
     return {
-      backgroundColor: '#ef6262',
-      color: '#ffffff',
+      backgroundColor: tones.danger.background,
+      color: tones.danger.text,
     }
   }
 
   if (days <= 60) {
     return {
-      backgroundColor: '#efbb84',
-      color: '#1f1f1f',
+      backgroundColor: tones.warning.background,
+      color: tones.warning.text,
     }
   }
 
   return {
-    backgroundColor: '#d5dbe1',
-    color: '#5f6368',
+    backgroundColor: tones.info.background,
+    color: tones.info.text,
   }
 }
-
-//Day reminder color coded//
-const columns: DataTableColumn<ExpirationItem>[] = [
-  {
-    id: 'employee',
-    label: 'Employee',
-    minWidth: 180,
-    render: (item) => (
-      <Typography
-        component="span"
-        sx={{
-          color: '#00509e',
-          fontWeight: 700,
-        }}
-      >
-        {item.employee}
-      </Typography>
-    ),
-  },
-  {
-    id: 'competency',
-    label: 'Competency',
-    minWidth: 300,
-    render: (item) => (
-      <Typography
-        component="span"
-        sx={{
-          fontWeight: 600,
-        }}
-      >
-        {item.competency}
-      </Typography>
-    ),
-  },
-  {
-    id: 'expires',
-    label: 'Expires',
-    minWidth: 130,
-    render: (item) => (
-      <Typography component="span" sx={{ fontWeight: 600 }}>
-        {item.expires}
-      </Typography>
-    ),
-  },
-  {
-    id: 'urgency',
-    label: 'Urgency',
-    minWidth: 110,
-    render: (item) => (
-      <Chip
-        label={String(item.urgencyDays) + 'd'}
-        size="small"
-        sx={{
-          ...getUrgencyStyles(item.urgencyDays),
-          fontWeight: 700,
-        }}
-      />
-    ),
-  },
-  {
-    id: 'renewalPlan',
-    label: 'Renewal plan',
-    minWidth: 140,
-    render: (item) =>
-      item.renewalPlan === null ? (
-        <Chip
-          label="Not planned"
-          size="small"
-          sx={{
-            backgroundColor: '#ffd6d6',
-            color: '#e53935',
-          }}
-        />
-      ) : (
-        <Typography component="span" sx={{ fontWeight: 600 }}>
-          {item.renewalPlan}
-        </Typography>
-      ),
-  },
-]
 
 interface UpcomingExpirationsTableProps {
   items: ExpirationItem[]
@@ -120,9 +43,87 @@ function UpcomingExpirationsTable({
   items,
   onItemClick,
 }: UpcomingExpirationsTableProps) {
+  const { t } = useTranslation()
+
+  const columns: DataTableColumn<ExpirationItem>[] = [
+    {
+      id: 'employee',
+      label: t('supervisorOverview.expirations.columns.employee'),
+      minWidth: 180,
+      render: (item) => (
+        <Typography
+          component="span"
+          sx={{
+            color: tones.info.main,
+            fontWeight: 700,
+          }}
+        >
+          {item.employee}
+        </Typography>
+      ),
+    },
+    {
+      id: 'competency',
+      label: t('supervisorOverview.expirations.columns.competency'),
+      minWidth: 300,
+      render: (item) => (
+        <Typography component="span" sx={{ fontWeight: 600 }}>
+          {item.competency}
+        </Typography>
+      ),
+    },
+    {
+      id: 'expires',
+      label: t('supervisorOverview.expirations.columns.expires'),
+      minWidth: 130,
+      render: (item) => (
+        <Typography component="span" sx={{ fontWeight: 600 }}>
+          {item.expires}
+        </Typography>
+      ),
+    },
+    {
+      id: 'urgency',
+      label: t('supervisorOverview.expirations.columns.urgency'),
+      minWidth: 110,
+      render: (item) => (
+        <Chip
+          label={`${String(item.urgencyDays)}${t(
+            'supervisorOverview.expirations.dayAbbreviation'
+          )}`}
+          size="small"
+          sx={{
+            ...getUrgencyStyles(item.urgencyDays),
+            fontWeight: 700,
+          }}
+        />
+      ),
+    },
+    {
+      id: 'renewalPlan',
+      label: t('supervisorOverview.expirations.columns.renewalPlan'),
+      minWidth: 140,
+      render: (item) =>
+        item.renewalPlan === null ? (
+          <Chip
+            label={t('supervisorOverview.expirations.notPlanned')}
+            size="small"
+            sx={{
+              backgroundColor: tones.danger.background,
+              color: tones.danger.text,
+            }}
+          />
+        ) : (
+          <Typography component="span" sx={{ fontWeight: 600 }}>
+            {item.renewalPlan}
+          </Typography>
+        ),
+    },
+  ]
+
   return (
     <DataTable
-      title="Upcoming Expirations"
+      title={t('supervisorOverview.expirations.title')}
       columns={columns}
       rows={items}
       getRowId={(item) => item.id}

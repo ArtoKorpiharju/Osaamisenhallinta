@@ -1,4 +1,5 @@
 import { Box } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import StatCard from '../GenericStatCard'
 import { type OverviewSummary } from '../../types/overview'
@@ -12,10 +13,11 @@ export default function SummaryCards({
   summary,
   onViewDetails,
 }: SummaryCardsProps) {
+  const { t } = useTranslation()
   const actionFor = (key: keyof OverviewSummary) =>
     onViewDetails
       ? {
-          actionLabel: 'View all details',
+          actionLabel: t('employeeOverview.viewAllDetails'),
           onAction: () => {
             onViewDetails(key)
           },
@@ -35,31 +37,31 @@ export default function SummaryCards({
       }}
     >
       <StatCard
-        title="Invalid"
+        title={t('employeeOverview.summary.invalid.title')}
         value={summary.outdated}
-        description="Invalid competencies"
-        highlight="Requires attention"
+        description={t('employeeOverview.summary.invalid.description')}
+        highlight={t('employeeOverview.summary.invalid.highlight')}
         tone="danger"
         {...actionFor('outdated')}
       />
       <StatCard
-        title="Expiring soon"
+        title={t('employeeOverview.summary.expiringSoon.title')}
         value={summary.expiring}
-        description="Expiring within 90 days"
+        description={t('employeeOverview.summary.expiringSoon.description')}
         tone="warning"
         {...actionFor('expiring')}
       />
       <StatCard
-        title="Missing renewals"
+        title={t('employeeOverview.summary.missingRenewals.title')}
         value={summary.missingRenewals}
-        description="Missing renewals"
+        description={t('employeeOverview.summary.missingRenewals.description')}
         tone="renewal"
         {...actionFor('missingRenewals')}
       />
       <StatCard
-        title="Planned renewals"
+        title={t('employeeOverview.summary.plannedRenewals.title')}
         value={summary.plannedRenewals}
-        description="Planned renewals"
+        description={t('employeeOverview.summary.plannedRenewals.description')}
         tone="success"
         {...actionFor('plannedRenewals')}
       />

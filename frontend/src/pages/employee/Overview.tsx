@@ -1,6 +1,9 @@
-import { Alert, Box, Typography } from '@mui/material'
+import { Alert, Box } from '@mui/material'
 import { useNavigate, useOutletContext } from 'react-router'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import PageTitle from '../../components/PageTitle'
+import PageContainer from '../../components/PageContainer'
 
 import ActionRequired from '../../components/EmployeeOverview/ActionRequired'
 import MyQualifications from '../../components/EmployeeOverview/MyQualifications'
@@ -11,7 +14,6 @@ import {
   type OverviewSummary,
   type EmployeeCompetency,
 } from '../../types/overview'
-import { tones } from '../../config/tones'
 import { fetchEmployeeOverview } from '../../services/employee/employeeOverview'
 import { getApiErrorMessage } from '../../services/api'
 
@@ -103,6 +105,7 @@ function createActionItems(
 }
 
 export default function EmployeeOverview() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const { userId } = useOutletContext<{ userId: number | undefined }>()
@@ -138,13 +141,8 @@ export default function EmployeeOverview() {
   }, [userId])
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, p: 3 }}>
-      <Typography
-        component="h1"
-        sx={{ fontSize: 18, fontWeight: 700, color: tones.info.main }}
-      >
-        Employee Overview
-      </Typography>
+    <PageContainer>
+      <PageTitle>{t('employeeOverview.title')}</PageTitle>
 
       {/** Display an error alert if there was an error fetching employee overview. */}
       {error && <Alert severity="error">{error}</Alert>}
@@ -190,6 +188,6 @@ export default function EmployeeOverview() {
           }}
         />
       </Box>
-    </Box>
+    </PageContainer>
   )
 }

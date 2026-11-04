@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   AppBar,
@@ -23,7 +24,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
 
 import { type Role, roles } from '../config/roles'
-import { type Language, languages } from '../config/languages'
+import { languages } from '../config/languages'
 
 interface TopBarProps {
   role: Role
@@ -40,10 +41,10 @@ export default function TopBar({
   onToggleNavigation,
   userName,
 }: TopBarProps) {
-  const currentRoleLabel =
-    roles.find((item) => item.value === role)?.label ?? role
+  const { t, i18n } = useTranslation()
 
-  const [language, setLanguage] = useState<Language>('en')
+  const currentRoleLabel = t(`roles.${role}`)
+  const currentLanguage = i18n.resolvedLanguage ?? 'en'
   const [languageAnchor, setLanguageAnchor] = useState<HTMLElement | null>(null)
   const [profileAnchor, setProfileAnchor] = useState<HTMLElement | null>(null)
   const [switchRoleAnchor, setSwitchRoleAnchor] = useState<HTMLElement | null>(
@@ -81,7 +82,7 @@ export default function TopBar({
             fontSize: 16,
           }}
         >
-          Osaamisenhallinta
+          {t('appName')}
         </Typography>
 
         <Button
@@ -95,7 +96,7 @@ export default function TopBar({
             gap: 0.5,
           }}
         >
-          <LanguageIcon fontSize="small" /> {language.toUpperCase()}
+          <LanguageIcon fontSize="small" /> {currentLanguage.toUpperCase()}
         </Button>
         <Menu
           anchorEl={languageAnchor}
@@ -107,13 +108,13 @@ export default function TopBar({
           {languages.map((lang) => (
             <MenuItem
               key={lang.value}
-              selected={language === lang.value}
+              selected={currentLanguage === lang.value}
               onClick={() => {
-                setLanguage(lang.value)
+                void i18n.changeLanguage(lang.value)
                 setLanguageAnchor(null)
               }}
             >
-              <ListItemText primary={lang.label} />
+              <ListItemText primary={t(lang.labelKey)} />
             </MenuItem>
           ))}
         </Menu>
@@ -163,7 +164,7 @@ export default function TopBar({
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary="Show profile" />
+            <ListItemText primary={t('profile.showProfile')} />
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -173,7 +174,7 @@ export default function TopBar({
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Sign out" />
+            <ListItemText primary={t('profile.signOut')} />
           </MenuItem>
 
           <Divider />
@@ -186,7 +187,7 @@ export default function TopBar({
             <ListItemIcon>
               <MenuIcon />
             </ListItemIcon>
-            <ListItemText primary="Switch role" />
+            <ListItemText primary={t('profile.switchRole')} />
           </MenuItem>
         </Menu>
         {/* Keep role choices in a separate popup anchored to the switch-role item. */}
@@ -207,7 +208,7 @@ export default function TopBar({
                 setProfileAnchor(null)
               }}
             >
-              <ListItemText primary={item.label} />
+              <ListItemText primary={t(`roles.${item.value}`)} />
             </MenuItem>
           ))}
         </Menu>

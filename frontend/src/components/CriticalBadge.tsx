@@ -1,13 +1,16 @@
 import { Chip } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import { tones } from '../config/tones'
 
 export default function CriticalBadge() {
+  const { t } = useTranslation()
+
   return (
     <Chip
       icon={<ShieldOutlinedIcon />}
-      label="Critical"
+      label={t('common.critical')}
       size="small"
       variant="outlined"
       sx={{

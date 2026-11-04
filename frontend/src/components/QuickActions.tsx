@@ -2,12 +2,24 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
+import { useTranslation } from 'react-i18next'
 
 function Actions() {
-  const addButtons: string[] = ['Competence', 'Qualification']
+  const { t } = useTranslation()
+
+  const addButtons = [
+    {
+      id: 'competence',
+      label: t('adminOverview.quickActions.addCompetence'),
+    },
+    {
+      id: 'qualification',
+      label: t('adminOverview.quickActions.addQualification'),
+    },
+  ]
   const buttonComponents = addButtons.map((button) => (
     <Button
-      key={button}
+      key={button.id}
       sx={{
         textTransform: 'none',
         color: 'black',
@@ -23,7 +35,7 @@ function Actions() {
       }}
     >
       <AddIcon />
-      <Typography sx={{ fontWeight: 700 }}>Add {button}</Typography>
+      <Typography sx={{ fontWeight: 700 }}>{button.label}</Typography>
     </Button>
   ))
 
@@ -44,7 +56,7 @@ function Actions() {
           fontWeight: 700,
         }}
       >
-        Quick actions
+        {t('adminOverview.quickActions.title')}
       </Typography>
       <Box
         sx={{
