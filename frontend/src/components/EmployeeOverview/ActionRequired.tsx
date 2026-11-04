@@ -35,6 +35,8 @@ export default function ActionRequired({
       label:
         action.id === 'plan-renewal'
           ? t('employeeOverview.actionRequired.actions.planRenewal')
+          : action.id === 'view-renewal-plan'
+            ? t('employeeOverview.actionRequired.actions.viewRenewalPlan')
           : action.id === 'upload-certificate'
             ? t(
                 'employeeOverview.actionRequired.actions.uploadRenewalCertificate'

@@ -56,6 +56,7 @@ const resources = {
         qualifications: {
           title: 'My Qualifications',
           viewAll: 'View All',
+          noExpiryDate: 'No expiry date',
           columns: {
             qualification: 'Qualification',
             status: 'Status',
@@ -80,6 +81,7 @@ const resources = {
             },
             actions: {
               planRenewal: 'Plan renewal',
+              viewRenewalPlan: 'View renewal plan',
               uploadRenewalCertificate: 'Upload renewal certificate',
             },
             noRenewalPlanned: 'No renewal planned',
@@ -192,6 +194,7 @@ const resources = {
         qualifications: {
           title: 'Omat kelpoisuudet',
           viewAll: 'Näytä kaikki',
+          noExpiryDate: 'Ei vanhene',
           columns: {
             qualification: 'Kelpoisuus',
             status: 'Tila',
@@ -216,6 +219,7 @@ const resources = {
             },
             actions: {
               planRenewal: 'Suunnittele uusiminen',
+              viewRenewalPlan: 'Näytä uusimissuunnitelma',
               uploadRenewalCertificate: 'Lataa uusimistodistus',
             },
             noRenewalPlanned: 'Uusimista ei ole suunniteltu',

@@ -152,7 +152,7 @@ export default function MyQualifications({
         <Box sx={{ fontWeight: 600 }}>
           {qualification.validUntil
             ? formatDate(qualification.validUntil)
-            : 'No expiry date'}
+            : t('employeeOverview.qualifications.noExpiryDate')}
         </Box>
       ),
     },
