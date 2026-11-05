@@ -11,9 +11,7 @@ public interface EmployeeQualificationRepository
   boolean existsByEmployeeIdAndQualificationId(Long employeeId, Long qualificationId);
 
   Optional<EmployeeQualification> findByEmployeeIdAndId(
-      Long employeeId, Long EmployeeQualificationId);
-
-  void deleteByQualificationId(Long qualificationId);
+      Long employeeId, Long employeeQualificationId);
 
   /**
    * Fetches an employee qualification by ID and employee ID, or throws an exception if not found.
