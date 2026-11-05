@@ -26,7 +26,10 @@ public class EmployeeQualificationService {
 
   /** Assigns a new qualification to an employee profile. */
   @Transactional
-  public EmployeeQualificationDto assignQualification(Long employeeId, Long qualificationId) {
+  public EmployeeQualificationDto assignQualification(
+      Long employeeId, Long qualificationId, boolean isCritical) {
+    // TODO IN FUTURE: Add authorization check to ensure that only supervisor can pass the
+    // isCritical flag as true.
     User employee = userRepository.getEmployeeByIdOrThrow(employeeId);
 
     Qualification qualification = qualificationRepository.getByIdOrThrow(qualificationId);
@@ -37,7 +40,8 @@ public class EmployeeQualificationService {
           HttpStatus.CONFLICT, "Employee already holds this qualification");
     }
 
-    EmployeeQualification assignment = new EmployeeQualification(employee, qualification);
+    EmployeeQualification assignment =
+        new EmployeeQualification(employee, qualification, isCritical);
 
     EmployeeQualification savedAssignment = employeeQualificationRepository.save(assignment);
 

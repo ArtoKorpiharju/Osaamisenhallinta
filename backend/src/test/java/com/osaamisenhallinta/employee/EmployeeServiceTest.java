@@ -35,36 +35,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
 
-  @Mock
-  private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-  @Mock
-  private QualificationEvaluator qualificationEvaluator;
+  @Mock private QualificationEvaluator qualificationEvaluator;
 
-  @InjectMocks
-  private EmployeeService employeeService;
+  @InjectMocks private EmployeeService employeeService;
 
-  @Mock
-  private User mockEmployee;
+  @Mock private User mockEmployee;
 
-  @Mock
-  private EmployeeQualification mockCriticalQualification;
+  @Mock private EmployeeQualification mockCriticalQualification;
 
-  @Mock
-  private EmployeeQualification mockStandardQualification;
+  @Mock private EmployeeQualification mockStandardQualification;
 
-  @Mock
-  private Qualification mockQualificationEntity;
+  @Mock private Qualification mockQualificationEntity;
 
-  @Mock
-  private EmployeeCompetency mockEmployeeCompetency;
+  @Mock private EmployeeCompetency mockEmployeeCompetency;
 
-  @Mock
-  private Competency mockCompetencyEntity;
+  @Mock private Competency mockCompetencyEntity;
 
   private final Long employeeId = 1L;
 
@@ -82,7 +72,7 @@ class EmployeeServiceTest {
   @Test
   void getEmployeeById_ShouldFilterQualificationsAndDelegateToEvaluator() {
     // Arrange: Setup all four truth table combinations with unique IDs
-    
+
     // 1. True / False
     EmployeeQualification mockCritical = mock(EmployeeQualification.class);
     when(mockCritical.getId()).thenReturn(10L);
@@ -102,7 +92,7 @@ class EmployeeServiceTest {
     when(mockBoth.getId()).thenReturn(30L);
     // In case of short circuiting, use lenient() to avoid unnecessary stubbing exceptions
     lenient().when(mockBoth.isCritical()).thenReturn(true);
-    lenient().when(mockBoth.isFavourite()).thenReturn(true); 
+    lenient().when(mockBoth.isFavourite()).thenReturn(true);
     when(mockBoth.getQualification()).thenReturn(mockQualificationEntity);
 
     // 4. False / False
@@ -112,13 +102,12 @@ class EmployeeServiceTest {
     when(mockNeither.isFavourite()).thenReturn(false);
 
     when(userRepository.getEmployeeByIdOrThrow(employeeId)).thenReturn(mockEmployee);
-    
+
     when(mockEmployee.getEmployeeQualifications())
         .thenReturn(Set.of(mockCritical, mockFavourite, mockBoth, mockNeither));
 
-    QualificationEvaluationResult mockResult = new QualificationEvaluationResult(
-        QualificationStatus.QUALIFIED, null, 1, 1, List.of()
-    );
+    QualificationEvaluationResult mockResult =
+        new QualificationEvaluationResult(QualificationStatus.QUALIFIED, null, 1, 1, List.of());
     when(qualificationEvaluator.evaluateQualification(any(), any())).thenReturn(mockResult);
 
     // Act
@@ -129,16 +118,18 @@ class EmployeeServiceTest {
     assertEquals(3, result.qualifications().size());
 
     // Extract the IDs from the resulting DTOs to prove the correct items survived
-    List<Long> resultingIds = result.qualifications().stream()
-        .map(EmployeeQualificationDto::employeeQualificationId)
-        .toList();
+    List<Long> resultingIds =
+        result.qualifications().stream()
+            .map(EmployeeQualificationDto::employeeQualificationId)
+            .toList();
 
     assertTrue(resultingIds.contains(10L), "Critical item should be present");
     assertTrue(resultingIds.contains(20L), "Favourite item should be present");
     assertTrue(resultingIds.contains(30L), "Item that is both should be present");
     assertFalse(resultingIds.contains(40L), "Item that is neither should be dropped");
 
-    verify(qualificationEvaluator, times(3)).evaluateQualification(eq(mockQualificationEntity), any());
+    verify(qualificationEvaluator, times(3))
+        .evaluateQualification(eq(mockQualificationEntity), any());
   }
 
   @Test
@@ -149,7 +140,7 @@ class EmployeeServiceTest {
 
     // Act & Assert
     assertThrows(EntityNotFoundException.class, () -> employeeService.getEmployeeById(employeeId));
-    
+
     // Verify no further logic was executed
     verify(qualificationEvaluator, never()).evaluateQualification(any(), any());
   }
@@ -158,7 +149,7 @@ class EmployeeServiceTest {
   void getEmployeeQualifications_ShouldReturnAllQualificationsUnfiltered() {
     // Arrange
     when(userRepository.getEmployeeByIdOrThrow(employeeId)).thenReturn(mockEmployee);
-    
+
     when(mockCriticalQualification.getQualification()).thenReturn(mockQualificationEntity);
     when(mockStandardQualification.getQualification()).thenReturn(mockQualificationEntity);
 
@@ -167,9 +158,8 @@ class EmployeeServiceTest {
         .thenReturn(Set.of(mockCriticalQualification, mockStandardQualification));
     when(mockEmployee.getEmployeeCompetencies()).thenReturn(Set.of());
 
-    QualificationEvaluationResult mockResult = new QualificationEvaluationResult(
-        QualificationStatus.QUALIFIED, null, 1, 1, List.of()
-    );
+    QualificationEvaluationResult mockResult =
+        new QualificationEvaluationResult(QualificationStatus.QUALIFIED, null, 1, 1, List.of());
     when(qualificationEvaluator.evaluateQualification(any(), any())).thenReturn(mockResult);
 
     // Act
@@ -189,10 +179,9 @@ class EmployeeServiceTest {
         .thenThrow(new EntityNotFoundException("Employee not found"));
 
     // Act & Assert: Verify the exception bubbles straight through the method
-    assertThrows(EntityNotFoundException.class, () -> 
-        employeeService.getEmployeeQualifications(employeeId)
-    );
-    
+    assertThrows(
+        EntityNotFoundException.class, () -> employeeService.getEmployeeQualifications(employeeId));
+
     // Verify we never attempted to run business logic on a missing user
     verify(qualificationEvaluator, never()).evaluateQualification(any(), any());
   }
@@ -201,7 +190,7 @@ class EmployeeServiceTest {
   void getEmployeeCompetencies_ShouldMapAndReturnAllCompetenciesWhenOneExists() {
     // Arrange
     when(userRepository.getEmployeeByIdOrThrow(employeeId)).thenReturn(mockEmployee);
-    
+
     // Setup nested competency data for the mapper
     when(mockCompetencyEntity.getId()).thenReturn(100L);
     when(mockCompetencyEntity.getName()).thenReturn("First Aid");
@@ -236,7 +225,7 @@ class EmployeeServiceTest {
   void getEmployeeCompetencies_ShouldMapAndReturnAllCompetenciesWhenMultipleExist() {
     // Arrange: MANY (2) items
     when(userRepository.getEmployeeByIdOrThrow(employeeId)).thenReturn(mockEmployee);
-    
+
     // Setup Mock 1
     EmployeeCompetency mockCompetency1 = mock(EmployeeCompetency.class);
     Competency mockEntity1 = mock(Competency.class);
@@ -249,7 +238,8 @@ class EmployeeServiceTest {
     when(mockEntity2.getId()).thenReturn(102L);
     when(mockCompetency2.getCompetency()).thenReturn(mockEntity2);
 
-    when(mockEmployee.getEmployeeCompetencies()).thenReturn(Set.of(mockCompetency1, mockCompetency2));
+    when(mockEmployee.getEmployeeCompetencies())
+        .thenReturn(Set.of(mockCompetency1, mockCompetency2));
 
     // Act
     List<EmployeeCompetencyDto> result = employeeService.getEmployeeCompetencies(employeeId);
@@ -266,8 +256,7 @@ class EmployeeServiceTest {
         .thenThrow(new EntityNotFoundException("Employee not found"));
 
     // Act & Assert
-    assertThrows(EntityNotFoundException.class, () -> 
-        employeeService.getEmployeeCompetencies(employeeId)
-    );
+    assertThrows(
+        EntityNotFoundException.class, () -> employeeService.getEmployeeCompetencies(employeeId));
   }
 }

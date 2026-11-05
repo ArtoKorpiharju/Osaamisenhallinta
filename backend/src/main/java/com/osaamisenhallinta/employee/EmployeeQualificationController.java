@@ -31,9 +31,13 @@ public class EmployeeQualificationController {
 
   private final EmployeeQualificationService employeeQualificationService;
 
+  /** Assigns a qualification to an employee. */
   @Operation(
       summary = "Assign a qualification",
-      description = "Assigns an existing global qualification to an employee's profile.")
+      description =
+          "Assigns an existing global qualification to an employee's profile. IsCritical is " +
+              "an optional parameter that is meant to be used only by supervisors. " +
+              "If not provided, it defaults to false.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "201", description = "Qualification assigned successfully"),
@@ -55,13 +59,17 @@ public class EmployeeQualificationController {
   public EmployeeQualificationDto assignQualification(
       @PathVariable Long employeeId, @Valid @RequestBody AssignQualificationRequestDto requestDto) {
     return employeeQualificationService.assignQualification(
-        employeeId, requestDto.qualificationId());
+        employeeId, requestDto.qualificationId(), requestDto.isCritical());
   }
 
+  /**
+   * Removes a qualification from an employee's profile. Critical qualifications cannot be deleted.
+   */
   @Operation(
       summary = "Remove an assigned qualification",
       description =
-          "Removes a qualification from an employee's profile. Critical qualifications cannot be deleted.")
+          "Removes a qualification from an employee's "
+              + "profile. Critical qualifications cannot be deleted.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "204", description = "Qualification removed successfully"),
@@ -82,9 +90,10 @@ public class EmployeeQualificationController {
     return;
   }
 
+  /** Updates the favourite status of an employee's assigned qualification. */
   @Operation(
-      summary = "Toggle favourite status",
-      description = "Toggles the favourite boolean flag for an employee's assigned qualification.")
+      summary = "Update favourite status",
+      description = "Updates the favourite boolean flag for an employee's assigned qualification.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "204", description = "Favourite status updated successfully"),

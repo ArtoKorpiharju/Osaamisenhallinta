@@ -22,21 +22,8 @@ import lombok.Getter;
     uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "qualification_id"}))
 public class EmployeeQualification {
 
-  /**
-   * Creates a new employee qualification.
-   *
-   * @param employee The employee
-   * @param qualification The qualification
-   */
-  public EmployeeQualification(User employee, Qualification qualification) {
-    this.employee = employee;
-    this.qualification = qualification;
-    this.favourite = false;
-    this.critical = false;
-  }
-
-  public void setCritical(boolean critical) {
-    this.critical = critical;
+  public void setCritical(boolean isCritical) {
+    this.isCritical = isCritical;
   }
 
   public void setFavourite(boolean favourite) {
@@ -59,7 +46,34 @@ public class EmployeeQualification {
   private boolean favourite;
 
   @Column(name = "critical", nullable = false)
-  private boolean critical;
+  private boolean isCritical;
+
+  /**
+   * Creates a new non-critical employee qualification. Used by employees.
+   *
+   * @param employee The employee
+   * @param qualification The qualification
+   */
+  public EmployeeQualification(User employee, Qualification qualification) {
+    this.employee = employee;
+    this.qualification = qualification;
+    this.favourite = false;
+    this.isCritical = false;
+  }
+
+  /**
+   * Creates a new employee qualification with possibility to define if qualification is critical.
+   * Used by supervisor.
+   *
+   * @param employee The employee
+   * @param qualification The qualification
+   * @param isCritical Whether the qualification is critical
+   */
+  public EmployeeQualification(User employee, Qualification qualification, boolean isCritical) {
+    this.employee = employee;
+    this.qualification = qualification;
+    this.isCritical = isCritical;
+  }
 
   protected EmployeeQualification() {}
 }
