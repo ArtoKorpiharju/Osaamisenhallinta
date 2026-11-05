@@ -105,7 +105,8 @@ VALUES
     ('Maintenance Safety Certificate', 'CERTIFICATION', 36),
     ('Equipment Inspection Skill',     'SKILL',         24),
     ('Incident Reporting',             'OTHER',         24),
-    ('Safety Awareness Training',      'TRAINING',      12);
+    ('Safety Awareness Training',      'TRAINING',      12),
+    ('Workplace Safety Audit',          'OTHER',         36);
 
 
 -- ============================================================
@@ -203,8 +204,11 @@ WITH scenarios(email, competency_name, expiration_offset_days) AS (
         ('test_EMPLOYEE@email.com',
          'Equipment Inspection Skill', 150),
 
+        -- Misc
          ('test_EMPLOYEE@email.com',
          'Safety Officer', 150),
+         ('test_EMPLOYEE@email.com',
+         'Workplace Safety Audit', 360),
 
 
         -- Anna Korhonen: qualified for Warehouse Operator
