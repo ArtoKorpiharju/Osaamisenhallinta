@@ -21,6 +21,28 @@ import lombok.Getter;
     name = "employee_qualification",
     uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "qualification_id"}))
 public class EmployeeQualification {
+
+  /**
+   * Creates a new employee qualification.
+   *
+   * @param employee The employee
+   * @param qualification The qualification
+   */
+  public EmployeeQualification(User employee, Qualification qualification) {
+    this.employee = employee;
+    this.qualification = qualification;
+    this.favourite = false;
+    this.critical = false;
+  }
+
+  public void setCritical(boolean critical) {
+    this.critical = critical;
+  }
+
+  public void setFavourite(boolean favourite) {
+    this.favourite = favourite;
+  }
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
