@@ -16,7 +16,14 @@ public class CompetencyService {
     this.competencyRepository = competencyRepository;
   }
 
-  /** Returns a competency by id. */
+  /**
+   * Returns a competency by ID, or throws an exception if not found.
+   *
+   * @param id The ID of the competency to retrieve.
+   * @return An CompetencyDto containing competency details.
+   * @throws ResponseStatusException if the competency is not found.
+   */
+  @Transactional(readOnly = true)
   public CompetencyDto getCompetencyById(Long id) {
     Competency competency = competencyRepository.findById(id)
         .orElseThrow(
@@ -26,20 +33,36 @@ public class CompetencyService {
     return response;
   }
 
-  /** Return all competencies as DTOs. */
+  /**
+   * Returns all competencies.
+   *
+   * @return A list of competency DTOs.
+   */
+  @Transactional(readOnly = true)
   public List<CompetencyDto> getAllCompetencies() {
-    return competencyRepository.getAllCompetencies();
+    return competencyRepository.findAll()
+      .stream()
+      .map(this::mapToDto)
+      .toList();
   }
   
-  /** Create a competency. */
+  /**
+   * Create a competency, or throws an exception if competency already exists.
+   *
+   * @param name The name of the competency.
+   * @param type The type of the competency.
+   * @param validityMonths How long the competency is valid for.
+   * @return An CompetencyDto containing competency details.
+   * @throws ResponseStatusException if the competency already exists.
+   */
   @Transactional
   public CompetencyDto createCompetency(
       String name, CompetencyType type, Integer validityMonths) {
 
     // Check if following competency already exists in the system
-    if (competencyRepository.doesExist(name)) {
+    if (competencyRepository.existsByName(name)) {
       throw new ResponseStatusException(
-        HttpStatus.BAD_REQUEST, "Competency already exists");
+        HttpStatus.CONFLICT, "Competency already exists");
     }
 
     // Create a new competency object
@@ -48,7 +71,12 @@ public class CompetencyService {
     return mapToDto(newCompetency); 
   }
 
-  /** Delete a competency. */
+  /**
+   * Deletes a competency, or throws an exception if not found.
+   *
+   * @param id The ID of the competency to delete.
+   * @throws ResponseStatusException if the competency is not found or in use by a qualification.
+   */
   @Transactional
   public void deleteCompetency(Long id) {
     Competency competency = competencyRepository.findById(id)
@@ -64,12 +92,17 @@ public class CompetencyService {
     competencyRepository.delete(competency);
   }
 
-  /** Map to a DTO. */
+  /**
+   * Maps a competency entity to a DTO.
+   *
+   * @param id The ID of the competency.
+   * @return A competency DTO.
+   */
   private CompetencyDto mapToDto(Competency competency) {
     return new CompetencyDto(
       competency.getId(), 
       competency.getName(), 
-      String.valueOf(competency.getType()),
+      competency.getType(),
       competency.getValidityMonths());
   }
 }
