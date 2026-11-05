@@ -4,5 +4,6 @@ package com.osaamisenhallinta.competency;
 public enum CompetencyStatus {
   VALID,
   EXPIRING_SOON,
-  EXPIRED
+  EXPIRED,
+  MISSING
 }

@@ -1,27 +1,73 @@
 import { type Tone } from '../config/tones'
 
-export type QualificationStatus =
-  | 'expired'
-  | 'expiring'
-  | 'qualified'
+export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
 
-export interface Qualification {
-  id: string
+export type CompetencyStatus = 'expired' | 'missing' | 'expiringSoon' | 'valid'
+
+export type CompetencyType =
+  'training' | 'license' | 'certification' | 'skill' | 'other'
+
+export interface RenewalPlan {
+  id: number
+  employeeCompetencyId: number
+  renewalDate: string
+  renewalComment: string | null
+}
+
+export interface EmployeeCompetency {
+  employeeCompetencyId: number | null
+  competencyId: number
   name: string
+  type: CompetencyType
+  issueDate: string | null
+  expirationDate: string | null
+  status: CompetencyStatus
+  renewalPlan: RenewalPlan | null
+}
+
+export interface Requirement {
+  competencyId: number
+  competencyName: string
+  competencyType: string
+  isMet: boolean
+  expirationDate: string | null
+}
+
+export interface EmployeeQualification {
+  employeeQualificationId: number
+  qualificationId: number
+  name: string
+  isFavourite: boolean // Star symbol in table if favourite
+  isCritical: boolean
+  validUntil: string | null
   status: QualificationStatus
-  requirementsMet: number
   requirementsTotal: number
-  validUntil: string
-  // Star symbol in table if primary
-  isPrimary?: boolean
-  isCritical?: boolean
+  requirementsMet: number
+  requiredCompetencies: EmployeeCompetency[]
+}
+
+export interface EmployeeOverview {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  role: 'EMPLOYEE'
+  qualifications: EmployeeQualification[]
+}
+
+export interface SupervisorOverview {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  employees: string[]
 }
 
 export interface OverviewSummary {
   outdated: number
   expiring: number
-  renewals: number
-  planned: number
+  missingRenewals: number
+  plannedRenewals: number
 }
 
 export interface ActionRequiredItem {

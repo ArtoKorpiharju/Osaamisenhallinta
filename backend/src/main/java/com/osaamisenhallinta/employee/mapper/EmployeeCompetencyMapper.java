@@ -3,8 +3,7 @@ package com.osaamisenhallinta.employee.mapper;
 import com.osaamisenhallinta.competency.Competency;
 import com.osaamisenhallinta.employee.EmployeeCompetency;
 import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
-import com.osaamisenhallinta.renewal.RenewalPlan;
-import com.osaamisenhallinta.renewal.dto.RenewalPlanDto;
+import com.osaamisenhallinta.renewal.mapper.RenewalPlanMapper;
 
 /** Mapper class for converting EmployeeCompetency entities to EmployeeCompetencyDto objects. */
 public class EmployeeCompetencyMapper {
@@ -27,17 +26,6 @@ public class EmployeeCompetencyMapper {
         entity.getIssueDate(),
         entity.getExpirationDate(),
         entity.getStatus(),
-        mapToRenewalPlanDto(entity.getRenewalPlan()));
-  }
-
-  private static RenewalPlanDto mapToRenewalPlanDto(RenewalPlan plan) {
-    if (plan == null) {
-      return null;
-    }
-    return new RenewalPlanDto(
-        plan.getId(),
-        plan.getEmployeeCompetency().getId(),
-        plan.getRenewalDate(),
-        plan.getRenewalComment());
+        RenewalPlanMapper.mapToDto(entity.getRenewalPlan()));
   }
 }

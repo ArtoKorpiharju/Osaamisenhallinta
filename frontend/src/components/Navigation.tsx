@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 import {
   Drawer,
@@ -19,6 +20,7 @@ interface NavigationProps {
 const drawerWidth = 240
 
 export default function Navigation({ role }: NavigationProps) {
+  const { t } = useTranslation()
   const navigationItems = pagesPerRole[role]
 
   return (
@@ -54,7 +56,7 @@ export default function Navigation({ role }: NavigationProps) {
             <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
               <item.icon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary={item.label} />
+            <ListItemText primary={t(item.labelKey)} />
           </ListItemButton>
         ))}
       </List>
@@ -72,7 +74,7 @@ export default function Navigation({ role }: NavigationProps) {
           <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
             <SettingsIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary={t('navigation.settings')} />
         </ListItemButton>
       </List>
     </Drawer>
