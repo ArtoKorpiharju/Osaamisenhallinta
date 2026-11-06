@@ -81,18 +81,18 @@ public class CompetencyService {
    */
   @Transactional
   public void deleteCompetency(Long id) {
+    Competency competency = competencyRepository.findById(id)
+        .orElseThrow(
+          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
+
     // Checks whether the competency is used by a Qualification
     if (competencyRepository.isUsedByQualification(id)) {
       throw new ResponseStatusException(
-        HttpStatus.BAD_REQUEST, "Competency is in use by a qualification");
+        HttpStatus.CONFLICT, "Competency is in use by a qualification");
     }
 
     renewalPlanRepository.deleteByCompetencyId(id);
     employeeCompetencyRepository.deleteByCompetencyId(id);
-
-    Competency competency = competencyRepository.findById(id)
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
 
     competencyRepository.delete(competency);
   }

@@ -94,11 +94,15 @@ public class CompetencyController {
           @ApiResponse(
             responseCode = "400", 
             description = 
-            "Competency is in use by a qualification; Missing or invalid parameter(s)", 
+            "Missing or invalid parameter(s)", 
             content = @Content),
           @ApiResponse(
               responseCode = "404",
               description = "Competency not found",
+              content = @Content),
+          @ApiResponse(
+              responseCode = "409",
+              description = "Competency is in use by a qualification",
               content = @Content)
       })
   @DeleteMapping("/{id}")
