@@ -81,7 +81,7 @@ public class CompetencyService {
    */
   @Transactional
   public void deleteCompetency(Long id) {
-    Competency competency = competencyRepository.findById(id)
+    final Competency competency = competencyRepository.findById(id)
         .orElseThrow(
           () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
 
