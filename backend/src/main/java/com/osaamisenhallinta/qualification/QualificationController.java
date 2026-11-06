@@ -32,6 +32,10 @@ public class QualificationController {
             responseCode = "200", 
             description = "Successful operation"),
           @ApiResponse(
+              responseCode = "400",
+              description = "Missing or invalid parameter(s)",
+              content = @Content),
+          @ApiResponse(
               responseCode = "404",
               description = "Qualification not found",
               content = @Content)

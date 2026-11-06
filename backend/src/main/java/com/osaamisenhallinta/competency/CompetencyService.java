@@ -1,6 +1,9 @@
 package com.osaamisenhallinta.competency;
 
+import com.osaamisenhallinta.employee.EmployeeCompetencyRepository;
+import com.osaamisenhallinta.renewal.RenewalPlanRepository;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,12 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 /** Service for managing competency-related operations. */
 @Service
+@RequiredArgsConstructor
 public class CompetencyService {
+  private final EmployeeCompetencyRepository employeeCompetencyRepository;
+  private final RenewalPlanRepository renewalPlanRepository;
   private final CompetencyRepository competencyRepository;
-
-  public CompetencyService(CompetencyRepository competencyRepository) {
-    this.competencyRepository = competencyRepository;
-  }
 
   /**
    * Returns a competency by ID, or throws an exception if not found.
@@ -79,15 +81,18 @@ public class CompetencyService {
    */
   @Transactional
   public void deleteCompetency(Long id) {
-    Competency competency = competencyRepository.findById(id)
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
-
     // Checks whether the competency is used by a Qualification
     if (competencyRepository.isUsedByQualification(id)) {
       throw new ResponseStatusException(
         HttpStatus.BAD_REQUEST, "Competency is in use by a qualification");
     }
+
+    renewalPlanRepository.deleteByCompetencyId(id);
+    employeeCompetencyRepository.deleteByCompetencyId(id);
+
+    Competency competency = competencyRepository.findById(id)
+        .orElseThrow(
+          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
 
     competencyRepository.delete(competency);
   }

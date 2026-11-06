@@ -8,5 +8,5 @@ public record CreateCompetencyDto(
     Long competencyId,
     @NotNull String name,
     @NotNull CompetencyType type,
-    @Min(value = 0, message = "Validity months cannot be negative")
+    @Min(value = 1, message = "Validity months cannot be non-positive")
     Integer validityMonths) {}
