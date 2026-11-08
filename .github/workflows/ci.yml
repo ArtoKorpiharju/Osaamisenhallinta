@@ -46,9 +46,9 @@ jobs:
         working-directory: backend
         run: chmod +x mvnw
 
-      - name: Check formatting (Spotless)
+      - name: Static code analysis (Checkstyle)
         working-directory: backend
-        run: ./mvnw --batch-mode --no-transfer-progress spotless:check
+        run: ./mvnw --batch-mode --no-transfer-progress checkstyle:check
 
       - name: Run backend tests
         working-directory: backend
