@@ -42,11 +42,17 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
+      - name: Make Maven wrapper executable
+        working-directory: backend
+        run: chmod +x mvnw
+
+      - name: Check formatting (Spotless)
+        working-directory: backend
+        run: ./mvnw --batch-mode --no-transfer-progress spotless:check
+
       - name: Run backend tests
         working-directory: backend
-        run: |
-          chmod +x mvnw
-          ./mvnw --batch-mode --no-transfer-progress test
+        run: ./mvnw --batch-mode --no-transfer-progress test
 
   frontend-unit-tests:
     name: Frontend unit tests (Vitest)
@@ -66,13 +72,18 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Lint frontend (ESLint)
+        working-directory: frontend
+        run: npm run lint
+
       - name: Run frontend unit tests
         working-directory: frontend
         run: npm run test
 
   e2e-tests:
-    name: End-to-end tests (Docker)
+    name: End-to-end tests (Playwright)
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     needs: [backend-tests, frontend-unit-tests]
     steps:
       - name: Check out repository
@@ -82,6 +93,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Run end-to-end tests
-        run: npm run e2e-test
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 90

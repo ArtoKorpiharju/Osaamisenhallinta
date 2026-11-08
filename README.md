@@ -13,7 +13,8 @@ Full-stack application using React, Spring Boot and PostgreSQL.
 - Backend: Java 21, Maven 3.9, Spring Boot 4.1, Checkstyle 3.6, Spotless 3.10
 - Database: PostgreSQL 18
 - Web server / reverse proxy: Nginx 1.30.4
-- Tooling: Docker Compose
+- Testing: Vitest 3, Playwright 1.64
+- Tooling: Docker Compose, Node.js 24
 
 ## Run with Docker Compose
 
@@ -82,4 +83,4 @@ Or cmd / Powershell:
 The tests can be run from the root of the repository by:
 
 - Frontend: `cd frontend && npm run test` (Vitest + Testing Library)
-- End to end: `npm run e2e-test`
+- End to end: `npx playwright test` (playwright)
