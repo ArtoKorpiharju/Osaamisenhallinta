@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /** A controller for competency information. */
 @RestController
 @RequestMapping("/api/competencies")
-@Tag(
-    name = "Competencies",
-    description = "Endpoints for managing competencies")
+@Tag(name = "Competencies", description = "Endpoints for managing competencies")
 public class CompetencyController {
   private final CompetencyService competencyService;
 
@@ -34,17 +31,12 @@ public class CompetencyController {
   @Operation(summary = "Get a competency by ID")
   @ApiResponses(
       value = {
-          @ApiResponse(
-            responseCode = "200", 
-            description = "Successful operation"),
-          @ApiResponse(
+        @ApiResponse(responseCode = "200", description = "Successful operation"),
+        @ApiResponse(
             responseCode = "400",
             description = "Missing or invalid parameter(s)",
             content = @Content),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Competency not found",
-              content = @Content)
+        @ApiResponse(responseCode = "404", description = "Competency not found", content = @Content)
       })
   @GetMapping("/{id}")
   public CompetencyDto getCompetencyById(@PathVariable Long id) {
@@ -53,12 +45,7 @@ public class CompetencyController {
 
   /** Get all competencies. */
   @Operation(summary = "Get all competencies")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-            responseCode = "200", 
-            description = "Successful operation")
-      })
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation")})
   @GetMapping()
   public List<CompetencyDto> getAllCompetencies() {
     return competencyService.getAllCompetencies();
@@ -67,16 +54,14 @@ public class CompetencyController {
   @Operation(summary = "Create a new competency")
   @ApiResponses(
       value = {
-          @ApiResponse(
-            responseCode = "201", 
-            description = "Competency created successfully"),
-          @ApiResponse(
+        @ApiResponse(responseCode = "201", description = "Competency created successfully"),
+        @ApiResponse(
             responseCode = "400",
             description = "Missing or invalid parameter(s)",
             content = @Content),
-          @ApiResponse(
-            responseCode = "409", 
-            description = "Competency already exists", 
+        @ApiResponse(
+            responseCode = "409",
+            description = "Competency already exists",
             content = @Content)
       })
   @PostMapping()
@@ -88,22 +73,19 @@ public class CompetencyController {
   @Operation(summary = "Delete a competency")
   @ApiResponses(
       value = {
-          @ApiResponse(
-            responseCode = "204", 
-            description = "Competency successfully deleted"),
-          @ApiResponse(
-            responseCode = "400", 
-            description = 
-            "Missing or invalid parameter(s)", 
+        @ApiResponse(responseCode = "204", description = "Competency successfully deleted"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Missing or invalid parameter(s)",
             content = @Content),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Competency not found",
-              content = @Content),
-          @ApiResponse(
-              responseCode = "409",
-              description = "Competency is in use by a qualification",
-              content = @Content)
+        @ApiResponse(
+            responseCode = "404",
+            description = "Competency not found",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Competency is in use by a qualification",
+            content = @Content)
       })
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -111,5 +93,4 @@ public class CompetencyController {
     competencyService.deleteCompetency(id);
     return;
   }
-  
 }

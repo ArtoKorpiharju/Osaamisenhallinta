@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 /** Repository for managing RenewalPlan entities. */
 public interface RenewalPlanRepository extends JpaRepository<RenewalPlan, Long> {
   @Modifying
-  @Query("""
+  @Query(
+      """
       DELETE from RenewalPlan rp
       WHERE rp.employeeCompetency.competency.id = :competencyId
       """)

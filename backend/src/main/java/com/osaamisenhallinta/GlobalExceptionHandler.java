@@ -1,5 +1,6 @@
 package com.osaamisenhallinta;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +10,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+  /** Handles validation errors for method arguments. */
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
@@ -39,5 +42,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     problemDetail.setProperty("errors", errors);
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
+  }
+
+  /** Handles cases where a requested database entity (like a User or Competency) does not exist. */
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+    ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
   }
 }
