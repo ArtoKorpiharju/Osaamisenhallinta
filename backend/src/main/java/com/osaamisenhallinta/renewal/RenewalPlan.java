@@ -11,9 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import lombok.Getter;
 
 /** Represents a plan for renewing an employee's competency. */
 @Entity
+@Getter
 @Table(name = "renewal_plan")
 public class RenewalPlan {
 
@@ -30,6 +32,23 @@ public class RenewalPlan {
 
   @Column(name = "renewal_comment", nullable = true, length = 500)
   private String renewalComment;
+
+  /** Constructor for creating a new RenewalPlan. */
+  public RenewalPlan(LocalDate renewalDate, String renewalComment) {
+    this.renewalDate = renewalDate;
+    this.renewalComment = renewalComment;
+  }
+
+  /** Sets the associated EmployeeCompetency for this RenewalPlan. */
+  public void setEmployeeCompetency(EmployeeCompetency employeeCompetency) {
+    this.employeeCompetency = employeeCompetency;
+  }
+
+  /** Updates the renewal date and comment for this RenewalPlan. */
+  public void update(LocalDate renewalDate, String renewalComment) {
+    this.renewalDate = renewalDate;
+    this.renewalComment = renewalComment;
+  }
 
   protected RenewalPlan() {}
 }

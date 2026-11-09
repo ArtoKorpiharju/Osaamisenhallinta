@@ -1,4 +1,4 @@
-package com.osaamisenhallinta.employee;
+package com.osaamisenhallinta.employee.dto;
 
 import com.osaamisenhallinta.user.UserRole;
 import java.util.List;
@@ -10,5 +10,4 @@ public record EmployeeOverviewDto(
     String lastName,
     String email,
     UserRole role,
-    List<EmployeeCompetencyDto> competencies,
     List<EmployeeQualificationDto> qualifications) {}

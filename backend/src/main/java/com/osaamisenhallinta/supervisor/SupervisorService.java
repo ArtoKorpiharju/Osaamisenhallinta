@@ -2,6 +2,7 @@ package com.osaamisenhallinta.supervisor;
 
 import com.osaamisenhallinta.user.User;
 import com.osaamisenhallinta.user.UserRepository;
+import com.osaamisenhallinta.user.UserRole;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,9 @@ public class SupervisorService {
     User supervisor =
         userRepository
             .findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+            .filter(user -> user.getRole() == UserRole.SUPERVISOR)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Supervisor not found"));
 
     SupervisorOverviewDto response = mapToDto(supervisor);
     return response;
