@@ -46,5 +46,12 @@ public class Competency {
   @OneToMany(mappedBy = "competency", fetch = FetchType.LAZY)
   private Set<EmployeeCompetency> employeeCompetencies = new HashSet<>();
 
+  /** A constructor for creating a new competency. */
+  public Competency(String name, CompetencyType type, Integer validityMonths) {
+    this.name = name;
+    this.type = type;
+    this.validityMonths = validityMonths;
+  }
+
   protected Competency() {}
 }

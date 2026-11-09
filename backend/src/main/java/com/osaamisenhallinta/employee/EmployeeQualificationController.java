@@ -35,9 +35,9 @@ public class EmployeeQualificationController {
   @Operation(
       summary = "Assign a qualification",
       description =
-          "Assigns an existing global qualification to an employee's profile. IsCritical is " +
-              "an optional parameter that is meant to be used only by supervisors. " +
-              "If not provided, it defaults to false.")
+          "Assigns an existing global qualification to an employee's profile. IsCritical is "
+              + "an optional parameter that is meant to be used only by supervisors. "
+              + "If not provided, it defaults to false.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "201", description = "Qualification assigned successfully"),
