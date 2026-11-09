@@ -7,7 +7,7 @@ import {
   type GridValidRowModel,
 } from '@mui/x-data-grid'
 
-export interface DataTableColumn<T extends GridValidRowModel>  {
+export interface DataTableColumn<T extends GridValidRowModel> {
   id: string
   label: string
   align?: 'left' | 'center' | 'right'
@@ -15,7 +15,7 @@ export interface DataTableColumn<T extends GridValidRowModel>  {
   render: (row: T) => ReactNode
 }
 
-interface DataTableProps<T extends GridValidRowModel>  {
+interface DataTableProps<T extends GridValidRowModel> {
   title?: string
   columns: DataTableColumn<T>[]
   rows: T[]
