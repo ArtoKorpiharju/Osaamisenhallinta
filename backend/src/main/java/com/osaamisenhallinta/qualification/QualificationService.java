@@ -3,6 +3,7 @@ package com.osaamisenhallinta.qualification;
 import com.osaamisenhallinta.competency.Competency;
 import com.osaamisenhallinta.competency.CompetencyRepository;
 import com.osaamisenhallinta.competency.dto.CompetencyDto;
+import com.osaamisenhallinta.employee.EmployeeQualificationRepository;
 import com.osaamisenhallinta.qualification.dto.QualificationDto;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class QualificationService {
   private final QualificationRepository qualificationRepository;
   private final CompetencyRepository competencyRepository;
+  private final EmployeeQualificationRepository employeeQualificationRepository;
 
   /**
    * Returns all qualifications.
@@ -78,6 +80,29 @@ public class QualificationService {
     Qualification newQualification = new Qualification(name, requiredCompetencies);
     newQualification = qualificationRepository.save(newQualification);
     return mapToDto(newQualification); 
+  }
+
+  /**
+   * Deletes a qualification, or throws an exception if not found.
+   *
+   * @param id Qualification ID.
+   * @throws ResponseStatusException if the qualification is not found.
+   */
+  @Transactional
+  public void deleteQualification(Long id) {
+    // Does qualification exist?
+    final Qualification qualification =
+        qualificationRepository
+          .findById(id)
+          .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
+
+    // When deleting, if the qualification is assigned to employees, 
+    // the system must forcefully remove it from all employees first, 
+    // and then delete the global qualification
+
+    employeeQualificationRepository.deleteByQualificationId(id);
+    qualificationRepository.delete(qualification);
   }
 
   /**

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,5 +80,27 @@ public class QualificationController {
   @ResponseStatus(HttpStatus.CREATED)
   public QualificationDto createQualification(@Valid @RequestBody CreateQualificationDto dto) {
     return qualificationService.createQualification(dto.name(), dto.requiredCompetenciesIds());
+  }
+
+  @Operation(summary = "Delete a qualification")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+          responseCode = "204", 
+          description = "Qualification successfully deleted"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Missing or invalid parameter(s)",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Qualification not found",
+            content = @Content)
+      })
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteQualification(@PathVariable Long id) {
+    qualificationService.deleteQualification(id);
+    return;
   }
 }
