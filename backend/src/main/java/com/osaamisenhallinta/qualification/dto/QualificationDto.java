@@ -1,6 +1,6 @@
-package com.osaamisenhallinta.qualification;
+package com.osaamisenhallinta.qualification.dto;
 
-import com.osaamisenhallinta.competency.CompetencyDto;
+import com.osaamisenhallinta.competency.dto.CompetencyDto;
 import java.util.List;
 
 /** A data transfer object for representing a qualification. */

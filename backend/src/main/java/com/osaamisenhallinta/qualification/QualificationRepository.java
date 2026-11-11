@@ -22,4 +22,6 @@ public interface QualificationRepository extends JpaRepository<Qualification, Lo
       LEFT JOIN FETCH q.requiredCompetencies
       """)
   List<Qualification> findAll();
+
+  boolean existsByName(String name);
 }
