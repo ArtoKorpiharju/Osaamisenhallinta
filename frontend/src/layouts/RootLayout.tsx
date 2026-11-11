@@ -110,7 +110,7 @@ export default function RootLayout() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh',
+        height: '100vh',
         bgcolor: '#f5f5f5',
       }}
     >
