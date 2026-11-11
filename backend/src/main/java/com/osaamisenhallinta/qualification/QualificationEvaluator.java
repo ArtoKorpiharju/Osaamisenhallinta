@@ -7,6 +7,7 @@ import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
 import com.osaamisenhallinta.renewal.mapper.RenewalPlanMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class QualificationEvaluator {
    *     and counts of total and met requirements.
    */
   public QualificationEvaluationResult evaluateQualification(
-      Qualification qualification, List<EmployeeCompetency> employeeCompetencies) {
+      Qualification qualification, Collection<EmployeeCompetency> employeeCompetencies) {
 
     Set<Competency> requiredCompetencies = qualification.getRequiredCompetencies();
     int metRequirementsCount = 0;

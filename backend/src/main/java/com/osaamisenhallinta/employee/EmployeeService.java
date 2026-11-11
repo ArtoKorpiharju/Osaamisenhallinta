@@ -4,7 +4,7 @@ import com.osaamisenhallinta.employee.dto.EmployeeCompetencyDto;
 import com.osaamisenhallinta.employee.dto.EmployeeOverviewDto;
 import com.osaamisenhallinta.employee.dto.EmployeeQualificationDto;
 import com.osaamisenhallinta.employee.mapper.EmployeeCompetencyMapper;
-import com.osaamisenhallinta.qualification.Qualification;
+import com.osaamisenhallinta.employee.mapper.EmployeeQualificationMapper;
 import com.osaamisenhallinta.qualification.QualificationEvaluationResult;
 import com.osaamisenhallinta.qualification.QualificationEvaluator;
 import com.osaamisenhallinta.user.User;
@@ -21,12 +21,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional(readOnly = true)
 public class EmployeeService {
   private final UserRepository userRepository;
-  private final QualificationEvaluator qualificationStatusCalculator;
+  private final QualificationEvaluator qualificationEvaluator;
 
   public EmployeeService(
-      UserRepository userRepository, QualificationEvaluator qualificationStatusCalculator) {
+      UserRepository userRepository, QualificationEvaluator qualificationEvaluator) {
     this.userRepository = userRepository;
-    this.qualificationStatusCalculator = qualificationStatusCalculator;
+    this.qualificationEvaluator = qualificationEvaluator;
   }
 
   /**
@@ -95,29 +95,16 @@ public class EmployeeService {
   private List<EmployeeQualificationDto> mapEmployeeQualificationsToDto(
       Collection<EmployeeQualification> qualifications,
       Collection<EmployeeCompetency> competencies) {
+
     return qualifications.stream()
-        .map(assignment -> mapEmployeeQualificationToDto(assignment, competencies))
+        .map(
+            assignment -> {
+              QualificationEvaluationResult result =
+                  qualificationEvaluator.evaluateQualification(
+                      assignment.getQualification(), competencies);
+
+              return EmployeeQualificationMapper.toEmployeeQualificationDto(assignment, result);
+            })
         .toList();
-  }
-
-  private EmployeeQualificationDto mapEmployeeQualificationToDto(
-      EmployeeQualification assignment, Collection<EmployeeCompetency> employeeCompetencies) {
-    Qualification qualification = assignment.getQualification();
-
-    QualificationEvaluationResult qualificationEvaluationResult =
-        qualificationStatusCalculator.evaluateQualification(
-            qualification, List.copyOf(employeeCompetencies));
-
-    return new EmployeeQualificationDto(
-        assignment.getId(),
-        qualification.getId(),
-        qualification.getName(),
-        assignment.isFavourite(),
-        assignment.isCritical(),
-        qualificationEvaluationResult.validUntil(),
-        qualificationEvaluationResult.status(),
-        qualificationEvaluationResult.totalRequirementsCount(),
-        qualificationEvaluationResult.metRequirementsCount(),
-        qualificationEvaluationResult.requirementStatuses());
   }
 }

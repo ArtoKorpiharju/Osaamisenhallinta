@@ -1,8 +1,8 @@
 package com.osaamisenhallinta.user;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 /** Database access for users. */
@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   default User getEmployeeByIdOrThrow(Long employeeId) {
     return findById(employeeId)
         .filter(user -> user.getRole() == UserRole.EMPLOYEE)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
+        .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
   }
 
   Optional<User> findByEmail(String email);

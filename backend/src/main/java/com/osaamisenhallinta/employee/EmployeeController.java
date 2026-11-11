@@ -35,6 +35,7 @@ public class EmployeeController {
     return employeeService.getEmployeeById(id);
   }
 
+  // FIX: consider moving to EmployeeQualificationController for better separation of concerns
   @Operation(summary = "Get all qualifications for an employee")
   @ApiResponses(
       value = {
@@ -47,6 +48,7 @@ public class EmployeeController {
     return employeeService.getEmployeeQualifications(id);
   }
 
+  // FIX: consider moving to EmployeeCompetencyController for better separation of concerns
   @Operation(summary = "Get all competencies for an employee")
   @ApiResponses(
       value = {
