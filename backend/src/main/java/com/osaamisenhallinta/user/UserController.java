@@ -20,8 +20,9 @@ public class UserController {
 
   @Operation(
       summary = "Get seed users",
-      description = "Retrieves a list of predefined seed users. "
-          + "These are used for changing the user role in development phase.")
+      description =
+          "Retrieves a list of predefined seed users. "
+              + "These are used for changing the user role in development phase.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved seed users")

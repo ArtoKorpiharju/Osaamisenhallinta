@@ -16,9 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
   /**
    * Fetches all employees belonging to a specific unit, also fetching their qualifications and
    * competencies.
-   *  
-   * <p>FIX? This uses multiple JOIN FETCHes which creates a Cartesian product.
-   * For the MVP this is fine, but consider changing if performance becomes an issue.
+   *
+   * <p>FIX? This uses multiple JOIN FETCHes which creates a Cartesian product. For the MVP this is
+   * fine, but consider changing if performance becomes an issue.
    */
   @Query(
       """
