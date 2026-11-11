@@ -1,4 +1,4 @@
-import { Alert, Box } from '@mui/material'
+import { Alert, Box, useMediaQuery, useTheme } from '@mui/material'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useState, useEffect } from 'react'
 
@@ -63,10 +63,14 @@ function getUserNameForRole(
 export default function RootLayout() {
   const location = useLocation()
   const navigate = useNavigate()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const role = getRoleFromPath(location.pathname)
 
-  const [navigationOpen, setNavigationOpen] = useState(true)
+  const [desktopNavigationOpen, setDesktopNavigationOpen] = useState(true)
+  const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false)
+  const navigationOpen = isMobile ? mobileNavigationOpen : desktopNavigationOpen
   const [seedUsers, setSeedUsers] = useState<SeedUser[]>([])
   const [usersError, setUsersError] = useState<string | null>(null)
   const [usersLoading, setUsersLoading] = useState(true)
@@ -118,23 +122,55 @@ export default function RootLayout() {
         role={role}
         onRoleChange={handleRoleChange}
         navigationOpen={navigationOpen}
+
+        // Start expanded on desktop and collapsed on mobile.
+        // User interactions keep both states in sync.
         onToggleNavigation={() => {
-          setNavigationOpen((open) => !open)
+          const nextOpen = !navigationOpen
+          setMobileNavigationOpen(nextOpen)
+          setDesktopNavigationOpen(nextOpen)
         }}
+
         userName={getUserNameForRole(seedUsers, role)}
       />
 
       <Box sx={{ flex: 1, display: 'flex', minHeight: 0 }}>
-        {navigationOpen && <Navigation role={role} />}
+        {isMobile ? (
+          <Navigation
+            key="mobile-navigation"
+            role={role}
+            variant="temporary"
+            open={mobileNavigationOpen}
+            onClose={() => {
+              setMobileNavigationOpen(false)
+              setDesktopNavigationOpen(false)
+            }}
+          />
+        ) : (
+          navigationOpen && (
+            <Navigation
+              key="desktop-navigation"
+              role={role}
+              variant="permanent"
+              open
+              onClose={() => {
+                setDesktopNavigationOpen(false)
+                setMobileNavigationOpen(false)
+              }}
+            />
+          )
+        )}
 
         <Box
           component="main"
           sx={{
             flex: 1,
+            minHeight: 0,
             p: 1,
             pl: 3,
             pr: 3,
             overflow: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
           {/** Display an error alert if there was an error fetching seed users. */}

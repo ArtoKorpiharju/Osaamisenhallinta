@@ -56,7 +56,10 @@ export default function TopBar({
       position="sticky"
       color="inherit"
       elevation={0}
-      sx={{ borderBottom: '1px solid #e0e3e8' }}
+      sx={{
+        zIndex: (theme) => theme.zIndex.modal + 1,
+        borderBottom: '1px solid #e0e3e8',
+      }}
     >
       <Toolbar sx={{ minHeight: '48px !important' }}>
         <IconButton
