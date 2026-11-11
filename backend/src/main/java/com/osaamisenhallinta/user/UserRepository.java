@@ -14,8 +14,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
   /**
-   * Fetches all employees belonging to a specific unit, fetching their qualifications and
-   * competencies to prevent N+1 queries.
+   * Fetches all employees belonging to a specific unit, also fetching their qualifications and
+   * competencies.
+   *  
+   * <p>FIX? This uses multiple JOIN FETCHes which creates a Cartesian product.
+   * For the MVP this is fine, but consider changing if performance becomes an issue.
    */
   @Query(
       """
