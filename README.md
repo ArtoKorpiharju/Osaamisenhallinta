@@ -78,9 +78,40 @@ Or cmd / Powershell:
 
 3. See test results in terminal.
 
-### How to run frontend and e2e tests
+### How to run frontend tests
 
-The tests can be run from the root of the repository by:
+All commands assume the current working directory is /frontend
 
-- Frontend: `cd frontend && npm run test` (Vitest + Testing Library)
-- End to end: `npx playwright test` (playwright)
+Run `npm run test` (Vitest + Testing Library)
+
+### How to run end-to-end tests
+
+All commands assume the current working directory is root
+
+1. Start by installing playwright by running:
+
+```bash
+npx playwright install
+```
+
+2. Run tests by command:
+
+```bash
+npx playwright test
+```
+
+Note: playwright does not build a new docker volume if one already exists. In this case use:
+
+```bash
+docker compose down -v
+```
+
+before testing again
+
+3. Playwright usually automatically opens web page on failed tests
+
+You can also get report of the last test run by:
+
+```bash
+npx playwright show-report
+```
