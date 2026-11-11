@@ -13,5 +13,5 @@ public record AtRiskItemDto(
     Long competencyId,
     String competencyName,
     LocalDate expirationDate,
-    CompetencyStatus status,
+    CompetencyStatus competencyStatus,
     LocalDate renewalDate) {}
