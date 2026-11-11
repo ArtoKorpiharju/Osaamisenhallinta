@@ -81,4 +81,17 @@ public class EmployeeQualificationService {
 
     return;
   }
+
+  /** Updates the isCritical flag for an employee's assigned qualification. */
+  @Transactional
+  public void updateQualificationIsCritical(
+      Long employeeId, Long employeeQualificationId, boolean isCritical) {
+    EmployeeQualification eq =
+        employeeQualificationRepository.getByEmployeeIdAndEmployeeQualificationIdOrThrow(
+            employeeId, employeeQualificationId);
+
+    eq.setCritical(isCritical);
+    employeeQualificationRepository.save(eq);
+    return;
+  }
 }
