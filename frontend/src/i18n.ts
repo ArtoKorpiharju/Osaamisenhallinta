@@ -21,7 +21,6 @@ const resources = {
         competencies: 'Competencies',
         renewals: 'Renewals',
         actions: 'Actions',
-        log: 'Log',
         settings: 'Settings',
       },
       profile: {

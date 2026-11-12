@@ -1,3 +1,5 @@
+import PageTitle from '../../components/PageTitle'
+
 export default function SupervisorRenewals() {
-  return <h1>Supervisor Renewals</h1>
+  return <PageTitle>Supervisor Renewals</PageTitle>
 }

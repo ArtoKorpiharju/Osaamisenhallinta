@@ -1,3 +1,5 @@
+import PageTitle from '../../components/PageTitle'
+
 export default function EmployeeRenewals() {
-  return <h1>Employee Renewals</h1>
+  return <PageTitle>Employee Renewals</PageTitle>
 }

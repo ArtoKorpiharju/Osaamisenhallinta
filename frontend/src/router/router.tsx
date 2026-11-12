@@ -13,7 +13,6 @@ import SupervisorRenewals from '../pages/supervisor/Renewals'
 import AdminOverview from '../pages/admin/Overview'
 import AdminQualifications from '../pages/admin/Qualifications'
 import AdminCompetencies from '../pages/admin/Competencies'
-import AdminLog from '../pages/admin/Log'
 
 // The NotFound page is used for any route that doesn't match the above routes.
 import NotFound from '../pages/NotFound'
@@ -47,7 +46,6 @@ export default function AppRouter() {
             <Route path="overview" element={<AdminOverview />} />
             <Route path="qualifications" element={<AdminQualifications />} />
             <Route path="competencies" element={<AdminCompetencies />} />
-            <Route path="log" element={<AdminLog />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
