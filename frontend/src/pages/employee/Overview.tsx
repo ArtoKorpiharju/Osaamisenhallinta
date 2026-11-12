@@ -32,7 +32,7 @@ const detailPaths: Record<keyof OverviewSummary, string> = {
 }
 
 // Get summary-card counts from the employee's competencies.
-// Missing renewals count only expired or expiring competencies without a plan.
+// Missing renewals count only missing, expired or expiring competencies without a plan.
 // Planned renewals count any competency that has a plan.
 function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
   return competencies.reduce(
@@ -46,7 +46,8 @@ function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
       }
 
       if (
-        (competency.status === 'expired' ||
+        (competency.status === 'missing' ||
+          competency.status === 'expired' ||
           competency.status === 'expiringSoon') &&
         competency.renewalPlan === null
       ) {
@@ -62,17 +63,21 @@ function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
   )
 }
 
-// Create action cards for expired or expiring soon competencies.
+// Create action cards for missing, expired or expiring soon competencies.
 // Show renewal details when a plan exists; otherwise offer renewal actions.
 function createActionItems(
   competencies: EmployeeCompetency[]
 ): ActionRequiredItem[] {
   return competencies.flatMap((competency) => {
+    const isMissing = competency.status === 'missing'
     const isInvalid = competency.status === 'expired'
     const isExpiringSoon = competency.status === 'expiringSoon'
 
-    // Only these statuses need attention, and the card needs an expiration date.
-    if ((!isInvalid && !isExpiringSoon) || competency.expirationDate === null) {
+    // These statuses don't need attention.
+    if (
+      (!isMissing && !isInvalid && !isExpiringSoon) ||
+      (competency.expirationDate === null && !isMissing)
+    ) {
       return []
     }
 
@@ -81,10 +86,13 @@ function createActionItems(
     const item: ActionRequiredItem = {
       id: String(competency.employeeCompetencyId),
       title: competency.name,
-      dueDate: competency.expirationDate,
-      status: isInvalid
-        ? { label: 'Invalid', tone: 'danger' }
-        : { label: 'Expiring soon', tone: 'warning' },
+      ...(competency.expirationDate !== null && {
+        dueDate: competency.expirationDate,
+      }),
+      status:
+        isMissing || isInvalid
+          ? { label: 'Invalid', tone: 'danger' }
+          : { label: 'Expiring soon', tone: 'warning' },
       actions: plan
         ? [{ id: 'view-renewal-plan', label: 'View renewal plan' }]
         : [

@@ -42,12 +42,12 @@ const resources = {
           },
           expiringSoon: {
             title: 'Expiring soon',
-            description: 'Expiring within 90 days',
+            description: 'Competencies expiring within 90 days',
           },
           missingRenewals: {
             title: 'Missing renewals',
             description:
-              'Invalid or soon expiring competencies without a planned renewal',
+              'Invalid or soon-expiring competencies with no planned actions',
           },
           plannedRenewals: {
             title: 'Planned renewals',
@@ -181,12 +181,12 @@ const resources = {
           },
           expiringSoon: {
             title: 'Vanhentumassa',
-            description: 'Vanhentuvat 90 päivän sisällä',
+            description: '90 päivän sisällä vanhentuvat osaamiset',
           },
           missingRenewals: {
             title: 'Puuttuvat uusimiset',
             description:
-              'Ei voimassa olevat tai pian vahentuvat osaamiset, joihin ei ole suunniteltu uusimista',
+              'Ei voimassa olevat tai pian vanhentuvat osaamiset, joihin ei ole suunniteltu uusimista',
           },
           plannedRenewals: {
             title: 'Suunnitellut uusimiset',
