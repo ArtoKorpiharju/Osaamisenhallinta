@@ -166,9 +166,7 @@ export default function RootLayout() {
           sx={{
             flex: 1,
             minHeight: 0,
-            p: 1,
-            pl: 3,
-            pr: 3,
+            p: { xs: 0.5, sm: 3 },
             overflow: 'auto',
             WebkitOverflowScrolling: 'touch',
           }}
