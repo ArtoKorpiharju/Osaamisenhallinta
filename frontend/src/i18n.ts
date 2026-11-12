@@ -20,6 +20,7 @@ const resources = {
         qualifications: 'Qualifications',
         competencies: 'Competencies',
         renewals: 'Renewals',
+        actions: 'Actions',
         log: 'Log',
         settings: 'Settings',
       },
@@ -83,7 +84,7 @@ const resources = {
           actions: {
             planRenewal: 'Plan renewal',
             viewRenewalPlan: 'View renewal plan',
-            uploadRenewalCertificate: 'Upload renewal certificate',
+            uploadRenewalCertificate: 'Upload certificate',
           },
           noRenewalPlanned: 'No renewal planned',
         },
@@ -159,7 +160,6 @@ const resources = {
         qualifications: 'Kelpoisuudet',
         competencies: 'Osaamiset',
         renewals: 'Uusimiset',
-        log: 'Loki',
         settings: 'Asetukset',
       },
       profile: {
@@ -224,7 +224,7 @@ const resources = {
             viewRenewalPlan: 'Näytä uusimissuunnitelma',
             uploadRenewalCertificate: 'Lataa uusimistodistus',
           },
-          noRenewalPlanned: 'Uusimista ei ole suunniteltu',
+          noActionPlanned: 'Uusimista ei ole suunniteltu',
         },
       },
       supervisorOverview: {

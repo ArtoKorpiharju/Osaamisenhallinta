@@ -39,8 +39,8 @@ export const pagesPerRole: Record<Role, Page[]> = {
       icon: StarBorderIcon,
     },
     {
-      labelKey: 'navigation.renewals',
-      path: '/employee/renewals',
+      labelKey: 'navigation.actions',
+      path: '/employee/actions',
       icon: EventRepeatIcon,
     },
   ],

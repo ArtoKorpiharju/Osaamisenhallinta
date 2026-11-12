@@ -75,13 +75,12 @@ function createActionItems(
 
     // These statuses don't need attention.
     if (
+      competency.renewalPlan ||
       (!isMissing && !isInvalid && !isExpiringSoon) ||
       (competency.expirationDate === null && !isMissing)
     ) {
       return []
     }
-
-    const plan = competency.renewalPlan
 
     const item: ActionRequiredItem = {
       id: String(competency.employeeCompetencyId),
@@ -93,19 +92,11 @@ function createActionItems(
         isMissing || isInvalid
           ? { label: 'Invalid', tone: 'danger' }
           : { label: 'Expiring soon', tone: 'warning' },
-      actions: plan
-        ? [{ id: 'view-renewal-plan', label: 'View renewal plan' }]
-        : [
-            { id: 'plan-renewal', label: 'Plan renewal' },
-            { id: 'upload-certificate', label: 'Upload renewal certificate' },
-          ],
-      note: plan
-        ? {
-            text:
-              plan.renewalComment ?? `Renewal planned for ${plan.renewalDate}`,
-            tone: 'info',
-          }
-        : { text: 'No renewal planned', tone: 'danger' },
+      actions: [
+        { id: 'plan-renewal', label: 'Plan renewal' },
+        { id: 'upload-certificate', label: 'Upload renewal certificate' },
+      ],
+      note: { text: 'No renewal planned', tone: 'danger' },
     }
 
     return [item]
