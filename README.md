@@ -94,6 +94,12 @@ All commands assume the current working directory is root
 npx playwright install
 ```
 
+If Playwright reports that required system dependencies are missing, run
+
+```bash
+npx playwright install-deps
+```
+
 2. Run tests by command:
 
 ```bash
