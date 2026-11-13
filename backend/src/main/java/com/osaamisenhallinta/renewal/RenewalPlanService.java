@@ -1,6 +1,7 @@
 package com.osaamisenhallinta.renewal;
 
 import com.osaamisenhallinta.employee.EmployeeCompetency;
+import com.osaamisenhallinta.employee.EmployeeCompetencyRepository;
 import com.osaamisenhallinta.employee.EmployeeCompetencyService;
 import com.osaamisenhallinta.renewal.dto.RenewalPlanDto;
 import com.osaamisenhallinta.renewal.dto.RenewalPlanRequestDto;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class RenewalPlanService {
   private final EmployeeCompetencyService employeeCompetencyService;
   private final RenewalPlanRepository renewalPlanRepository;
+  private final EmployeeCompetencyRepository employeeCompetencyRepository;
 
   /**
    * Adds or updates a renewal plan for a specific employee competency depending on whether one
@@ -31,7 +33,7 @@ public class RenewalPlanService {
       Long employeeId, Long empCompId, RenewalPlanRequestDto request) {
 
     EmployeeCompetency empComp =
-        employeeCompetencyService.getEmployeeCompetencyOrThrow(empCompId, employeeId);
+        employeeCompetencyRepository.getEmployeeCompetencyOrThrow(empCompId, employeeId);
 
     RenewalPlan existingPlan = empComp.getRenewalPlan();
 
@@ -56,7 +58,7 @@ public class RenewalPlanService {
   @Transactional
   public void deleteRenewalPlan(Long employeeId, Long empCompId) {
     EmployeeCompetency empComp =
-        employeeCompetencyService.getEmployeeCompetencyOrThrow(empCompId, employeeId);
+        employeeCompetencyRepository.getEmployeeCompetencyOrThrow(empCompId, employeeId);
     RenewalPlan existingPlan = empComp.getRenewalPlan();
 
     if (existingPlan != null) {

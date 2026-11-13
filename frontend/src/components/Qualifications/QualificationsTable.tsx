@@ -12,10 +12,8 @@ import QualificationLegend from '../QualificationLegend'
 import StatusChip from '../StatusChip'
 import { statusDisplay, statusOrder } from '../../config/qualifications'
 import { tones } from '../../config/tones'
-import {
-  type Competence,
-  type QualificationDetails,
-} from '../../types/qualifications'
+import { type EmployeeCompetency } from '../../types/overview'
+import { type QualificationDetails } from '../../types/qualifications'
 import { compareQualifications } from '../../utils/qualifications'
 import { formatDate } from '../../utils/formatDate'
 import CompetenceList from './CompetenceList'
@@ -23,7 +21,7 @@ import CompetenceList from './CompetenceList'
 interface MyQualificationsTableProps {
   qualifications: readonly QualificationDetails[]
   onCompetenceClick: (
-    competence: Competence,
+    competence: EmployeeCompetency,
     qualification: QualificationDetails
   ) => void
   onRemove: (qualification: QualificationDetails) => void
@@ -45,7 +43,7 @@ export default function MyQualificationsTable({
       render: (q, { expanded }) => (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box sx={{ flexShrink: 0, width: 88 }}>
-            {q.isCritical === true && <CriticalBadge />}
+            {q.isCritical && <CriticalBadge />}
           </Box>
           {q.name}
           <ArrowRightIcon
@@ -58,9 +56,9 @@ export default function MyQualificationsTable({
           />
           {onToggleFavorite && (
             <FavoriteStar
-              active={q.isPrimary === true}
+              active={q.isFavourite}
               label={
-                q.isPrimary === true
+                q.isFavourite
                   ? `Remove ${q.name} from Overview`
                   : `Add ${q.name} to Overview`
               }
@@ -89,7 +87,8 @@ export default function MyQualificationsTable({
       label: 'Requirements met',
       align: 'center',
       width: '17%',
-      render: (q) => `${q.requirementsMet}/${q.requirementsTotal}`,
+      render: (q) =>
+        `${String(q.requirementsMet)}/${String(q.requirementsTotal)}`,
     },
     {
       id: 'validUntil',
@@ -100,9 +99,14 @@ export default function MyQualificationsTable({
       render: (q) => (
         <Box
           component="span"
-          sx={{ color: q.status === 'expired' ? tones.danger.main : undefined }}
+          sx={{
+            color:
+              q.status === 'notQualified' || q.status === 'expired'
+                ? tones.danger.main
+                : undefined,
+          }}
         >
-          {formatDate(q.validUntil)}
+          {q.validUntil ? formatDate(q.validUntil) : '-'}
         </Box>
       ),
     },
@@ -112,7 +116,7 @@ export default function MyQualificationsTable({
       align: 'center',
       width: '13%',
       render: (q) => {
-        const isCritical = q.isCritical === true
+        const isCritical = q.isCritical
         return (
           <IconButton
             size="small"
@@ -155,10 +159,10 @@ export default function MyQualificationsTable({
             ariaLabel="My qualifications"
             rows={[...qualifications].sort(compareQualifications)}
             columns={columns}
-            getRowId={(q) => q.id}
+            getRowId={(q) => String(q.qualificationId)}
             renderExpanded={(q) => (
               <CompetenceList
-                competences={q.competences}
+                competences={q.requiredCompetencies}
                 onCompetenceClick={(competence) => {
                   onCompetenceClick(competence, q)
                 }}

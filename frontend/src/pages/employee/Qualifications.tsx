@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
-import { Box, Typography } from '@mui/material'
+import { Alert, Box, Snackbar, Typography } from '@mui/material'
+import { useOutletContext } from 'react-router'
 
 import CompetenceDetailDialog from '../../components/Qualifications/CompetenceDetailDialog'
 import ExploreQualifications from '../../components/Qualifications/ExploreQualifications'
@@ -8,42 +9,50 @@ import MyQualificationsTable from '../../components/Qualifications/Qualification
 import RemoveQualificationDialog from '../../components/Qualifications/RemoveQualificationDialog'
 import { tones } from '../../config/tones'
 import useQualifications from '../../hooks/useQualifications'
-import {
-  type Competence,
-  type QualificationDetails,
-} from '../../types/qualifications'
+import { type EmployeeCompetency } from '../../types/overview'
+import { type EmployeeQualification } from '../../types/overview'
 
 interface SelectedCompetence {
-  competence: Competence
+  competence: EmployeeCompetency
   qualificationName: string
 }
 
 export default function Qualifications() {
+  const { userId } = useOutletContext<{ userId: number | undefined }>()
+
   const {
     catalogue,
     myQualifications,
     addedIds,
+    loading,
+    error,
+    actionError,
+    clearActionError,
     addQualification,
     removeQualification,
     toggleFavorite,
-  } = useQualifications()
+  } = useQualifications(userId)
 
   const [pendingRemoval, setPendingRemoval] =
-    useState<QualificationDetails | null>(null)
+    useState<EmployeeQualification | null>(null)
+
   const [selected, setSelected] = useState<SelectedCompetence | null>(null)
 
   const handleConfirmRemove = () => {
     if (pendingRemoval) {
-      removeQualification(pendingRemoval.id)
+      void removeQualification(pendingRemoval.qualificationId)
     }
     setPendingRemoval(null)
   }
 
   const openCompetence = (
-    competence: Competence,
-    qualification: QualificationDetails
+    competence: EmployeeCompetency,
+    qualification: { name: string }
   ) => {
-    setSelected({ competence, qualificationName: qualification.name })
+    setSelected({
+      competence,
+      qualificationName: qualification.name,
+    })
   }
 
   return (
@@ -55,19 +64,27 @@ export default function Qualifications() {
         Qualifications
       </Typography>
 
+      {error && <Alert severity="error">{error}</Alert>}
+
+      {loading && userId !== undefined && (
+        <Alert severity="info">Fetching qualifications…</Alert>
+      )}
+
       <MyQualificationsTable
         qualifications={myQualifications}
         onCompetenceClick={openCompetence}
         onRemove={setPendingRemoval}
         onToggleFavorite={(qualification) => {
-          toggleFavorite(qualification.id)
+          void toggleFavorite(qualification.qualificationId)
         }}
       />
 
       <ExploreQualifications
         qualifications={catalogue}
         addedIds={addedIds}
-        onAdd={addQualification}
+        onAdd={(qualification) => {
+          void addQualification(qualification)
+        }}
         onCompetenceClick={openCompetence}
       />
 
@@ -86,6 +103,16 @@ export default function Qualifications() {
           setSelected(null)
         }}
       />
+
+      <Snackbar
+        open={actionError !== null}
+        autoHideDuration={6000}
+        onClose={clearActionError}
+      >
+        <Alert severity="error" onClose={clearActionError}>
+          {actionError}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

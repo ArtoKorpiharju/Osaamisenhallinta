@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-
 /** Service for managing competency-related operations. */
 @Service
 @RequiredArgsConstructor
@@ -27,9 +26,11 @@ public class CompetencyService {
    */
   @Transactional(readOnly = true)
   public CompetencyDto getCompetencyById(Long id) {
-    Competency competency = competencyRepository.findById(id)
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
+    Competency competency =
+        competencyRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
 
     CompetencyDto response = mapToDto(competency);
     return response;
@@ -42,12 +43,9 @@ public class CompetencyService {
    */
   @Transactional(readOnly = true)
   public List<CompetencyDto> getAllCompetencies() {
-    return competencyRepository.findAll()
-      .stream()
-      .map(this::mapToDto)
-      .toList();
+    return competencyRepository.findAll().stream().map(this::mapToDto).toList();
   }
-  
+
   /**
    * Create a competency, or throws an exception if competency already exists.
    *
@@ -58,19 +56,17 @@ public class CompetencyService {
    * @throws ResponseStatusException if the competency already exists.
    */
   @Transactional
-  public CompetencyDto createCompetency(
-      String name, CompetencyType type, Integer validityMonths) {
+  public CompetencyDto createCompetency(String name, CompetencyType type, Integer validityMonths) {
 
     // Check if following competency already exists in the system
     if (competencyRepository.existsByName(name)) {
-      throw new ResponseStatusException(
-        HttpStatus.CONFLICT, "Competency already exists");
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Competency already exists");
     }
 
     // Create a new competency object
     Competency newCompetency = new Competency(name, type, validityMonths);
     newCompetency = competencyRepository.save(newCompetency);
-    return mapToDto(newCompetency); 
+    return mapToDto(newCompetency);
   }
 
   /**
@@ -81,14 +77,16 @@ public class CompetencyService {
    */
   @Transactional
   public void deleteCompetency(Long id) {
-    final Competency competency = competencyRepository.findById(id)
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
+    final Competency competency =
+        competencyRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
 
     // Checks whether the competency is used by a Qualification
     if (competencyRepository.isUsedByQualification(id)) {
       throw new ResponseStatusException(
-        HttpStatus.CONFLICT, "Competency is in use by a qualification");
+          HttpStatus.CONFLICT, "Competency is in use by a qualification");
     }
 
     renewalPlanRepository.deleteByCompetencyId(id);
@@ -105,9 +103,9 @@ public class CompetencyService {
    */
   private CompetencyDto mapToDto(Competency competency) {
     return new CompetencyDto(
-      competency.getId(), 
-      competency.getName(), 
-      competency.getType(),
-      competency.getValidityMonths());
+        competency.getId(),
+        competency.getName(),
+        competency.getType(),
+        competency.getValidityMonths());
   }
 }

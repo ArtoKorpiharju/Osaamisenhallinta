@@ -14,7 +14,7 @@ type QualificationStatusApiResponse =
 type CompetencyStatusApiResponse =
   'EXPIRED' | 'MISSING' | 'EXPIRING_SOON' | 'VALID'
 
-type CompetencyTypeApiResponse =
+export type CompetencyTypeApiResponse =
   'TRAINING' | 'LICENSE' | 'CERTIFICATION' | 'SKILL' | 'OTHER'
 
 interface RenewalPlanApiResponse {
@@ -71,7 +71,7 @@ function isCompetencyStatusApiResponse(
   )
 }
 
-function isCompetencyTypeApiResponse(
+export function isCompetencyTypeApiResponse(
   value: unknown
 ): value is CompetencyTypeApiResponse {
   return (
@@ -178,7 +178,9 @@ function mapCompetencyStatus(
   }
 }
 
-function mapCompetencyType(type: CompetencyTypeApiResponse): CompetencyType {
+export function mapCompetencyType(
+  type: CompetencyTypeApiResponse
+): CompetencyType {
   switch (type) {
     case 'TRAINING':
       return 'training'

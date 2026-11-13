@@ -7,24 +7,24 @@ import RenewalChip from '../RenewalChip'
 import StatusChip from '../StatusChip'
 import {
   competenceTypeLabels,
-  statusDisplay,
+  competencyStatusDisplay,
 } from '../../config/qualifications'
-import { type Competence } from '../../types/qualifications'
-import { formatDate } from '../../utils/formatDate'
 import { tones } from '../../config/tones'
+import { type EmployeeCompetency } from '../../types/overview'
+import { formatDate } from '../../utils/formatDate'
 
-const columns: ExpandableTableColumn<Competence>[] = [
+const columns: ExpandableTableColumn<EmployeeCompetency>[] = [
   {
     id: 'name',
     label: 'Required competences',
     width: '40%',
-    render: (competence) => (
+    render: (competency) => (
       <Box>
         <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-          {competence.name}
+          {competency.name}
         </Typography>
         <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-          {competenceTypeLabels[competence.type]}
+          {competenceTypeLabels[competency.type]}
         </Typography>
       </Box>
     ),
@@ -33,10 +33,10 @@ const columns: ExpandableTableColumn<Competence>[] = [
     id: 'status',
     label: 'Status',
     width: '20%',
-    render: (competence) => (
+    render: (competency) => (
       <StatusChip
-        label={statusDisplay[competence.status].label}
-        tone={statusDisplay[competence.status].tone}
+        label={competencyStatusDisplay[competency.status].label}
+        tone={competencyStatusDisplay[competency.status].tone}
       />
     ),
   },
@@ -44,26 +44,29 @@ const columns: ExpandableTableColumn<Competence>[] = [
     id: 'renewal',
     label: 'Renewals',
     width: '20%',
-    render: (competence) => (
-      <RenewalChip plan={competence.plannedRenewal ?? null} />
-    ),
+    render: (competency) => <RenewalChip plan={competency.renewalPlan} />,
   },
   {
     id: 'validUntil',
     label: 'Valid until',
     width: '15%',
-    render: (competence) => (
-      <Typography
-        sx={{
-          fontSize: 13,
-          color:
-            competence.status === 'expired' ? tones.danger.main : 'inherit',
-          fontWeight: competence.status === 'expired' ? 700 : 400,
-        }}
-      >
-        {formatDate(competence.validUntil)}
-      </Typography>
-    ),
+    render: (competency) => {
+      const isInvalid =
+        competency.status === 'expired' || competency.status === 'missing'
+      return (
+        <Typography
+          sx={{
+            fontSize: 13,
+            color: isInvalid ? tones.danger.main : 'inherit',
+            fontWeight: isInvalid ? 700 : 400,
+          }}
+        >
+          {competency.expirationDate
+            ? formatDate(competency.expirationDate)
+            : '-'}
+        </Typography>
+      )
+    },
   },
   {
     id: 'open',
@@ -76,11 +79,11 @@ const columns: ExpandableTableColumn<Competence>[] = [
 ]
 
 interface CompetenceListProps {
-  competences: readonly Competence[]
-  onCompetenceClick: (competence: Competence) => void
+  competences: readonly EmployeeCompetency[]
+  onCompetenceClick: (competence: EmployeeCompetency) => void
 }
 
-// Competences of one qualification, shown under an expanded row.
+// Competencies of one qualification, shown under an expanded row.
 export default function CompetenceList({
   competences,
   onCompetenceClick,
@@ -101,7 +104,7 @@ export default function CompetenceList({
         ariaLabel="Required competences"
         rows={competences}
         columns={columns}
-        getRowId={(competence) => competence.id}
+        getRowId={(competency) => String(competency.competencyId)}
         onRowClick={onCompetenceClick}
       />
     </Box>

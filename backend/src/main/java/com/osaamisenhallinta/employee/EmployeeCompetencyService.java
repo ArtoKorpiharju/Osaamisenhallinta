@@ -26,8 +26,6 @@ public class EmployeeCompetencyService {
   private final CompetencyRepository competencyRepository;
   private final RenewalPlanRepository renewalPlanRepository;
 
-  private static final String EMP_COMP_NOT_FOUND_MESSAGE = "Employee's competency not found";
-
   /**
    * Adds a new competency to an employee.
    *
@@ -72,7 +70,8 @@ public class EmployeeCompetencyService {
   @Transactional
   public EmployeeCompetencyDto updateCompetency(
       Long employeeId, Long empCompId, UpdateEmployeeCompetencyRequestDto request) {
-    EmployeeCompetency empComp = getEmployeeCompetencyOrThrow(empCompId, employeeId);
+    EmployeeCompetency empComp =
+        employeeCompetencyRepository.getEmployeeCompetencyOrThrow(empCompId, employeeId);
 
     LocalDate newIssueDate = request.issueDate();
     LocalDate newExpirationDate =
@@ -91,7 +90,8 @@ public class EmployeeCompetencyService {
    */
   @Transactional
   public void deleteCompetency(Long employeeId, Long empCompId) {
-    EmployeeCompetency empComp = getEmployeeCompetencyOrThrow(empCompId, employeeId);
+    EmployeeCompetency empComp =
+        employeeCompetencyRepository.getEmployeeCompetencyOrThrow(empCompId, employeeId);
 
     if (empComp.getRenewalPlan() != null) {
       renewalPlanRepository.delete(empComp.getRenewalPlan());
@@ -99,21 +99,6 @@ public class EmployeeCompetencyService {
     }
 
     employeeCompetencyRepository.delete(empComp);
-  }
-
-  /**
-   * Retrieves an employee competency by employee ID and employee's competency ID, or throws a
-   * NOT_FOUND exception if not found.
-   *
-   * @param employeeId The ID of the employee.
-   * @param empCompId The ID of the employee competency.
-   * @return The employee competency.
-   */
-  public EmployeeCompetency getEmployeeCompetencyOrThrow(Long empCompId, Long employeeId) {
-    return employeeCompetencyRepository
-        .findByIdAndEmployeeId(empCompId, employeeId)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMP_COMP_NOT_FOUND_MESSAGE));
   }
 
   private LocalDate calculateCompetencyExpirationDate(Competency competency, LocalDate issueDate) {

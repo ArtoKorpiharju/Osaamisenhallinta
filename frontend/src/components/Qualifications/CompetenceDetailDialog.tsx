@@ -17,23 +17,22 @@ import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
-import CriticalBadge from '../CriticalBadge'
 import StatusChip from '../StatusChip'
 import {
   competenceTypeLabels,
-  statusDisplay,
+  competencyStatusDisplay,
 } from '../../config/qualifications'
 import { tones } from '../../config/tones'
-import { type Competence } from '../../types/qualifications'
+import { type EmployeeCompetency } from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'
 
 interface CompetenceDetailDialogProps {
-  competence: Competence | null
+  competence: EmployeeCompetency | null
   // Name of the qualification the competence was opened from (breadcrumb).
   qualificationName?: string
   onClose: () => void
-  onPlanRenewal?: (competence: Competence) => void
-  onViewRenewalPlan?: (competence: Competence) => void
+  onPlanRenewal?: (competence: EmployeeCompetency) => void
+  onViewRenewalPlan?: (competence: EmployeeCompetency) => void
 }
 
 function DetailRow({
@@ -51,6 +50,9 @@ function DetailRow({
   )
 }
 
+const dateOrDash = (isoDate: string | null) =>
+  isoDate ? formatDate(isoDate) : '-'
+
 export default function CompetenceDetailDialog({
   competence,
   qualificationName = 'Qualifications',
@@ -58,7 +60,7 @@ export default function CompetenceDetailDialog({
   onPlanRenewal,
   onViewRenewalPlan,
 }: CompetenceDetailDialogProps) {
-  const status = competence ? statusDisplay[competence.status] : null
+  const status = competence ? competencyStatusDisplay[competence.status] : null
 
   return (
     <Dialog
@@ -92,24 +94,6 @@ export default function CompetenceDetailDialog({
               <Typography sx={{ fontSize: 13, mt: 1 }}>
                 {competenceTypeLabels[competence.type]}
               </Typography>
-              {competence.isCritical === true && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.5,
-                    mt: 1,
-                  }}
-                >
-                  <CriticalBadge />
-                  <Typography sx={{ fontSize: 12 }}>
-                    Employer requirement
-                  </Typography>
-                </Box>
-              )}
-              <Typography sx={{ fontSize: 12, mt: 2, maxWidth: 380 }}>
-                {competence.summary ?? competence.description}
-              </Typography>
             </Box>
 
             <Box
@@ -125,7 +109,7 @@ export default function CompetenceDetailDialog({
                 <Box sx={{ textAlign: 'right' }}>
                   <Typography sx={{ fontSize: 12 }}>Valid until</Typography>
                   <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                    {formatDate(competence.validUntil)}
+                    {dateOrDash(competence.expirationDate)}
                   </Typography>
                 </Box>
                 <CalendarMonthIcon />
@@ -158,12 +142,11 @@ export default function CompetenceDetailDialog({
                 <DetailRow label="Status">
                   <StatusChip label={status.label} tone={status.tone} />
                 </DetailRow>
-                <DetailRow label="Valid until">
-                  {formatDate(competence.validUntil)}
+                <DetailRow label="Issue date">
+                  {dateOrDash(competence.issueDate)}
                 </DetailRow>
-                <DetailRow label="Issued by">{competence.issuedBy}</DetailRow>
-                <DetailRow label="Description">
-                  {competence.description}
+                <DetailRow label="Valid until">
+                  {dateOrDash(competence.expirationDate)}
                 </DetailRow>
               </Box>
               <Box
@@ -206,7 +189,7 @@ export default function CompetenceDetailDialog({
               <Button
                 variant="contained"
                 startIcon={<EventAvailableIcon />}
-                disabled={!competence.plannedRenewal}
+                disabled={competence.renewalPlan === null}
                 onClick={() => onViewRenewalPlan?.(competence)}
                 sx={{
                   textTransform: 'none',

@@ -34,3 +34,27 @@ export async function fetchApiData(path: string): Promise<unknown> {
   const data: unknown = await response.json()
   return data
 }
+
+export async function sendApiRequest(
+  path: string,
+  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+  body?: unknown
+): Promise<unknown> {
+  const response = await fetch(path, {
+    method,
+    headers:
+      body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  })
+
+  if (!response.ok) {
+    throw new ApiError(response.status)
+  }
+
+  if (response.status === 204) {
+    return undefined
+  }
+
+  const data: unknown = await response.json()
+  return data
+}

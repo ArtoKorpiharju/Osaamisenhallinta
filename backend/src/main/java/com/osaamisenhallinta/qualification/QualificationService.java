@@ -24,10 +24,7 @@ public class QualificationService {
    * @return A list of qualification DTOs.
    */
   public List<QualificationDto> getAllQualifications() {
-    return qualificationRepository.findAll()
-      .stream()
-      .map(this::mapToDto)
-      .toList();
+    return qualificationRepository.findAll().stream().map(this::mapToDto).toList();
   }
 
   /**
@@ -38,10 +35,11 @@ public class QualificationService {
    * @throws ResponseStatusException if the qualification is not found.
    */
   public QualificationDto getQualificationById(Long id) {
-    return qualificationRepository.findById(id)
+    return qualificationRepository
+        .findById(id)
         .map(this::mapToDto)
         .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
   }
 
   /**
@@ -52,15 +50,10 @@ public class QualificationService {
    */
   private QualificationDto mapToDto(Qualification qualification) {
     return new QualificationDto(
-      qualification.getId(),
-      qualification.getName(),
-      qualification.getRequiredCompetencies().stream()
-        .map(c -> new CompetencyDto(
-          c.getId(), 
-          c.getName(), 
-          c.getType(), 
-          c.getValidityMonths()))
-        .toList()
-    );
+        qualification.getId(),
+        qualification.getName(),
+        qualification.getRequiredCompetencies().stream()
+            .map(c -> new CompetencyDto(c.getId(), c.getName(), c.getType(), c.getValidityMonths()))
+            .toList());
   }
 }

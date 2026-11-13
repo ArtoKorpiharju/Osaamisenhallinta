@@ -22,28 +22,28 @@ import ExpandableTable, {
 } from '../ExpandableTable'
 import Panel from '../Panel'
 import { tones } from '../../config/tones'
-import {
-  type Competence,
-  type QualificationDetails,
-} from '../../types/qualifications'
+import { type EmployeeCompetency } from '../../types/overview'
+import { type CatalogueQualification } from '../../types/qualifications'
 import CompetenceList from './CompetenceList'
 
 interface ExploreQualificationsProps {
-  qualifications: readonly QualificationDetails[]
+  qualifications: readonly CatalogueQualification[]
   // Ids of qualifications that are already in My Qualifications.
-  addedIds: ReadonlySet<string>
-  onAdd: (qualification: QualificationDetails) => void
+  addedIds: ReadonlySet<number>
+  onAdd: (qualification: CatalogueQualification) => void
   onCompetenceClick: (
-    competence: Competence,
-    qualification: QualificationDetails
+    competence: EmployeeCompetency,
+    qualification: CatalogueQualification
   ) => void
 }
 
 // Sortable values per column id. Add an entry here when a column gets sortValue.
-const sortValues: Record<string, (q: QualificationDetails) => string | number> =
-  {
-    name: (q) => q.name,
-  }
+const sortValues: Record<
+  string,
+  (q: CatalogueQualification) => string | number
+> = {
+  name: (q) => q.name,
+}
 
 export default function ExploreQualifications({
   qualifications,
@@ -74,7 +74,7 @@ export default function ExploreQualifications({
 
   const pageRows = visible.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
 
-  const columns: ExpandableTableColumn<QualificationDetails>[] = [
+  const columns: ExpandableTableColumn<CatalogueQualification>[] = [
     {
       id: 'name',
       label: 'Qualifications',
@@ -84,7 +84,7 @@ export default function ExploreQualifications({
       render: (q, { expanded }) => (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box sx={{ flexShrink: 0, width: 88 }}>
-            {q.isCritical === true && <CriticalBadge />}
+            {q.isCritical && <CriticalBadge />}
           </Box>
           {q.name}
           <ArrowRightIcon
@@ -103,7 +103,8 @@ export default function ExploreQualifications({
       label: 'Requirements met',
       align: 'center',
       width: '34%',
-      render: (q) => `${q.requirementsMet}/${q.requirementsTotal}`,
+      render: (q) =>
+        `${q.requirementsMet.toString()}/${q.requirementsTotal.toString()}`,
     },
     {
       id: 'action',
@@ -111,7 +112,7 @@ export default function ExploreQualifications({
       align: 'center',
       width: '28%',
       render: (q) => {
-        const added = addedIds.has(q.id)
+        const added = addedIds.has(q.qualificationId)
         return (
           <Tooltip title={added ? '' : 'Add to My Qualifications'}>
             <span>
@@ -181,7 +182,7 @@ export default function ExploreQualifications({
             ariaLabel="Explore qualifications"
             rows={pageRows}
             columns={columns}
-            getRowId={(q) => q.id}
+            getRowId={(q) => String(q.qualificationId)}
             sort={sort}
             onSortChange={(next) => {
               setSort(next)
@@ -189,7 +190,7 @@ export default function ExploreQualifications({
             }}
             renderExpanded={(q) => (
               <CompetenceList
-                competences={q.competences}
+                competences={q.requiredCompetencies}
                 onCompetenceClick={(competence) => {
                   onCompetenceClick(competence, q)
                 }}

@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import StarIcon from '@mui/icons-material/Star'
@@ -23,40 +23,9 @@ interface MyQualificationsProps {
 
 const statusOrder: Record<QualificationStatus, number> = {
   notQualified: 0,
+  expired: 0,
   expiringSoon: 1,
   qualified: 2,
-}
-
-function Legend() {
-  const { t } = useTranslation()
-
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        gap: '8px 24px',
-        color: '#174f83',
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <StarIcon
-          fontSize="small"
-          sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
-        />
-        <Typography sx={{ fontSize: 13 }}>
-          = {t('employeeOverview.qualifications.favorite')}
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <CriticalBadge />
-        <Typography sx={{ fontSize: 13 }}>
-          = {t('employeeOverview.qualifications.employerRequirement')}
-        </Typography>
-      </Box>
-    </Box>
-  )
 }
 
 export default function MyQualifications({
@@ -70,6 +39,10 @@ export default function MyQualifications({
     QualificationStatus,
     { label: string; tone: Tone }
   > = {
+    expired: {
+      label: t('employeeOverview.qualifications.statuses.invalid'),
+      tone: 'danger',
+    },
     notQualified: {
       label: t('employeeOverview.qualifications.statuses.invalid'),
       tone: 'danger',
@@ -184,7 +157,7 @@ export default function MyQualifications({
           height: '100%',
         }}
       >
-        <Legend />
+        <QualificationLegend />
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <GenericTable
