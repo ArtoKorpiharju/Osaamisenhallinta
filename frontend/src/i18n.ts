@@ -20,7 +20,6 @@ const resources = {
         qualifications: 'Qualifications',
         competencies: 'Competencies',
         renewals: 'Renewals',
-        actions: 'Actions',
         settings: 'Settings',
       },
       profile: {
@@ -44,10 +43,10 @@ const resources = {
             title: 'Expiring soon',
             description: 'Competencies expiring within 90 days',
           },
-          missingRenewals: {
-            title: 'Missing renewals',
+          requireAction: {
+            title: 'Require action',
             description:
-              'Invalid or soon-expiring competencies with no planned actions',
+              'Invalid or soon-expiring competencies that require action',
           },
           plannedRenewals: {
             title: 'Planned renewals',
@@ -92,26 +91,27 @@ const resources = {
         title: 'Supervisor Overview',
         viewAllDetails: 'View all details',
         summary: {
-          outdated: {
-            title: 'Outdated',
-            description: 'Expired competencies',
+          invalid: {
+            title: 'Invalid',
+            description: 'Invalid competencies',
             highlight: 'Requires attention',
           },
-          expiring: {
-            title: 'Expiring',
-            description: 'Expiring within 90 days',
+          expiringSoon: {
+            title: 'Expiring soon',
+            description: 'Competencies expiring within 90 days',
           },
-          renewals: {
-            title: 'Renewals',
-            description: 'Missing renewals',
+          missingActions: {
+            title: 'Missing actions',
+            description:
+              'Invalid or soon-expiring competencies with no planned actions',
           },
-          planned: {
-            title: 'Planned',
-            description: 'Planned renewals',
+          plannedActions: {
+            title: 'Planned actions',
+            description: 'All planned actions',
           },
         },
-        expirations: {
-          title: 'Upcoming Expirations',
+        invalidAndExpiring: {
+          title: 'Invalid or soon-expiring competencies',
           columns: {
             employee: 'Employee',
             competency: 'Competency',
@@ -119,6 +119,7 @@ const resources = {
             urgency: 'Urgency',
             renewalPlan: 'Renewal plan',
           },
+          notCompleted: 'Not completed',
           notPlanned: 'Not planned',
           dayAbbreviation: 'd',
         },
@@ -182,10 +183,10 @@ const resources = {
             title: 'Vanhentumassa',
             description: '90 päivän sisällä vanhentuvat osaamiset',
           },
-          missingRenewals: {
-            title: 'Puuttuvat uusimiset',
+          requireAction: {
+            title: 'Vaatii toimenpiteitä',
             description:
-              'Ei voimassa olevat tai pian vanhentuvat osaamiset, joihin ei ole suunniteltu uusimista',
+              'Ei voimassa olevat tai pian vanhentuvat osaamiset, jotka vaativat toimenpiteitä',
           },
           plannedRenewals: {
             title: 'Suunnitellut uusimiset',
@@ -230,26 +231,27 @@ const resources = {
         title: 'Esihenkilön yleisnäkymä',
         viewAllDetails: 'Näytä kaikki tiedot',
         summary: {
-          outdated: {
-            title: 'Vanhentuneet',
-            description: 'Vanhentuneet osaamiset',
+          invalid: {
+            title: 'Ei voimassa',
+            description: 'Ei voimassa olevat osaamiset',
             highlight: 'Vaatii huomiota',
           },
-          expiring: {
+          expiringSoon: {
             title: 'Vanhentumassa',
-            description: 'Vanhentuvat 90 päivän sisällä',
+            description: '90 päivän sisällä vanhentuvat osaamiset',
           },
-          renewals: {
-            title: 'Uusimiset',
-            description: 'Puuttuvat uusimiset',
+          missingActions: {
+            title: 'Puuttuvat toimenpiteet',
+            description:
+              'Ei voimassa olevat tai pian vanhentuvat osaamiset, joille ei ole suunniteltu toimenpiteitä',
           },
-          planned: {
-            title: 'Suunnitellut',
-            description: 'Suunnitellut uusimiset',
+          plannedActions: {
+            title: 'Suunnitellut toimenpiteet',
+            description: 'Kaikki suunnitellut toimenpiteet',
           },
         },
-        expirations: {
-          title: 'Tulevat vanhentumiset',
+        invalidAndExpiring: {
+          title: 'Ei voimassa olevat ja pian vanhentuvat osaamiset',
           columns: {
             employee: 'Työntekijä',
             competency: 'Osaaminen',
@@ -257,6 +259,7 @@ const resources = {
             urgency: 'Kiireellisyys',
             renewalPlan: 'Uusimissuunnitelma',
           },
+          notCompleted: 'Ei suoritettu',
           notPlanned: 'Ei suunniteltu',
           dayAbbreviation: 'pv',
         },
