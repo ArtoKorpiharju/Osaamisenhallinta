@@ -8,7 +8,12 @@ test("supervisor overview shows stats and upcoming expirations", async ({
   await expect(
     page.getByRole("heading", { name: "Supervisor Overview" }),
   ).toBeVisible();
-  for (const title of ["Outdated", "Expiring", "Renewals", "Planned"]) {
+  for (const title of [
+    "Invalid",
+    "Expiring soon",
+    "Missing actions",
+    "Planned renewals",
+  ]) {
     await expect(page.getByText(title, { exact: true }).first()).toBeVisible();
   }
   await expect(page.getByText("Emma Johnson")).toBeVisible();

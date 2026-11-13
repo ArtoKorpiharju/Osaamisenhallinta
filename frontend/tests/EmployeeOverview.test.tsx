@@ -90,8 +90,10 @@ describe('EmployeeOverview', () => {
 
     // Summary cards rendered
     expect(screen.getByText('Invalid competencies')).toBeInTheDocument()
-    expect(screen.getByText('Expiring within 90 days')).toBeInTheDocument()
-    expect(screen.getByText('Missing renewals')).toBeInTheDocument()
+    expect(
+      screen.getByText('Competencies expiring within 90 days')
+    ).toBeInTheDocument()
+    expect(screen.getByText('Require action')).toBeInTheDocument()
     expect(screen.getByText('Planned renewals')).toBeInTheDocument()
 
     // Tables rendered
@@ -169,7 +171,7 @@ describe('EmployeeOverview', () => {
 
     fireEvent.click(
       within(safetyCard).getByRole('button', {
-        name: 'Upload renewal certificate',
+        name: 'Upload certificate',
       })
     )
     // Clicking works
