@@ -38,7 +38,7 @@ public class QualificationController {
         @ApiResponse(responseCode = "200", description = "Successful operation"),
         @ApiResponse(
             responseCode = "400",
-            description = "Missing or invalid parameter(s)",
+            description = "Invalid parameter",
             content = @Content),
         @ApiResponse(
             responseCode = "404",
@@ -90,11 +90,11 @@ public class QualificationController {
           description = "Qualification successfully deleted"),
         @ApiResponse(
             responseCode = "400",
-            description = "Missing or invalid parameter(s)",
+            description = "Invalid parameter",
             content = @Content),
         @ApiResponse(
             responseCode = "404",
-            description = "Qualification not found",
+            description = "Some required competencies not found",
             content = @Content)
       })
   @DeleteMapping("/{id}")

@@ -78,7 +78,7 @@ public class CompetencyController {
         @ApiResponse(responseCode = "204", description = "Competency successfully deleted"),
         @ApiResponse(
             responseCode = "400",
-            description = "Missing or invalid parameter(s)",
+            description = "Invalid parameter",
             content = @Content),
         @ApiResponse(
             responseCode = "404",

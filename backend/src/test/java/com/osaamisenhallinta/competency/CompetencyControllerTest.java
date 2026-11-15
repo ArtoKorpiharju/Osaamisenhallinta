@@ -28,7 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 class CompetencyControllerTest {
   @Autowired private MockMvc mockMvc;
 
-  @MockitoBean CompetencyService competencyService;
+  @MockitoBean private CompetencyService competencyService;
 
   @MockitoBean private CompetencyDto mockCompetencyDto;
 

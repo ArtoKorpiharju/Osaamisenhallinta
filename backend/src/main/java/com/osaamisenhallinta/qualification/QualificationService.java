@@ -45,7 +45,8 @@ public class QualificationService {
         .findById(id)
         .map(this::mapToDto)
         .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+              "Some required competencies not found"));
   }
 
   /**
