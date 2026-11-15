@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router'
 
 import MyCompetenciesTable from '../../components/Competencies/MyCompetenciesTable'
+import SearchCompetence from '../../components/Competencies/SearchCompetence'
 import PageContainer from '../../components/PageContainer'
 import PageTitle from '../../components/PageTitle'
 import { getApiErrorMessage } from '../../services/api'
@@ -41,8 +42,10 @@ export default function EmployeeCompetencies() {
       {loading && userId !== undefined && (
         <Alert severity="info">Fetching competencies…</Alert>
       )}
-
-      <MyCompetenciesTable competencies={competencies} />
+      
+      <SearchCompetence competencies={competencies}>
+        {(filtered) => <MyCompetenciesTable competencies={filtered} />}
+      </SearchCompetence>
     </PageContainer>
   )
 }

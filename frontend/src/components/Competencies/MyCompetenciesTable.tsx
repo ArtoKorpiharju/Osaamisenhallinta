@@ -65,7 +65,7 @@ export default function MyCompetenciesTable({
       id: 'validUntil',
       label: 'Valid until',
       align: 'right',
-      width: '15%',
+      width: '17%',
       sortValue: (c) => c.expirationDate,
       render: (c) => (
         <Box
@@ -108,7 +108,7 @@ export default function MyCompetenciesTable({
   ]
 
   return (
-    <Panel title="My Competencies">
+
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
         {/* Frame around the whole table. */}
         <Box
@@ -135,6 +135,6 @@ export default function MyCompetenciesTable({
           />
         </Box>
       </Box>
-    </Panel>
+
   )
 }
