@@ -66,12 +66,15 @@ public class QualificationService {
         HttpStatus.CONFLICT, "Qualification already exists");
     }
 
+    // Remove duplicate IDs
+    Set<Long> competencyIds = new HashSet<>(requiredCompetenciesIds);
+
     // Convert the incoming competency IDs into competency entities
     Set<Competency> requiredCompetencies = new HashSet<>(
-        competencyRepository.findAllById(requiredCompetenciesIds));
+        competencyRepository.findAllById(competencyIds));
 
     // Check if all the required competencies were found
-    if (requiredCompetencies.size() != new HashSet<>(requiredCompetenciesIds).size()) {
+    if (requiredCompetencies.size() != competencyIds.size()) {
       throw new ResponseStatusException(
         HttpStatus.NOT_FOUND, "One or more competencies not found");
     }

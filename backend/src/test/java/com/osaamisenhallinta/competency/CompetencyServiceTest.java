@@ -139,6 +139,8 @@ class CompetencyServiceTest {
     assertEquals(mockCompetencyEntity.getName(), result.competencyName());
     assertEquals(mockCompetencyEntity.getType(), result.competencyType());
     assertEquals(mockCompetencyEntity.getValidityMonths(), result.validityMonths());
+
+    verify(competencyRepository).save(any(Competency.class));
   }
 
   @Test
@@ -155,20 +157,6 @@ class CompetencyServiceTest {
         mockCompetencyEntity.getValidityMonths()));
 
     assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-  }
-
-  @Test
-  void createCompetency_ShouldNotSaveAnythingWhenDuplicateFound() {
-    // Arrange
-    when(competencyRepository.existsByName(mockCompetencyEntity.getName()))
-        .thenReturn(true);
-
-    // Assert & act
-    assertThrows(ResponseStatusException.class, 
-        () -> competencyService.createCompetency(
-        mockCompetencyEntity.getName(),
-        mockCompetencyEntity.getType(), 
-        mockCompetencyEntity.getValidityMonths()));
 
     verify(competencyRepository, never()).save(any(Competency.class));
   }
