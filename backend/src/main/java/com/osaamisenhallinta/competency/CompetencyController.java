@@ -36,7 +36,7 @@ public class CompetencyController {
         @ApiResponse(responseCode = "200", description = "Successful operation"),
         @ApiResponse(
             responseCode = "400",
-            description = "Missing or invalid parameter(s)",
+            description = "Invalid parameter",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "Competency not found", content = @Content)
       })
