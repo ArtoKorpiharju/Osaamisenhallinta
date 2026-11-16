@@ -5,10 +5,8 @@ import RootLayout from '../layouts/RootLayout'
 import EmployeeOverview from '../pages/employee/Overview'
 import EmployeeQualifications from '../pages/employee/Qualifications'
 import EmployeeCompetencies from '../pages/employee/Competencies'
-import EmployeeRenewals from '../pages/employee/Renewals'
 
 import SupervisorOverview from '../pages/supervisor/Overview'
-import SupervisorRenewals from '../pages/supervisor/Renewals'
 
 import AdminOverview from '../pages/admin/Overview'
 import AdminQualifications from '../pages/admin/Qualifications'
@@ -31,7 +29,6 @@ export default function AppRouter() {
             <Route path="overview" element={<EmployeeOverview />} />
             <Route path="qualifications" element={<EmployeeQualifications />} />
             <Route path="competencies" element={<EmployeeCompetencies />} />
-            <Route path="renewals" element={<EmployeeRenewals />} />
           </Route>
           <Route path="supervisor">
             <Route
@@ -39,7 +36,6 @@ export default function AppRouter() {
               element={<Navigate to="/supervisor/overview" replace />}
             />
             <Route path="overview" element={<SupervisorOverview />} />
-            <Route path="renewals" element={<SupervisorRenewals />} />
           </Route>
           <Route path="admin">
             <Route index element={<Navigate to="/admin/overview" replace />} />

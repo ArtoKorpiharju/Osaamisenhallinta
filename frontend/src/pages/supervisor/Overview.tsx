@@ -73,8 +73,9 @@ export default function SupervisorOverview() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const openRenewals = () => {
-    void navigate('/supervisor/renewals')
+  // Rename and modify this to navigate to the correct page
+  const openPageX = () => {
+    void navigate('/supervisor/overview')
   }
 
   return (
@@ -99,7 +100,7 @@ export default function SupervisorOverview() {
           highlight={t('supervisorOverview.summary.invalid.highlight')}
           tone="danger"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
 
         <GenericStatCard
@@ -108,7 +109,7 @@ export default function SupervisorOverview() {
           description={t('supervisorOverview.summary.expiringSoon.description')}
           tone="warning"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
 
         <GenericStatCard
@@ -119,7 +120,7 @@ export default function SupervisorOverview() {
           )}
           tone="renewal"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
 
         <GenericStatCard
@@ -130,15 +131,13 @@ export default function SupervisorOverview() {
           )}
           tone="success"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
       </Box>
 
       <InvalidAndExpiringCompetenciesTable
         items={expirationItems}
-        onItemClick={() => {
-          void navigate('/supervisor/renewals')
-        }}
+        onItemClick={openPageX}
       />
     </PageContainer>
   )

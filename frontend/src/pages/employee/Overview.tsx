@@ -19,7 +19,6 @@ import { getApiErrorMessage } from '../../services/api'
 
 const paths = {
   qualifications: '/employee/Qualifications',
-  renewals: '/employee/Renewals',
   competencies: '/employee/Competencies',
 }
 
@@ -28,7 +27,7 @@ const detailPaths: Record<keyof OverviewSummary, string> = {
   outdated: paths.competencies,
   expiring: paths.competencies,
   missingRenewals: paths.competencies,
-  plannedRenewals: paths.renewals,
+  plannedRenewals: paths.competencies,
 }
 
 // Get summary-card counts from the employee's competencies.
@@ -192,7 +191,7 @@ export default function EmployeeOverview() {
                 void navigate(paths.competencies)
                 break
               case 'plan-renewal':
-                void navigate(paths.renewals)
+                void navigate(paths.competencies)
                 break
             }
           }}
