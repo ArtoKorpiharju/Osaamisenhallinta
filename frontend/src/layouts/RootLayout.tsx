@@ -170,6 +170,15 @@ export default function RootLayout() {
             overflow: 'auto',
             WebkitOverflowScrolling: 'touch',
           }}
+          // Taps through the mobile backdrop close the navigation.
+          onClickCapture={(event) => {
+            if (isMobile && mobileNavigationOpen) {
+              event.preventDefault()
+              event.stopPropagation()
+              setMobileNavigationOpen(false)
+              setDesktopNavigationOpen(false)
+            }
+          }}
         >
           {/** Display an error alert if there was an error fetching seed users. */}
           {usersError && <Alert severity="error">{usersError}</Alert>}

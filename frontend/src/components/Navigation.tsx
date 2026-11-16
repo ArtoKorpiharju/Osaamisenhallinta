@@ -37,6 +37,15 @@ export default function Navigation({
       variant={variant}
       open={open}
       onClose={onClose}
+      slotProps={
+        isMobile
+          ? // Keep the gray overlay visible while allowing the page behind it to scroll.
+            {
+              root: { disableScrollLock: true },
+              backdrop: { sx: { pointerEvents: 'none' } },
+            }
+          : undefined
+      }
       sx={{
         width: drawerWidth,
         flexShrink: 0,
