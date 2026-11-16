@@ -81,9 +81,9 @@ const resources = {
           },
           actions: {
             planRenewal: 'Plan renewal',
-            viewRenewalPlan: 'View renewal plan',
-            uploadRenewalCertificate: 'Upload certificate',
+            addCompetencyInformation: 'Add competency information',
           },
+          competencyMissing: 'The competency is missing',
           noRenewalPlanned: 'No renewal planned',
         },
       },
@@ -221,10 +221,10 @@ const resources = {
           },
           actions: {
             planRenewal: 'Suunnittele uusiminen',
-            viewRenewalPlan: 'Näytä uusimissuunnitelma',
-            uploadRenewalCertificate: 'Lataa uusimistodistus',
+            addCompetencyInformation: 'Lisää osaamisen tiedot',
           },
-          noActionPlanned: 'Uusimista ei ole suunniteltu',
+          competencyMissing: 'Osaaminen puuttuu',
+          noRenewalPlanned: 'Uusimista ei ole suunniteltu',
         },
       },
       supervisorOverview: {

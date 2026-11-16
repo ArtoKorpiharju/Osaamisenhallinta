@@ -35,9 +35,9 @@ export default function ActionRequired({
       label:
         action.id === 'plan-renewal'
           ? t('employeeOverview.actionRequired.actions.planRenewal')
-          : action.id === 'upload-certificate'
+          : action.id === 'add-competency-information'
             ? t(
-                'employeeOverview.actionRequired.actions.uploadRenewalCertificate'
+                'employeeOverview.actionRequired.actions.addCompetencyInformation'
               )
             : action.label,
     })),
@@ -46,8 +46,11 @@ export default function ActionRequired({
         ? undefined
         : {
             ...item.note,
-            text:
-              item.note.tone === 'danger'
+            text: item.actions.some(
+              (action) => action.id === 'add-competency-information'
+            )
+              ? t('employeeOverview.actionRequired.competencyMissing')
+              : item.note.tone === 'danger'
                 ? t('employeeOverview.actionRequired.noRenewalPlanned')
                 : item.note.text,
           },

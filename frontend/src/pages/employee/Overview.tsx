@@ -27,7 +27,7 @@ const paths = {
 const detailPaths: Record<keyof OverviewSummary, string> = {
   outdated: paths.competencies,
   expiring: paths.competencies,
-  missingRenewals: paths.renewals,
+  missingRenewals: paths.competencies,
   plannedRenewals: paths.renewals,
 }
 
@@ -64,7 +64,7 @@ function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
 }
 
 // Create action cards for missing, expired or expiring soon competencies.
-// Show renewal details when a plan exists; otherwise offer renewal actions.
+// Show renewal actions when renewal is not planned.
 function createActionItems(
   competencies: EmployeeCompetency[]
 ): ActionRequiredItem[] {
@@ -93,8 +93,12 @@ function createActionItems(
           ? { label: 'Invalid', tone: 'danger' }
           : { label: 'Expiring soon', tone: 'warning' },
       actions: [
-        { id: 'plan-renewal', label: 'Plan renewal' },
-        { id: 'upload-certificate', label: 'Upload renewal certificate' },
+        competency.status === 'missing'
+          ? {
+              id: 'add-competency-information',
+              label: 'Add competency information',
+            }
+          : { id: 'plan-renewal', label: 'Plan renewal' },
       ],
       note: { text: 'No renewal planned', tone: 'danger' },
     }
@@ -182,8 +186,15 @@ export default function EmployeeOverview() {
         />
         <ActionRequired
           items={actionItems}
-          onAction={() => {
-            void navigate(paths.renewals)
+          onAction={(_item, actionId) => {
+            switch (actionId) {
+              case 'add-competency-information':
+                void navigate(paths.competencies)
+                break
+              case 'plan-renewal':
+                void navigate(paths.renewals)
+                break
+            }
           }}
         />
       </Box>

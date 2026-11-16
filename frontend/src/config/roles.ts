@@ -50,8 +50,8 @@ export const pagesPerRole: Record<Role, Page[]> = {
       icon: HomeOutlinedIcon,
     },
     {
-      labelKey: 'navigation.actions',
-      path: '/supervisor/actions',
+      labelKey: 'navigation.renewals',
+      path: '/supervisor/renewals',
       icon: EventRepeatIcon,
     },
   ],

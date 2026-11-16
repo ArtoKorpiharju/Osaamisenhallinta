@@ -11,7 +11,7 @@ test("supervisor overview shows stats and upcoming expirations", async ({
   for (const title of [
     "Invalid",
     "Expiring soon",
-    "Missing actions",
+    "Require action",
     "Planned renewals",
   ]) {
     await expect(page.getByText(title, { exact: true }).first()).toBeVisible();

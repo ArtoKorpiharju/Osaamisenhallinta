@@ -168,16 +168,50 @@ describe('EmployeeOverview', () => {
     expect(
       within(craneLicense).queryByText('No renewal planned')
     ).not.toBeInTheDocument()
+  })
 
-    fireEvent.click(
-      within(safetyCard).getByRole('button', {
-        name: 'Upload certificate',
-      })
+  it('shows a missing-competency note for missing competencies', () => {
+    render(
+      <ActionRequired
+        items={[
+          {
+            id: '5',
+            title: 'First aid training',
+            status: { label: 'Invalid', tone: 'danger' },
+            actions: [
+              {
+                id: 'add-competency-information',
+                label: 'Add competency information',
+              },
+            ],
+            note: { text: 'No renewal planned', tone: 'danger' },
+          },
+        ]}
+      />
     )
-    // Clicking works
-    expect(onAction).toHaveBeenCalledWith(
-      expect.objectContaining({ id: fakeActionItems[1].id }),
-      'upload-certificate'
+
+    expect(screen.getByText('The competency is missing')).toBeInTheDocument()
+    expect(screen.queryByText('No renewal planned')).not.toBeInTheDocument()
+  })
+
+  it('shows a no-renewal note when the competency is not missing', () => {
+    render(
+      <ActionRequired
+        items={[
+          {
+            id: '6',
+            title: 'Forklift licence',
+            status: { label: 'Invalid', tone: 'danger' },
+            actions: [{ id: 'plan-renewal', label: 'Plan renewal' }],
+            note: { text: 'No renewal planned', tone: 'danger' },
+          },
+        ]}
+      />
     )
+
+    expect(screen.getByText('No renewal planned')).toBeInTheDocument()
+    expect(
+      screen.queryByText('The competency is missing')
+    ).not.toBeInTheDocument()
   })
 })
