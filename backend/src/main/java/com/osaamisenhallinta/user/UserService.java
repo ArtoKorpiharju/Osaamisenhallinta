@@ -48,7 +48,11 @@ public class UserService {
   }
 
   private SeedUserResponseDto mapToDto(User user) {
+    Long supervisedUnitId = null;
+    if (user.getRole() == UserRole.SUPERVISOR) {
+      supervisedUnitId = user.getSupervisedUnit() != null ? user.getSupervisedUnit().getId() : null;
+    }
     return new SeedUserResponseDto(
-        user.getId(), user.getFirstName(), user.getLastName(), user.getRole());
+        user.getId(), user.getFirstName(), user.getLastName(), user.getRole(), supervisedUnitId);
   }
 }
