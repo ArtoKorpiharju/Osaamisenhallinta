@@ -12,6 +12,14 @@ public class EmployeeQualificationMapper {
 
   private EmployeeQualificationMapper() {}
 
+  /**
+   * Maps an EmployeeQualification entity and its corresponding QualificationEvaluationResult to an
+   * EmployeeQualificationDto.
+   *
+   * @param assignment The EmployeeQualification entity to convert.
+   * @param qualificationEvaluationResult The result of evaluating the qualification.
+   * @return An EmployeeQualificationDto containing the relevant data.
+   */
   public static EmployeeQualificationDto toEmployeeQualificationDto(
       EmployeeQualification assignment,
       QualificationEvaluationResult qualificationEvaluationResult) {
