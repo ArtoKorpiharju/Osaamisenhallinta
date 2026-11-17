@@ -86,11 +86,10 @@ export default function SearchCompetence({
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography sx={{ fontSize: 13 }}>
-        View and manage your training, certificates, licences and other
-        competences
-      </Typography>
-
+        <Typography sx={{ fontSize: 13 }}>
+          View and manage your training, certificates, licences and other
+          competences
+        </Typography>
       <TextField
         size="small"
         placeholder="Search by name or type...."

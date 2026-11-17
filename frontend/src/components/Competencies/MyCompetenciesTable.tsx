@@ -108,7 +108,6 @@ export default function MyCompetenciesTable({
   ]
 
   return (
-
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
         {/* Frame around the whole table. */}
         <Box
@@ -135,6 +134,5 @@ export default function MyCompetenciesTable({
           />
         </Box>
       </Box>
-
   )
 }
