@@ -9,8 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @DataJpaTest
+@Testcontainers 
 class CompetencyRepositoryTest {
 
   @Autowired private CompetencyRepository competencyRepository;
@@ -21,7 +26,10 @@ class CompetencyRepositoryTest {
 
   private Qualification qualification;
 
-  private final Long competencyId = 1L;
+  @Container
+  @ServiceConnection
+   static PostgreSQLContainer postgres =
+        new PostgreSQLContainer("postgres:16-alpine");
 
   @BeforeEach 
   void setUp() {
@@ -45,7 +53,7 @@ class CompetencyRepositoryTest {
     entityManager.flush(); // sends pending changes to the database
     entityManager.clear(); // removes entitites from the persistence context
 
-    boolean result = competencyRepository.isUsedByQualification(competencyId);
+    boolean result = competencyRepository.isUsedByQualification(competency.getId());
     assertThat(result).isTrue();
   }
 
@@ -56,7 +64,7 @@ class CompetencyRepositoryTest {
     entityManager.flush(); // sends pending changes to the database
     entityManager.clear(); // removes entitites from the persistence context
 
-    boolean result = competencyRepository.isUsedByQualification(competencyId);
+    boolean result = competencyRepository.isUsedByQualification(competency.getId());
     assertThat(result).isFalse();
   }
 
