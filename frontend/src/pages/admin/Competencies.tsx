@@ -15,6 +15,7 @@ import PageContainer from '../../components/PageContainer'
 import CompetenciesTable, {
   type Competency,
 } from '../../components/AdminCompetencies/CompetenciesTable'
+import AddCompetencyPopUp from '../../components/AdminCompetencies/AddCompetencyPopUp'
 
 // Temporary frontend data. Replace with backend data later.
 const Competencies: Competency[] = [
@@ -43,6 +44,7 @@ const Competencies: Competency[] = [
 
 function AdminCompetencies() {
   const navigate = useNavigate()
+  const [addCompetencyOpen, setAddCompetencyOpen] = useState(false)
   const [search, setSearch] = useState('')
   const filteredCompetencies = Competencies.filter((item) =>
     item.competency.toLowerCase().includes(search.trim().toLowerCase())
@@ -74,6 +76,9 @@ function AdminCompetencies() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
+            onClick={() => {
+              setAddCompetencyOpen(true)
+            }}
             sx={{
               flexShrink: 1,
               mt: '39px',
@@ -124,6 +129,12 @@ function AdminCompetencies() {
           }}
         />
       </Box>
+      <AddCompetencyPopUp
+        open={addCompetencyOpen}
+        onClose={() => {
+          setAddCompetencyOpen(false)
+        }}
+      />
     </PageContainer>
   )
 }
