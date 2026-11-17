@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
 import { tones } from '../../config/tones'
 
@@ -21,14 +22,16 @@ export default function RemoveQualificationDialog({
   onConfirm,
   onCancel,
 }: RemoveQualificationDialogProps) {
+  const { t } = useTranslation()
+
   return (
     <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth>
       <DialogTitle sx={{ typography: 'h2', textAlign: 'center', pt: 3 }}>
-        Remove Qualification?
+        {t('qualifications.removeDialog.title')}
       </DialogTitle>
       <DialogContent>
         <Typography variant="body1" sx={{ textAlign: 'center' }}>
-          This qualification will be removed from My Qualifications -list
+          {t('qualifications.removeDialog.message')}
         </Typography>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center', gap: 4, pb: 3, pt: 2 }}>
@@ -41,7 +44,7 @@ export default function RemoveQualificationDialog({
             bgcolor: tones.info.main,
           }}
         >
-          Remove
+          {t('qualifications.removeDialog.confirm')}
         </Button>
         <Button
           variant="contained"
@@ -58,7 +61,7 @@ export default function RemoveQualificationDialog({
             },
           }}
         >
-          Cancel
+          {t('qualifications.removeDialog.cancel')}
         </Button>
       </DialogActions>
     </Dialog>

@@ -7,22 +7,40 @@ import {
 
 export const statusDisplay: Record<
   QualificationStatus,
-  { label: string; tone: Tone }
+  { labelKey: string; tone: Tone }
 > = {
-  notQualified: { label: 'Invalid', tone: 'danger' },
-  expired: { label: 'Invalid', tone: 'danger' },
-  expiringSoon: { label: 'Expiring soon', tone: 'warning' },
-  qualified: { label: 'Qualified', tone: 'success' },
+  notQualified: { labelKey: 'qualifications.statuses.invalid', tone: 'danger' },
+  expired: { labelKey: 'qualifications.statuses.invalid', tone: 'danger' },
+  expiringSoon: {
+    labelKey: 'qualifications.statuses.expiringSoon',
+    tone: 'warning',
+  },
+  qualified: {
+    labelKey: 'qualifications.statuses.qualified',
+    tone: 'success',
+  },
 }
 
 export const competencyStatusDisplay: Record<
   CompetencyStatus,
-  { label: string; tone: Tone }
+  { labelKey: string; tone: Tone }
 > = {
-  expired: { label: 'Invalid', tone: 'danger' },
-  missing: { label: 'Missing', tone: 'danger' },
-  expiringSoon: { label: 'Expiring soon', tone: 'warning' },
-  valid: { label: 'Valid', tone: 'success' },
+  expired: {
+    labelKey: 'qualifications.competencyStatuses.invalid',
+    tone: 'danger',
+  },
+  missing: {
+    labelKey: 'qualifications.competencyStatuses.missing',
+    tone: 'danger',
+  },
+  expiringSoon: {
+    labelKey: 'qualifications.competencyStatuses.expiringSoon',
+    tone: 'warning',
+  },
+  valid: {
+    labelKey: 'qualifications.competencyStatuses.valid',
+    tone: 'success',
+  },
 }
 
 // Sort order: most urgent first.
@@ -33,10 +51,10 @@ export const statusOrder: Record<QualificationStatus, number> = {
   qualified: 2,
 }
 
-export const competenceTypeLabels: Record<CompetencyType, string> = {
-  training: 'Training',
-  license: 'License',
-  certification: 'Certification',
-  skill: 'Skill',
-  other: 'Other',
+export const competenceTypeKeys: Record<CompetencyType, string> = {
+  training: 'qualifications.competenceTypes.training',
+  license: 'qualifications.competenceTypes.license',
+  certification: 'qualifications.competenceTypes.certification',
+  skill: 'qualifications.competenceTypes.skill',
+  other: 'qualifications.competenceTypes.other',
 }

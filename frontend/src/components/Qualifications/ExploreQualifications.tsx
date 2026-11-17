@@ -10,6 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import AddIcon from '@mui/icons-material/Add'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
@@ -51,6 +52,8 @@ export default function ExploreQualifications({
   onAdd,
   onCompetenceClick,
 }: ExploreQualificationsProps) {
+  const { t } = useTranslation()
+
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortState>({ by: 'name', direction: 'asc' })
   const [page, setPage] = useState(0)
@@ -77,7 +80,7 @@ export default function ExploreQualifications({
   const columns: ExpandableTableColumn<CatalogueQualification>[] = [
     {
       id: 'name',
-      label: 'Qualifications',
+      label: t('qualifications.columns.qualifications'),
       width: '38%',
       // Only marks the column as sortable, the sorting itself is done above.
       sortValue: sortValues.name,
@@ -100,7 +103,7 @@ export default function ExploreQualifications({
     },
     {
       id: 'requirements',
-      label: 'Requirements met',
+      label: t('qualifications.columns.requirementsMet'),
       align: 'center',
       width: '34%',
       render: (q) =>
@@ -108,13 +111,13 @@ export default function ExploreQualifications({
     },
     {
       id: 'action',
-      label: 'Action',
+      label: t('qualifications.columns.action'),
       align: 'center',
       width: '28%',
       render: (q) => {
         const added = addedIds.has(q.qualificationId)
         return (
-          <Tooltip title={added ? '' : 'Add to My Qualifications'}>
+          <Tooltip title={added ? '' : t('qualifications.explore.addTooltip')}>
             <span>
               <Button
                 variant="outlined"
@@ -127,14 +130,14 @@ export default function ExploreQualifications({
                   onAdd(q)
                 }}
                 sx={{
-                  textTransform: 'none',
                   borderRadius: 5,
-                  fontWeight: 700,
                   borderColor: tones.info.main,
                   color: tones.info.main,
                 }}
               >
-                {added ? 'Added' : 'Add'}
+                {added
+                  ? t('qualifications.explore.added')
+                  : t('qualifications.explore.add')}
               </Button>
             </span>
           </Tooltip>
@@ -144,15 +147,15 @@ export default function ExploreQualifications({
   ]
 
   return (
-    <Panel title="Explore Qualifications">
+    <Panel title={t('qualifications.explore.title')}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Typography sx={{ fontSize: 13 }}>
-          Discover qualifications and see what requirements they have
+        <Typography variant="body2">
+          {t('qualifications.explore.description')}
         </Typography>
 
         <TextField
           size="small"
-          placeholder="Search qualifications..."
+          placeholder={t('qualifications.explore.searchPlaceholder')}
           value={search}
           onChange={(event) => {
             setSearch(event.target.value)
@@ -166,7 +169,9 @@ export default function ExploreQualifications({
                 </InputAdornment>
               ),
             },
-            htmlInput: { 'aria-label': 'Search qualifications' },
+            htmlInput: {
+              'aria-label': t('qualifications.explore.searchLabel'),
+            },
           }}
           sx={{ maxWidth: 480, bgcolor: 'action.hover' }}
         />
@@ -179,7 +184,7 @@ export default function ExploreQualifications({
           }}
         >
           <ExpandableTable
-            ariaLabel="Explore qualifications"
+            ariaLabel={t('qualifications.explore.tableLabel')}
             rows={pageRows}
             columns={columns}
             getRowId={(q) => String(q.qualificationId)}
@@ -196,7 +201,7 @@ export default function ExploreQualifications({
                 }}
               />
             )}
-            emptyMessage="No qualifications found."
+            emptyMessage={t('qualifications.explore.empty')}
           />
         </Box>
 
@@ -206,10 +211,11 @@ export default function ExploreQualifications({
           page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[4, 8, 12]}
-          labelRowsPerPage="Rows per page"
+          labelRowsPerPage={t('qualifications.explore.rowsPerPage')}
           labelDisplayedRows={({ from, to, count }) =>
-            `Showing ${String(from)}-${String(to)} of ${String(count)}`
+            t('qualifications.explore.showing', { from, to, total: count })
           }
+          getItemAriaLabel={(type) => t(`common.pagination.${type}`)}
           onPageChange={(_event, newPage) => {
             setPage(newPage)
           }}

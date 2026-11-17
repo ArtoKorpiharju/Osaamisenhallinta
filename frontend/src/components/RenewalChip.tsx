@@ -1,5 +1,6 @@
 import { Chip } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
 import StatusChip from './StatusChip'
 import { tones } from '../config/tones'
@@ -12,18 +13,24 @@ interface RenewalChipProps {
 }
 
 export default function RenewalChip({ plan }: RenewalChipProps) {
+  const { t } = useTranslation()
+
   if (plan === null) {
-    return <StatusChip label="Not planned" tone="info" />
+    return (
+      <StatusChip label={t('qualifications.renewal.notPlanned')} tone="info" />
+    )
   }
 
   return (
     <Chip
-      label={`Planned - ${formatDate(plan.renewalDate)}`}
+      label={t('qualifications.renewal.planned', {
+        date: formatDate(plan.renewalDate),
+      })}
       size="small"
       sx={{
         height: 20,
         borderRadius: 0.75,
-        fontSize: 11,
+        typography: 'caption',
         bgcolor: alpha(tones.info.main, 0.15),
         color: tones.info.main,
         '& .MuiChip-label': { px: 0.75 },

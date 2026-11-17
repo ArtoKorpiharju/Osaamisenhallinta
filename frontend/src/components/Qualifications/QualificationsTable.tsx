@@ -1,5 +1,6 @@
 import { Box, IconButton } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
@@ -36,10 +37,12 @@ export default function MyQualificationsTable({
   onToggleFavorite,
   expandedQualificationId,
 }: MyQualificationsTableProps) {
+  const { t } = useTranslation()
+
   const columns: ExpandableTableColumn<QualificationDetails>[] = [
     {
       id: 'name',
-      label: 'My Qualifications',
+      label: t('qualifications.columns.myQualifications'),
       width: '38%',
       sortValue: (q) => q.name,
       render: (q, { expanded }) => (
@@ -61,8 +64,8 @@ export default function MyQualificationsTable({
               active={q.isFavourite}
               label={
                 q.isFavourite
-                  ? `Remove ${q.name} from Overview`
-                  : `Add ${q.name} to Overview`
+                  ? t('qualifications.my.removeFromOverview', { name: q.name })
+                  : t('qualifications.my.addNamedToOverview', { name: q.name })
               }
               onToggle={() => {
                 onToggleFavorite(q)
@@ -74,19 +77,19 @@ export default function MyQualificationsTable({
     },
     {
       id: 'status',
-      label: 'Status',
+      label: t('qualifications.columns.status'),
       width: '17%',
       sortValue: (q) => statusOrder[q.status],
       render: (q) => (
         <StatusChip
-          label={statusDisplay[q.status].label}
+          label={t(statusDisplay[q.status].labelKey)}
           tone={statusDisplay[q.status].tone}
         />
       ),
     },
     {
       id: 'requirements',
-      label: 'Requirements met',
+      label: t('qualifications.columns.requirementsMet'),
       align: 'center',
       width: '17%',
       render: (q) =>
@@ -94,7 +97,7 @@ export default function MyQualificationsTable({
     },
     {
       id: 'validUntil',
-      label: 'Valid until',
+      label: t('qualifications.columns.validUntil'),
       align: 'right',
       width: '15%',
       sortValue: (q) => q.validUntil,
@@ -125,8 +128,8 @@ export default function MyQualificationsTable({
             disabled={isCritical}
             aria-label={
               isCritical
-                ? `${q.name} is critical and cannot be removed`
-                : `Remove ${q.name}`
+                ? t('qualifications.my.criticalCannotRemove', { name: q.name })
+                : t('qualifications.my.remove', { name: q.name })
             }
             onClick={(event) => {
               // Do not expand the row.
@@ -146,9 +149,11 @@ export default function MyQualificationsTable({
   ]
 
   return (
-    <Panel title="My Qualifications">
+    <Panel title={t('qualifications.my.title')}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        <QualificationLegend favoriteLabel="Add to Overview" />
+        <QualificationLegend
+          favoriteLabel={t('qualifications.my.addToOverview')}
+        />
         {/* Frame around the whole table. */}
         <Box
           sx={{
@@ -158,7 +163,7 @@ export default function MyQualificationsTable({
           }}
         >
           <ExpandableTable
-            ariaLabel="My qualifications"
+            ariaLabel={t('qualifications.my.tableLabel')}
             rows={[...qualifications].sort(compareQualifications)}
             columns={columns}
             getRowId={(q) => String(q.qualificationId)}
@@ -175,7 +180,7 @@ export default function MyQualificationsTable({
                 }}
               />
             )}
-            emptyMessage="You have no qualifications yet."
+            emptyMessage={t('qualifications.my.empty')}
           />
         </Box>
       </Box>

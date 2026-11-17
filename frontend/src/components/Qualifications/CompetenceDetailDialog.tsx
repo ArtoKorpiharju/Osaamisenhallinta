@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -19,7 +20,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 import StatusChip from '../StatusChip'
 import {
-  competenceTypeLabels,
+  competenceTypeKeys,
   competencyStatusDisplay,
 } from '../../config/qualifications'
 import { tones } from '../../config/tones'
@@ -57,12 +58,16 @@ const dateOrDash = (isoDate: string | null) =>
 
 export default function CompetenceDetailDialog({
   competence,
-  qualificationName = 'Qualifications',
+  qualificationName,
   onClose,
   onPlanRenewal,
   onViewRenewalPlan,
 }: CompetenceDetailDialogProps) {
+  const { t } = useTranslation()
+
   const status = competence ? competencyStatusDisplay[competence.status] : null
+  const statusLabel = status ? t(status.labelKey) : ''
+  const typeLabel = competence ? t(competenceTypeKeys[competence.type]) : ''
 
   return (
     <Dialog
@@ -74,15 +79,25 @@ export default function CompetenceDetailDialog({
       {competence && status && (
         <DialogContent sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-            <IconButton aria-label="Back" size="small" onClick={onClose}>
+            <IconButton
+              aria-label={t('qualifications.detail.back')}
+              size="small"
+              onClick={onClose}
+            >
               <ArrowBackIcon fontSize="small" />
             </IconButton>
-            <Typography variant="body2">{qualificationName}</Typography>
+            <Typography variant="body2">
+              {qualificationName ?? t('qualifications.title')}
+            </Typography>
             <Typography variant="body2">{'>'}</Typography>
             <Typography variant="body2" sx={{ flex: 1 }}>
               {competence.name}
             </Typography>
-            <IconButton aria-label="Close" size="small" onClick={onClose}>
+            <IconButton
+              aria-label={t('qualifications.detail.close')}
+              size="small"
+              onClick={onClose}
+            >
               <CloseIcon fontSize="small" />
             </IconButton>
           </Box>
@@ -92,7 +107,7 @@ export default function CompetenceDetailDialog({
             <Box sx={{ flex: 1 }}>
               <Typography variant="h2">{competence.name}</Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
-                {competenceTypeLabels[competence.type]}
+                {typeLabel}
               </Typography>
             </Box>
 
@@ -104,11 +119,11 @@ export default function CompetenceDetailDialog({
                 gap: 2,
               }}
             >
-              <StatusChip label={status.label} tone={status.tone} />
+              <StatusChip label={statusLabel} tone={status.tone} />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Box sx={{ textAlign: 'right' }}>
                   <Typography component="p" variant="caption">
-                    Valid until
+                    {t('qualifications.detail.validUntil')}
                   </Typography>
                   <Typography component="p" variant="subtitle2">
                     {dateOrDash(competence.expirationDate)}
@@ -133,18 +148,18 @@ export default function CompetenceDetailDialog({
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.75 }}>
                 <Typography variant="h3" sx={{ mb: 1 }}>
-                  Competence details
+                  {t('qualifications.detail.title')}
                 </Typography>
-                <DetailRow label="Type">
-                  {competenceTypeLabels[competence.type]}
+                <DetailRow label={t('qualifications.detail.type')}>
+                  {typeLabel}
                 </DetailRow>
-                <DetailRow label="Status">
-                  <StatusChip label={status.label} tone={status.tone} />
+                <DetailRow label={t('qualifications.detail.status')}>
+                  <StatusChip label={statusLabel} tone={status.tone} />
                 </DetailRow>
-                <DetailRow label="Issue date">
+                <DetailRow label={t('qualifications.detail.issueDate')}>
                   {dateOrDash(competence.issueDate)}
                 </DetailRow>
-                <DetailRow label="Valid until">
+                <DetailRow label={t('qualifications.detail.validUntil')}>
                   {dateOrDash(competence.expirationDate)}
                 </DetailRow>
               </Box>
@@ -178,7 +193,7 @@ export default function CompetenceDetailDialog({
                 onClick={() => onPlanRenewal?.(competence)}
                 sx={{ bgcolor: tones.info.main, px: 4 }}
               >
-                Plan renewal
+                {t('qualifications.detail.planRenewal')}
               </Button>
               <Button
                 variant="contained"
@@ -187,7 +202,7 @@ export default function CompetenceDetailDialog({
                 onClick={() => onViewRenewalPlan?.(competence)}
                 sx={{ bgcolor: tones.info.main, px: 4 }}
               >
-                View renewal plan
+                {t('qualifications.detail.viewRenewalPlan')}
               </Button>
             </Box>
           </Box>
