@@ -148,7 +148,7 @@ const resources = {
         },
       },
       qualifications: {
-        title: 'Qualifications',
+        title: 'Employee Qualifications',
         loading: 'Fetching qualifications…',
         columns: {
           myQualifications: 'My Qualifications',
@@ -376,7 +376,7 @@ const resources = {
         },
       },
       qualifications: {
-        title: 'Kelpoisuudet',
+        title: 'Työntekijän Kelpoisuudet',
         loading: 'Haetaan kelpoisuuksia…',
         columns: {
           myQualifications: 'Omat kelpoisuudet',
