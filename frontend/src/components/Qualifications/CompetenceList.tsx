@@ -20,10 +20,14 @@ const columns: ExpandableTableColumn<EmployeeCompetency>[] = [
     width: '40%',
     render: (competency) => (
       <Box>
-        <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+        <Typography component="p" variant="subtitle2">
           {competency.name}
         </Typography>
-        <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+        <Typography
+          component="p"
+          variant="caption"
+          sx={{ color: 'text.secondary' }}
+        >
           {competenceTypeLabels[competency.type]}
         </Typography>
       </Box>
@@ -55,10 +59,10 @@ const columns: ExpandableTableColumn<EmployeeCompetency>[] = [
         competency.status === 'expired' || competency.status === 'missing'
       return (
         <Typography
+          variant="body2"
           sx={{
-            fontSize: 13,
             color: isInvalid ? tones.danger.main : 'inherit',
-            fontWeight: isInvalid ? 700 : 400,
+            fontWeight: isInvalid ? 700 : undefined,
           }}
         >
           {competency.expirationDate

@@ -123,22 +123,9 @@ const resources = {
           dayAbbreviation: 'd',
         },
       },
-      adminOverview: {
-        title: 'Admin Center',
-        description:
-          'Manage competency definitions and qualification requirements.',
-        cards: {
-          certificates: 'Total certificates',
-          skills: 'Total skills',
-          trainings: 'Total trainings',
-          licenses: 'Total licenses',
-          qualifications: 'Total qualifications',
-        },
-        quickActions: {
-          title: 'Quick actions',
-          addCompetence: 'Add competence',
-          addQualification: 'Add qualification',
-        },
+      qualifications: {
+        title: 'Qualifications',
+        loading: 'Fetching qualifications…',
       },
     },
   },
@@ -277,6 +264,10 @@ const resources = {
           addCompetence: 'Lisää osaaminen',
           addQualification: 'Lisää kelpoisuus',
         },
+      },
+      qualifications: {
+        title: 'Kelpoisuudet',
+        loading: 'Haetaan kelpoisuuksia…',
       },
     },
   },

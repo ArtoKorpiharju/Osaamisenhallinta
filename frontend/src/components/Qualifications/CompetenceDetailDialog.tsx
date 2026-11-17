@@ -44,8 +44,10 @@ function DetailRow({
 }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-      <Typography sx={{ width: 110, fontSize: 13 }}>{label}</Typography>
-      <Box sx={{ fontSize: 13, fontWeight: 600 }}>{children}</Box>
+      <Typography variant="body2" sx={{ width: 110 }}>
+        {label}
+      </Typography>
+      <Box sx={{ typography: 'subtitle2' }}>{children}</Box>
     </Box>
   )
 }
@@ -75,9 +77,9 @@ export default function CompetenceDetailDialog({
             <IconButton aria-label="Back" size="small" onClick={onClose}>
               <ArrowBackIcon fontSize="small" />
             </IconButton>
-            <Typography sx={{ fontSize: 13 }}>{qualificationName}</Typography>
-            <Typography sx={{ fontSize: 13 }}>{'>'}</Typography>
-            <Typography sx={{ fontSize: 13, flex: 1 }}>
+            <Typography variant="body2">{qualificationName}</Typography>
+            <Typography variant="body2">{'>'}</Typography>
+            <Typography variant="body2" sx={{ flex: 1 }}>
               {competence.name}
             </Typography>
             <IconButton aria-label="Close" size="small" onClick={onClose}>
@@ -88,10 +90,8 @@ export default function CompetenceDetailDialog({
           <Box sx={{ display: 'flex', gap: 2, px: 1 }}>
             <StarBorderIcon sx={{ color: 'text.disabled', mt: 0.5 }} />
             <Box sx={{ flex: 1 }}>
-              <Typography component="h2" sx={{ fontSize: 24, fontWeight: 700 }}>
-                {competence.name}
-              </Typography>
-              <Typography sx={{ fontSize: 13, mt: 1 }}>
+              <Typography variant="h2">{competence.name}</Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}>
                 {competenceTypeLabels[competence.type]}
               </Typography>
             </Box>
@@ -107,8 +107,10 @@ export default function CompetenceDetailDialog({
               <StatusChip label={status.label} tone={status.tone} />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Box sx={{ textAlign: 'right' }}>
-                  <Typography sx={{ fontSize: 12 }}>Valid until</Typography>
-                  <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  <Typography component="p" variant="caption">
+                    Valid until
+                  </Typography>
+                  <Typography component="p" variant="subtitle2">
                     {dateOrDash(competence.expirationDate)}
                   </Typography>
                 </Box>
@@ -130,10 +132,7 @@ export default function CompetenceDetailDialog({
               sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.75 }}>
-                <Typography
-                  component="h3"
-                  sx={{ fontSize: 15, fontWeight: 700, mb: 1 }}
-                >
+                <Typography variant="h3" sx={{ mb: 1 }}>
                   Competence details
                 </Typography>
                 <DetailRow label="Type">
@@ -177,12 +176,7 @@ export default function CompetenceDetailDialog({
               <Button
                 variant="contained"
                 onClick={() => onPlanRenewal?.(competence)}
-                sx={{
-                  textTransform: 'none',
-                  bgcolor: tones.info.main,
-                  px: 4,
-                  fontWeight: 700,
-                }}
+                sx={{ bgcolor: tones.info.main, px: 4 }}
               >
                 Plan renewal
               </Button>
@@ -191,12 +185,7 @@ export default function CompetenceDetailDialog({
                 startIcon={<EventAvailableIcon />}
                 disabled={competence.renewalPlan === null}
                 onClick={() => onViewRenewalPlan?.(competence)}
-                sx={{
-                  textTransform: 'none',
-                  bgcolor: tones.info.main,
-                  px: 4,
-                  fontWeight: 700,
-                }}
+                sx={{ bgcolor: tones.info.main, px: 4 }}
               >
                 View renewal plan
               </Button>
