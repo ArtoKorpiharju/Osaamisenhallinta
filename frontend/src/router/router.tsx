@@ -31,6 +31,10 @@ export default function AppRouter() {
             />
             <Route path="overview" element={<EmployeeOverview />} />
             <Route path="qualifications" element={<EmployeeQualifications />} />
+            <Route
+              path="qualifications/:id"
+              element={<EmployeeQualifications />}
+            />
             <Route path="competencies" element={<EmployeeCompetencies />} />
             <Route path="renewals" element={<EmployeeRenewals />} />
           </Route>

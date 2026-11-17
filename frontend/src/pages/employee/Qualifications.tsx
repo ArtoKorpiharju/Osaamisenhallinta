@@ -1,16 +1,20 @@
 import { useState } from 'react'
 
-import { Alert, Box, Snackbar, Typography } from '@mui/material'
-import { useOutletContext } from 'react-router'
+import { Alert, Snackbar } from '@mui/material'
+import { useOutletContext, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
+import PageTitle from '../../components/PageTitle'
+import PageContainer from '../../components/PageContainer'
 import CompetenceDetailDialog from '../../components/Qualifications/CompetenceDetailDialog'
 import ExploreQualifications from '../../components/Qualifications/ExploreQualifications'
 import MyQualificationsTable from '../../components/Qualifications/QualificationsTable'
 import RemoveQualificationDialog from '../../components/Qualifications/RemoveQualificationDialog'
-import { tones } from '../../config/tones'
 import useQualifications from '../../hooks/useQualifications'
-import { type EmployeeCompetency } from '../../types/overview'
-import { type EmployeeQualification } from '../../types/overview'
+import {
+  type EmployeeCompetency,
+  type EmployeeQualification,
+} from '../../types/overview'
 
 interface SelectedCompetence {
   competence: EmployeeCompetency
@@ -18,7 +22,12 @@ interface SelectedCompetence {
 }
 
 export default function Qualifications() {
+  const { t } = useTranslation()
   const { userId } = useOutletContext<{ userId: number | undefined }>()
+  const { id } = useParams()
+  const parsedId = Number(id)
+  const highlightedId =
+    id !== undefined && Number.isInteger(parsedId) ? parsedId : undefined
 
   const {
     catalogue,
@@ -56,22 +65,19 @@ export default function Qualifications() {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, p: 3 }}>
-      <Typography
-        component="h1"
-        sx={{ fontSize: 18, fontWeight: 700, color: tones.info.main }}
-      >
-        Qualifications
-      </Typography>
+    <PageContainer>
+      <PageTitle>{t('qualifications.title')}</PageTitle>
 
       {error && <Alert severity="error">{error}</Alert>}
 
       {loading && userId !== undefined && (
-        <Alert severity="info">Fetching qualifications…</Alert>
+        <Alert severity="info">{t('qualifications.loading')}</Alert>
       )}
 
       <MyQualificationsTable
+        key={highlightedId}
         qualifications={myQualifications}
+        expandedQualificationId={highlightedId}
         onCompetenceClick={openCompetence}
         onRemove={setPendingRemoval}
         onToggleFavorite={(qualification) => {
@@ -113,6 +119,6 @@ export default function Qualifications() {
           {actionError}
         </Alert>
       </Snackbar>
-    </Box>
+    </PageContainer>
   )
 }

@@ -39,6 +39,7 @@ interface ExpandableTableProps<T> {
   /** Controlled sorting. When given, the parent sorts `rows` itself */
   sort?: SortState
   onSortChange?: (sort: SortState) => void
+  defaultExpandedIds?: readonly string[]
 }
 
 function sortRows<T>(
@@ -90,8 +91,11 @@ export default function ExpandableTable<T>({
   ariaLabel,
   sort,
   onSortChange,
+  defaultExpandedIds,
 }: ExpandableTableProps<T>) {
-  const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(new Set())
+  const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(
+    () => new Set(defaultExpandedIds)
+  )
   const [internalSort, setInternalSort] = useState<SortState>({
     by: null,
     direction: 'asc',

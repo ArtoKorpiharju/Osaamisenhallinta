@@ -14,18 +14,12 @@ import {
 } from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'
 import QualificationLegend from '../QualificationLegend'
+import { compareQualifications } from '../../utils/qualifications'
 
 interface MyQualificationsProps {
   qualifications: readonly EmployeeQualification[]
   onViewAll?: () => void
   onQualificationClick?: (qualification: EmployeeQualification) => void
-}
-
-const statusOrder: Record<QualificationStatus, number> = {
-  notQualified: 0,
-  expired: 0,
-  expiringSoon: 1,
-  qualified: 2,
 }
 
 export default function MyQualifications({
@@ -162,9 +156,7 @@ export default function MyQualifications({
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <GenericTable
             columns={columns}
-            rows={[...qualifications].sort(
-              (a, b) => statusOrder[a.status] - statusOrder[b.status]
-            )}
+            rows={[...qualifications].sort(compareQualifications)}
             getRowId={(qualification) => qualification.employeeQualificationId}
             onRowClick={onQualificationClick}
           />

@@ -26,6 +26,7 @@ interface MyQualificationsTableProps {
   ) => void
   onRemove: (qualification: QualificationDetails) => void
   onToggleFavorite?: (qualification: QualificationDetails) => void
+  expandedQualificationId?: number
 }
 
 export default function MyQualificationsTable({
@@ -33,6 +34,7 @@ export default function MyQualificationsTable({
   onCompetenceClick,
   onRemove,
   onToggleFavorite,
+  expandedQualificationId,
 }: MyQualificationsTableProps) {
   const columns: ExpandableTableColumn<QualificationDetails>[] = [
     {
@@ -160,6 +162,11 @@ export default function MyQualificationsTable({
             rows={[...qualifications].sort(compareQualifications)}
             columns={columns}
             getRowId={(q) => String(q.qualificationId)}
+            defaultExpandedIds={
+              expandedQualificationId === undefined
+                ? undefined
+                : [String(expandedQualificationId)]
+            }
             renderExpanded={(q) => (
               <CompetenceList
                 competences={q.requiredCompetencies}

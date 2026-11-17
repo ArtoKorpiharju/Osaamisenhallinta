@@ -177,7 +177,7 @@ export default function EmployeeOverview() {
           }}
           onQualificationClick={(qualification) => {
             void navigate(
-              `${paths.qualifications}/${String(qualification.employeeQualificationId)}`
+              `${paths.qualifications}/${String(qualification.qualificationId)}`
             )
           }}
         />
