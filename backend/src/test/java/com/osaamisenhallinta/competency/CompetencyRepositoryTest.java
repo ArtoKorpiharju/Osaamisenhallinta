@@ -26,6 +26,8 @@ class CompetencyRepositoryTest {
 
   private Qualification qualification;
 
+  private final Long nonExistingCompetencyId = 999L;
+
   @Container
   @ServiceConnection
    static PostgreSQLContainer postgres =
@@ -34,13 +36,13 @@ class CompetencyRepositoryTest {
   @BeforeEach 
   void setUp() {
     competency = new Competency(
-      "Fire Safety Training", 
+      "TEST Fire Safety Training", 
       CompetencyType.TRAINING, 
       12
     );
 
     qualification = new Qualification(
-      "Warehouse Operator",
+      "TEST Warehouse Operator",
       Set.of(competency)
     );
   }
@@ -68,6 +70,12 @@ class CompetencyRepositoryTest {
     assertThat(result).isFalse();
   }
 
+  @Test 
+  void isUsedByQualification_ShouldReturnFalseIfCompetencyDoesNotExist() {
+    boolean result = competencyRepository.isUsedByQualification(nonExistingCompetencyId);
+    assertThat(result).isFalse();
+  }
+
   @Test
   void existsByName_ShouldReturnTrueWhenCompetencyExists() {
     entityManager.persist(competency);
@@ -79,7 +87,7 @@ class CompetencyRepositoryTest {
   }
 
   @Test
-  void existsByName_ShouldReturnFalseWhenCompetencyDoesntExist() {
+  void existsByName_ShouldReturnFalseWhenCompetencyDoesNotExist() {
     boolean result = competencyRepository.existsByName("Non-existent");
     assertThat(result).isFalse();
   }

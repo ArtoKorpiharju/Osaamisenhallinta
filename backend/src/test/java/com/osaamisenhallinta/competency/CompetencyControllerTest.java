@@ -66,7 +66,7 @@ class CompetencyControllerTest {
   }
 
   @Test
-  void getCompetencyById_ShouldReturnNotFoundWhenCompetencyDoesntExist() throws Exception {
+  void getCompetencyById_ShouldReturnNotFoundWhenCompetencyDoesNotExist() throws Exception {
     when(competencyService.getCompetencyById(competencyId))
         .thenThrow(new ResponseStatusException(
           HttpStatus.NOT_FOUND, "Competency not found"));
@@ -255,7 +255,7 @@ class CompetencyControllerTest {
   }
   
   @Test
-  void deleteCompetency_ShouldReturnNotFoundWhenCompetencyDoesntExist() throws Exception {
+  void deleteCompetency_ShouldReturnNotFoundWhenCompetencyDoesNotExist() throws Exception {
     doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
         .when(competencyService).deleteCompetency(competencyId);
 

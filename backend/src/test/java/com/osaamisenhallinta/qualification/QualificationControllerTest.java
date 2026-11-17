@@ -75,7 +75,7 @@ class QualificationControllerTest {
   }  
 
   @Test 
-  void getQualificationById_ShouldReturnNotFoundWhenQualificationDoesntExist() throws Exception {
+  void getQualificationById_ShouldReturnNotFoundWhenQualificationDoesNotExist() throws Exception {
     when(qualificationService.getQualificationById(qualificationId))
         .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
 
@@ -266,7 +266,7 @@ class QualificationControllerTest {
   }
 
   @Test 
-  void deleteQualification_ShouldReturnNotFoundWhenQualificationDoesntExist() throws Exception {
+  void deleteQualification_ShouldReturnNotFoundWhenQualificationDoesNotExist() throws Exception {
     doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
         .when(qualificationService).deleteQualification(qualificationId);
 

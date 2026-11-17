@@ -66,6 +66,9 @@ class QualificationRepositoryTest {
     assertThat(result).isPresent();
     assertThat(result.get().getRequiredCompetencies())
         .hasSize(1);
+    assertThat(result.get().getRequiredCompetencies())
+        .extracting(Competency::getName)
+        .containsExactly("TEST Fire Safety Training");
   }
 
   @Test 
@@ -76,12 +79,12 @@ class QualificationRepositoryTest {
   @Test 
   void findAll_ShouldReturnAllQualificationsWithTheirRequiredCompetencies() {
     Competency competency2 = new Competency(
-        "First Aid Training", 
+        "TEST First Aid Training", 
         CompetencyType.TRAINING, 
         null);
 
     Qualification qualification2 = new Qualification(
-        "First Aid Responder",
+        "TEST First Aid Responder",
         Set.of(competency2)
     );
 
@@ -107,7 +110,7 @@ class QualificationRepositoryTest {
   }
 
   @Test
-  void findAll_ShouldReturnEmplyListWhenNoQualificationsExist() {
+  void findAll_ShouldReturnEmptyListWhenNoQualificationsExist() {
     List<Qualification> result = qualificationRepository.findAll();
     assertThat(result).isEmpty();
   }
@@ -124,13 +127,13 @@ class QualificationRepositoryTest {
   }
 
   @Test
-  void existsByName_ShouldReturnFalseWhenQualificationDoesntExist() {
+  void existsByName_ShouldReturnFalseWhenQualificationDoesNotExist() {
     boolean result = qualificationRepository.existsByName("Non-existent");
     assertThat(result).isFalse();
   }
 
   @Test
-  void getByIdOrThrow_ShouldThrowWhenQualificationDoesntExist() {
+  void getByIdOrThrow_ShouldThrowWhenQualificationDoesNotExist() {
     assertThatThrownBy(() -> 
         qualificationRepository.getByIdOrThrow(nonExistingQualificationId)
     )

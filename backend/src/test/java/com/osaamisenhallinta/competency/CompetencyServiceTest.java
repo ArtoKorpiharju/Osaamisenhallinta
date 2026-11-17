@@ -144,7 +144,7 @@ class CompetencyServiceTest {
   }
 
   @Test
-  void createCompetency_ShouldBubbleUpExceptionWhenCompetencyAlreadyExists() {
+  void createCompetency_ShouldBubbleUpExceptionWhenCompetencyExists() {
     // Arrange
     when(competencyRepository.existsByName(mockCompetencyEntity.getName()))
         .thenReturn(true);
@@ -187,19 +187,6 @@ class CompetencyServiceTest {
         () -> competencyService.deleteCompetency(competencyId));
 
     assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-  }
-
-  @Test
-  void deleteCompetency_ShouldNotDeleteAnythingWhenCompetencyIsUsedByQualification() {
-    // Arrange
-    when(competencyRepository.findById(competencyId))
-        .thenReturn(Optional.of(mockCompetencyEntity));
-    when(competencyRepository.isUsedByQualification(competencyId))
-        .thenReturn(true);
-
-    // Assert & act
-    assertThrows(ResponseStatusException.class,
-        () -> competencyService.deleteCompetency(competencyId));
 
     verify(renewalPlanRepository, never()).deleteByCompetencyId(competencyId);
     verify(employeeCompetencyRepository, never()).deleteByCompetencyId(competencyId);

@@ -147,7 +147,7 @@ class QualificationServiceTest {
   }
 
   @Test
-  void createQualification_ShouldBubbleUpExceptionWhenQualificationAlreadyExists() {
+  void createQualification_ShouldBubbleUpExceptionWhenQualificationExists() {
     when(qualificationRepository.existsByName(mockQualificationEntity.getName()))
         .thenReturn(true);
 
