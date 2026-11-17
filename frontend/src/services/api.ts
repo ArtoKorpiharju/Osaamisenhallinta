@@ -23,12 +23,19 @@ export function getApiErrorMessage(
   return fallbackMessage
 }
 
-// Fetch data from the API and return it as a Promise of unknown type.
-export async function fetchApiData(path: string): Promise<unknown> {
-  const response = await fetch(path)
+// Send an API request and return its JSON response, or undefined if there is no body.
+export async function fetchApiData(
+  path: string,
+  options?: RequestInit
+): Promise<unknown> {
+  const response = await fetch(path, options)
 
   if (!response.ok) {
     throw new ApiError(response.status)
+  }
+
+  if (response.status === 204) {
+    return undefined
   }
 
   const data: unknown = await response.json()

@@ -39,7 +39,7 @@ export default function AddCompetencyPopUp({
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [validForLimitedTime, setValidForLimitedTime] = useState(true)
-  const [validityYears, setValidityYears] = useState('0')
+  const [validityMonths, setValidityMonths] = useState('1')
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
@@ -145,15 +145,17 @@ export default function AddCompetencyPopUp({
             <TextField
               type="number"
               size="small"
-              value={validityYears}
+              value={validityMonths}
               onChange={(event) => {
-                setValidityYears(event.target.value)
+                setValidityMonths(event.target.value)
               }}
-              slotProps={{ htmlInput: { min: 0 } }}
+              slotProps={{ htmlInput: { min: 1, step: 1 } }}
               sx={{ width: 64 }}
             />
             <Typography variant="body1">
-              {t('adminCompetencies.dialog.years')}
+              {t('adminCompetencies.dialog.month', {
+                count: Number(validityMonths),
+              })}
             </Typography>
           </Box>
         )}

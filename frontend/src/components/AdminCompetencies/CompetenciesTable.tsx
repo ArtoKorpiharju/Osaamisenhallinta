@@ -2,19 +2,13 @@ import { Box, IconButton, Typography } from '@mui/material'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { useTranslation } from 'react-i18next'
 
+import { type AdminCompetency } from '../../services/admin/admin'
 import DataTable, { type DataTableColumn } from '../DataTable'
 
-export interface Competency {
-  id: number
-  competency: string
-  type: string
-  validity: number
-}
-
 interface CompetenciesTableProps {
-  items: Competency[]
-  onItemClick?: (item: Competency) => void
-  onDelete?: (item: Competency) => void
+  items: AdminCompetency[]
+  onItemClick?: (item: AdminCompetency) => void
+  onDelete?: (item: AdminCompetency) => void
 }
 
 function CompetenciesTable({
@@ -24,9 +18,19 @@ function CompetenciesTable({
 }: CompetenciesTableProps) {
   const { t } = useTranslation()
 
-  const columns: DataTableColumn<Competency>[] = [
+  const formatValidity = (validityMonths: number | null) => {
+    if (validityMonths === null) {
+      return t('adminCompetencies.table.noExpiry')
+    }
+
+    return t('adminCompetencies.table.month', {
+      count: validityMonths,
+    })
+  }
+
+  const columns: DataTableColumn<AdminCompetency>[] = [
     {
-      id: 'competency',
+      id: 'name',
       label: t('adminCompetencies.table.competency'),
       minWidth: 260,
       render: (item) => (
@@ -37,7 +41,7 @@ function CompetenciesTable({
             fontWeight: 700,
           }}
         >
-          {item.competency}
+          {item.name}
         </Typography>
       ),
     },
@@ -76,7 +80,7 @@ function CompetenciesTable({
             variant="subtitle2"
             sx={{ fontWeight: 600 }}
           >
-            {item.validity} {t('adminCompetencies.table.years')}
+            {formatValidity(item.validityMonths)}
           </Typography>
           <IconButton
             size="small"
