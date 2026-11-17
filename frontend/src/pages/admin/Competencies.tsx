@@ -18,8 +18,14 @@ import CompetenciesTable from '../../components/AdminCompetencies/CompetenciesTa
 import AddCompetencyPopUp from '../../components/AdminCompetencies/AddCompetencyPopUp'
 import { tones } from '../../config/tones'
 import { getApiErrorMessage } from '../../services/api'
-import { fetchAdminCompetencies } from '../../services/admin/adminCompetencies'
-import { type AdminCompetency } from '../../services/admin/admin'
+import {
+  createCompetency,
+  fetchAdminCompetencies,
+} from '../../services/admin/adminCompetencies'
+import {
+  type AdminCompetency,
+  type CreateAdminCompetencyInput,
+} from '../../services/admin/admin'
 
 function AdminCompetencies() {
   const navigate = useNavigate()
@@ -49,6 +55,13 @@ function AdminCompetencies() {
   const filteredCompetencies = competencies.filter((item) =>
     item.name.toLowerCase().includes(search.trim().toLowerCase())
   )
+
+  const handleAddCompetency = async (
+    competency: CreateAdminCompetencyInput
+  ) => {
+    const createdCompetency = await createCompetency(competency)
+    setCompetencies((current) => [...current, createdCompetency])
+  }
 
   return (
     <PageContainer>
@@ -139,6 +152,7 @@ function AdminCompetencies() {
       </Box>
       <AddCompetencyPopUp
         open={addCompetencyOpen}
+        onAdd={handleAddCompetency}
         onClose={() => {
           setAddCompetencyOpen(false)
         }}
