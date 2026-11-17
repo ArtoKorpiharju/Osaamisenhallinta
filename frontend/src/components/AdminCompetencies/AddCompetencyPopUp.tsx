@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 
 import type { CompetencyType } from '../../types/overview'
+import { tones } from '../../config/tones'
 
 interface AddCompetencyPopUpProps {
   open: boolean
@@ -41,11 +42,10 @@ export default function AddCompetencyPopUp({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle
+        variant="h2"
         sx={{
-          bgcolor: '#e6eef5',
-          color: '#174f83',
-          fontSize: 18,
-          fontWeight: 700,
+          bgcolor: '#e4edf5',
+          color: tones.info.main,
         }}
       >
         Add competence
@@ -60,12 +60,9 @@ export default function AddCompetencyPopUp({
         }}
       >
         <Box>
-          <Typography
-            component="div"
-            sx={{ fontSize: 14, fontWeight: 600, mb: 0.5 }}
-          >
+          <Typography component="div" variant="subtitle1" sx={{ mb: 0.5 }}>
             Name{' '}
-            <Box component="span" sx={{ color: 'error.main' }}>
+            <Box component="span" sx={{ color: tones.danger.main }}>
               *
             </Box>
           </Typography>
@@ -81,12 +78,9 @@ export default function AddCompetencyPopUp({
         </Box>
 
         <Box>
-          <Typography
-            component="div"
-            sx={{ fontSize: 14, fontWeight: 600, mb: 0.5 }}
-          >
+          <Typography component="div" variant="subtitle1" sx={{ mb: 0.5 }}>
             Type{' '}
-            <Box component="span" sx={{ color: 'error.main' }}>
+            <Box component="span" sx={{ color: tones.danger.main }}>
               *
             </Box>
           </Typography>
@@ -109,9 +103,9 @@ export default function AddCompetencyPopUp({
         </Box>
 
         <FormControl>
-          <Typography component="div" sx={{ fontSize: 14, fontWeight: 600 }}>
+          <Typography component="div" variant="subtitle1">
             Validity{' '}
-            <Box component="span" sx={{ color: 'error.main' }}>
+            <Box component="span" sx={{ color: tones.danger.main }}>
               *
             </Box>
           </Typography>
@@ -143,7 +137,7 @@ export default function AddCompetencyPopUp({
 
         {validForLimitedTime && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography sx={{ fontSize: 14 }}>Valid for</Typography>
+            <Typography variant="body1">Valid for</Typography>
             <TextField
               type="number"
               size="small"
@@ -154,7 +148,7 @@ export default function AddCompetencyPopUp({
               slotProps={{ htmlInput: { min: 0 } }}
               sx={{ width: 64 }}
             />
-            <Typography sx={{ fontSize: 14 }}>Years</Typography>
+            <Typography variant="body1">Years</Typography>
           </Box>
         )}
       </DialogContent>
@@ -163,7 +157,13 @@ export default function AddCompetencyPopUp({
         <Button onClick={onClose} variant="outlined" color="inherit">
           Cancel
         </Button>
-        <Button type="button" variant="contained">
+        <Button
+          type="button"
+          variant="contained"
+          sx={{
+            bgcolor: tones.info.main,
+          }}
+        >
           Add competence
         </Button>
       </DialogActions>

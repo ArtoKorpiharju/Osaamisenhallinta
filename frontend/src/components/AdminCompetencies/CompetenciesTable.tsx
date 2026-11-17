@@ -29,6 +29,7 @@ function CompetenciesTable({
       render: (item) => (
         <Typography
           component="span"
+          variant="subtitle2"
           sx={{
             fontWeight: 700,
           }}
@@ -42,7 +43,11 @@ function CompetenciesTable({
       label: 'Type',
       minWidth: 120,
       render: (item) => (
-        <Typography component="span" sx={{ fontWeight: 600 }}>
+        <Typography
+          component="span"
+          variant="subtitle2"
+          sx={{ fontWeight: 600 }}
+        >
           {item.type}
         </Typography>
       ),
@@ -61,7 +66,11 @@ function CompetenciesTable({
             height: '100%',
           }}
         >
-          <Typography component="span" sx={{ fontWeight: 600 }}>
+          <Typography
+            component="span"
+            variant="subtitle2"
+            sx={{ fontWeight: 600 }}
+          >
             {item.validity} years
           </Typography>
           <IconButton

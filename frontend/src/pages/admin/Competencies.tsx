@@ -16,6 +16,7 @@ import CompetenciesTable, {
   type Competency,
 } from '../../components/AdminCompetencies/CompetenciesTable'
 import AddCompetencyPopUp from '../../components/AdminCompetencies/AddCompetencyPopUp'
+import { tones } from '../../config/tones'
 
 // Temporary frontend data. Replace with backend data later.
 const Competencies: Competency[] = [
@@ -61,9 +62,9 @@ function AdminCompetencies() {
           <Box>
             <PageTitle>Competencies</PageTitle>
             <Typography
+              variant="body2"
               sx={{
                 mt: 0.5,
-                fontSize: 13,
                 color: 'text.secondary',
               }}
             >
@@ -78,9 +79,8 @@ function AdminCompetencies() {
             }}
             sx={{
               flexShrink: 1,
-              mt: '39px',
-              textTransform: 'none',
-              backgroundColor: '#174f83',
+              mt: '30px',
+              backgroundColor: tones.info.main,
             }}
           >
             Add new competence
@@ -109,9 +109,9 @@ function AdminCompetencies() {
         />
 
         <Typography
+          variant="body2"
           sx={{
             mt: 2,
-            fontSize: 13,
             color: 'text.secondary',
           }}
         >
