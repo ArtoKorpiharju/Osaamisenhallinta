@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.osaamisenhallinta.competency.Competency;
 import com.osaamisenhallinta.competency.CompetencyType;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,8 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @DataJpaTest
+@Testcontainers
 class QualificationRepositoryTest {
     
   @Autowired private QualificationRepository qualificationRepository;
@@ -26,20 +31,23 @@ class QualificationRepositoryTest {
 
   private Qualification qualification;
 
-  private final Long qualificationId = 1L;
-
   private final Long nonExistingQualificationId = 999L;
+
+  @Container
+  @ServiceConnection
+   static PostgreSQLContainer postgres =
+        new PostgreSQLContainer("postgres:16-alpine");
 
   @BeforeEach
   void setUp() {
     competency = new Competency(
-      "Fire Safety Training", 
+      "TEST Fire Safety Training", 
       CompetencyType.TRAINING, 
       12
     );
     
     qualification = new Qualification(
-      "Warehouse Operator",
+      "TEST Warehouse Operator",
       Set.of(competency)
     );
   }
@@ -53,7 +61,7 @@ class QualificationRepositoryTest {
     entityManager.clear(); // removes entitites from the persistence context
 
     Optional<Qualification> result = 
-        qualificationRepository.findById(qualificationId);
+        qualificationRepository.findById(qualification.getId());
 
     assertThat(result).isPresent();
     assertThat(result.get().getRequiredCompetencies())
@@ -106,6 +114,7 @@ class QualificationRepositoryTest {
 
   @Test
   void existsByName_ShouldReturnTrueWhenQualificationExists() {
+    entityManager.persist(competency);
     entityManager.persist(qualification);
     entityManager.flush(); // sends pending changes to the database
     entityManager.clear(); // removes entitites from the persistence context
@@ -125,7 +134,7 @@ class QualificationRepositoryTest {
     assertThatThrownBy(() -> 
         qualificationRepository.getByIdOrThrow(nonExistingQualificationId)
     )
-        .isInstanceOf(EntityNotFoundException.class)
+        .isInstanceOf(JpaObjectRetrievalFailureException.class)
         .hasMessageContaining("Qualification not found with id: " + nonExistingQualificationId);
   }
 }
