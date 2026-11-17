@@ -26,9 +26,9 @@ public interface EmployeeQualificationRepository
             () ->
                 new EntityNotFoundException(
                     "Qualification assignment not found with id: "
-                        + employeeId
+                        + employeeQualificationId
                         + " for employee: "
-                        + employeeQualificationId));
+                        + employeeId));
   }
 
   @Modifying

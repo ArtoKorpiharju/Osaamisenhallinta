@@ -2,6 +2,7 @@ package com.osaamisenhallinta.employee;
 
 import com.osaamisenhallinta.employee.dto.AssignQualificationRequestDto;
 import com.osaamisenhallinta.employee.dto.EmployeeQualificationDto;
+import com.osaamisenhallinta.employee.dto.UpdateEmployeeQualificationIsCriticalRequestDto;
 import com.osaamisenhallinta.employee.dto.UpdateFavouriteRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -115,5 +116,31 @@ public class EmployeeQualificationController {
     employeeQualificationService.toggleQualificationFavourite(
         employeeId, employeeQualificationId, requestDto.favourite());
     return;
+  }
+
+  /** Updates the isCritical status of an employee's assigned qualification. */
+  @Operation(
+      summary = "Update isCritical status",
+      description = "Updates the isCritical boolean flag for an employee's assigned qualification.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "204", description = "IsCritical status updated successfully"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid request payload",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Employee qualification assignment not found",
+            content = @Content)
+      })
+  @PatchMapping("/{employeeQualificationId}/critical")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void updateCriticalFlag(
+      @PathVariable Long employeeId,
+      @PathVariable Long employeeQualificationId,
+      @Valid @RequestBody UpdateEmployeeQualificationIsCriticalRequestDto dto) {
+    employeeQualificationService.updateQualificationIsCritical(
+        employeeId, employeeQualificationId, dto.isCritical());
   }
 }

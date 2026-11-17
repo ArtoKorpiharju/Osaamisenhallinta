@@ -2,6 +2,7 @@ package com.osaamisenhallinta.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,14 +10,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 /** Service for generic user related operations, independent of their roles. */
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
 
   private final UserRepository userRepository;
-
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
 
   /**
    * Returns a list of test users for each role. The test users are expected to be created in the
@@ -50,7 +48,11 @@ public class UserService {
   }
 
   private SeedUserResponseDto mapToDto(User user) {
+    Long supervisedUnitId = null;
+    if (user.getRole() == UserRole.SUPERVISOR) {
+      supervisedUnitId = user.getSupervisedUnit() != null ? user.getSupervisedUnit().getId() : null;
+    }
     return new SeedUserResponseDto(
-        user.getId(), user.getFirstName(), user.getLastName(), user.getRole());
+        user.getId(), user.getFirstName(), user.getLastName(), user.getRole(), supervisedUnitId);
   }
 }

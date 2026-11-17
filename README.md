@@ -13,7 +13,8 @@ Full-stack application using React, Spring Boot and PostgreSQL.
 - Backend: Java 21, Maven 3.9, Spring Boot 4.1, Checkstyle 3.6, Spotless 3.10
 - Database: PostgreSQL 18
 - Web server / reverse proxy: Nginx 1.30.4
-- Tooling: Docker Compose
+- Testing: Vitest 3, Playwright 1.64
+- Tooling: Docker Compose, Node.js 24
 
 ## Run with Docker Compose
 
@@ -77,9 +78,46 @@ Or cmd / Powershell:
 
 3. See test results in terminal.
 
-### How to run frontend and e2e tests
+### How to run frontend tests
 
-The tests can be run from the root of the repository by:
+All commands assume the current working directory is /frontend
 
-- Frontend: `cd frontend && npm run test` (Vitest + Testing Library)
-- End to end: `npm run e2e-test`
+Run `npm run test` (Vitest + Testing Library)
+
+### How to run end-to-end tests
+
+All commands assume the current working directory is root
+
+1. Start by installing playwright by running:
+
+```bash
+npx playwright install
+```
+
+If Playwright reports that required system dependencies are missing, run
+
+```bash
+npx playwright install-deps
+```
+
+2. Run tests by command:
+
+```bash
+npx playwright test
+```
+
+Note: playwright does not build a new docker volume if one already exists. In this case use:
+
+```bash
+docker compose down -v
+```
+
+before testing again
+
+3. Playwright usually automatically opens web page on failed tests
+
+You can also get report of the last test run by:
+
+```bash
+npx playwright show-report
+```

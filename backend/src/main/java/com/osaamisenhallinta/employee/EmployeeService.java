@@ -12,22 +12,18 @@ import com.osaamisenhallinta.user.UserRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 /** Retrieves Employees and maps them to API responses. */
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EmployeeService {
   private final UserRepository userRepository;
   private final QualificationEvaluator qualificationEvaluator;
-
-  public EmployeeService(
-      UserRepository userRepository, QualificationEvaluator qualificationEvaluator) {
-    this.userRepository = userRepository;
-    this.qualificationEvaluator = qualificationEvaluator;
-  }
 
   /**
    * Returns an employee by their ID, or throws an exception if not found.
