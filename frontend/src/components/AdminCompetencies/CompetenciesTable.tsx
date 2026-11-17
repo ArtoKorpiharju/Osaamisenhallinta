@@ -8,7 +8,6 @@ export interface Competency {
   competency: string
   type: string
   validity: number
-  update: string
 }
 
 interface CompetenciesTableProps {
@@ -53,16 +52,6 @@ function CompetenciesTable({
       label: 'Validity',
       minWidth: 120,
       render: (item) => (
-        <Typography component="span" sx={{ fontWeight: 600 }}>
-          {item.validity} years
-        </Typography>
-      ),
-    },
-    {
-      id: 'update',
-      label: 'Update',
-      minWidth: 120,
-      render: (item) => (
         <Box
           sx={{
             display: 'flex',
@@ -73,7 +62,7 @@ function CompetenciesTable({
           }}
         >
           <Typography component="span" sx={{ fontWeight: 600 }}>
-            {item.update}
+            {item.validity} years
           </Typography>
           <IconButton
             size="small"

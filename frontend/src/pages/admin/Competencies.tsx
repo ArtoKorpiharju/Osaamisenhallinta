@@ -24,21 +24,18 @@ const Competencies: Competency[] = [
     competency: 'Magnetic Flux Leakage (MFL)',
     type: 'Training',
     validity: 3,
-    update: '16.03.2026',
   },
   {
     id: 2,
     competency: 'First Aid Training',
     type: 'Certificate',
     validity: 5,
-    update: '26.03.2026',
   },
   {
     id: 3,
     competency: 'Safety Card',
     type: 'Certificate',
     validity: 3,
-    update: '06.06.2026',
   },
 ]
 
