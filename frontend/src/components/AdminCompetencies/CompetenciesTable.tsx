@@ -9,12 +9,14 @@ interface CompetenciesTableProps {
   items: AdminCompetency[]
   onItemClick?: (item: AdminCompetency) => void
   onDelete?: (item: AdminCompetency) => void
+  deleting?: boolean
 }
 
 function CompetenciesTable({
   items,
   onItemClick,
   onDelete,
+  deleting = false,
 }: CompetenciesTableProps) {
   const { t } = useTranslation()
 
@@ -84,6 +86,7 @@ function CompetenciesTable({
           </Typography>
           <IconButton
             size="small"
+            disabled={deleting}
             onClick={(event) => {
               event.stopPropagation()
               onDelete?.(item)

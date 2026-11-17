@@ -20,6 +20,7 @@ import { tones } from '../../config/tones'
 import { getApiErrorMessage } from '../../services/api'
 import {
   createCompetency,
+  deleteCompetency,
   fetchAdminCompetencies,
 } from '../../services/admin/adminCompetencies'
 import {
@@ -34,7 +35,9 @@ function AdminCompetencies() {
   const [search, setSearch] = useState('')
   const [competencies, setCompetencies] = useState<AdminCompetency[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     fetchAdminCompetencies()
@@ -61,6 +64,28 @@ function AdminCompetencies() {
   ) => {
     const createdCompetency = await createCompetency(competency)
     setCompetencies((current) => [...current, createdCompetency])
+  }
+
+  const handleDeleteCompetency = async (competency: AdminCompetency) => {
+    setDeleteError(null)
+    setDeleting(true)
+
+    try {
+      await deleteCompetency(competency.id)
+      setCompetencies((current) =>
+        current.filter((item) => item.id !== competency.id)
+      )
+    } catch (deleteError: unknown) {
+      setDeleteError(
+        getApiErrorMessage(deleteError, t('adminCompetencies.errors.delete'), {
+          400: t('adminCompetencies.errors.deleteBadRequest'),
+          404: t('adminCompetencies.errors.deleteNotFound'),
+          409: t('adminCompetencies.errors.inUse'),
+        })
+      )
+    } finally {
+      setDeleting(false)
+    }
   }
 
   return (
@@ -127,6 +152,7 @@ function AdminCompetencies() {
           <Alert severity="info">{t('adminCompetencies.loading')}</Alert>
         )}
         {error && <Alert severity="error">{error}</Alert>}
+        {deleteError && <Alert severity="error">{deleteError}</Alert>}
         {!loading && error === null && (
           <>
             <Typography
@@ -143,8 +169,12 @@ function AdminCompetencies() {
 
             <CompetenciesTable
               items={filteredCompetencies}
+              deleting={deleting}
               onItemClick={() => {
                 void navigate('/admin/competencies')
+              }}
+              onDelete={(competency) => {
+                void handleDeleteCompetency(competency)
               }}
             />
           </>
