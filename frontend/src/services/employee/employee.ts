@@ -185,7 +185,7 @@ function mapCompetencyType(type: CompetencyTypeApiResponse): CompetencyType {
     case 'LICENSE':
       return 'license'
     case 'CERTIFICATION':
-      return 'certification'
+      return 'certificate'
     case 'SKILL':
       return 'skill'
     case 'OTHER':

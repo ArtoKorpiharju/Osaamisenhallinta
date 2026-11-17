@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import {
   Box,
   Button,
@@ -42,6 +43,7 @@ const Competencies: Competency[] = [
 
 function AdminCompetencies() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [addCompetencyOpen, setAddCompetencyOpen] = useState(false)
   const [search, setSearch] = useState('')
   const filteredCompetencies = Competencies.filter((item) =>
@@ -60,7 +62,7 @@ function AdminCompetencies() {
           }}
         >
           <Box>
-            <PageTitle>Competencies</PageTitle>
+            <PageTitle>{t('adminCompetencies.title')}</PageTitle>
             <Typography
               variant="body2"
               sx={{
@@ -68,7 +70,7 @@ function AdminCompetencies() {
                 color: 'text.secondary',
               }}
             >
-              Manage competency definitions
+              {t('adminCompetencies.description')}
             </Typography>
           </Box>
           <Button
@@ -83,14 +85,14 @@ function AdminCompetencies() {
               backgroundColor: tones.info.main,
             }}
           >
-            Add new competence
+            {t('adminCompetencies.addButton')}
           </Button>
         </Box>
       </Box>
 
       <Box>
         <TextField
-          label="Search competencies"
+          label={t('adminCompetencies.searchLabel')}
           size="small"
           value={search}
           onChange={(event) => {
@@ -115,8 +117,9 @@ function AdminCompetencies() {
             color: 'text.secondary',
           }}
         >
-          {filteredCompetencies.length}{' '}
-          {filteredCompetencies.length === 1 ? 'Competency' : 'Competencies'}
+          {t('adminCompetencies.resultCount', {
+            count: filteredCompetencies.length,
+          })}
         </Typography>
 
         <CompetenciesTable

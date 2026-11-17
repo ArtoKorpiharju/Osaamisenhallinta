@@ -5,7 +5,7 @@ export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
 export type CompetencyStatus = 'expired' | 'missing' | 'expiringSoon' | 'valid'
 
 export type CompetencyType =
-  'training' | 'license' | 'certification' | 'skill' | 'other'
+  'training' | 'license' | 'certificate' | 'skill' | 'other'
 
 export interface RenewalPlan {
   id: number

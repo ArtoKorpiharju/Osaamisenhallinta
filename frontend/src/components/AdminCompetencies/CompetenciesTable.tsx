@@ -1,5 +1,6 @@
 import { Box, IconButton, Typography } from '@mui/material'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import { useTranslation } from 'react-i18next'
 
 import DataTable, { type DataTableColumn } from '../DataTable'
 
@@ -21,10 +22,12 @@ function CompetenciesTable({
   onItemClick,
   onDelete,
 }: CompetenciesTableProps) {
+  const { t } = useTranslation()
+
   const columns: DataTableColumn<Competency>[] = [
     {
       id: 'competency',
-      label: 'Competency',
+      label: t('adminCompetencies.table.competency'),
       minWidth: 260,
       render: (item) => (
         <Typography
@@ -40,7 +43,7 @@ function CompetenciesTable({
     },
     {
       id: 'Type',
-      label: 'Type',
+      label: t('adminCompetencies.table.type'),
       minWidth: 120,
       render: (item) => (
         <Typography
@@ -48,13 +51,15 @@ function CompetenciesTable({
           variant="subtitle2"
           sx={{ fontWeight: 600 }}
         >
-          {item.type}
+          {t(`adminCompetencies.types.${item.type.toLowerCase()}`, {
+            defaultValue: item.type,
+          })}
         </Typography>
       ),
     },
     {
       id: 'validity',
-      label: 'Validity',
+      label: t('adminCompetencies.table.validity'),
       minWidth: 120,
       render: (item) => (
         <Box
@@ -71,7 +76,7 @@ function CompetenciesTable({
             variant="subtitle2"
             sx={{ fontWeight: 600 }}
           >
-            {item.validity} years
+            {item.validity} {t('adminCompetencies.table.years')}
           </Typography>
           <IconButton
             size="small"

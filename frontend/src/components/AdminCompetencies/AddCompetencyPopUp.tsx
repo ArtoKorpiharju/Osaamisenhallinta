@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import type { CompetencyType } from '../../types/overview'
 import { tones } from '../../config/tones'
@@ -22,18 +23,19 @@ interface AddCompetencyPopUpProps {
   onClose: () => void
 }
 
-const competencyTypes: { value: CompetencyType; label: string }[] = [
-  { value: 'training', label: 'Training' },
-  { value: 'license', label: 'License' },
-  { value: 'certification', label: 'Certification' },
-  { value: 'skill', label: 'Skill' },
-  { value: 'other', label: 'Other' },
+const competencyTypes: CompetencyType[] = [
+  'training',
+  'license',
+  'certificate',
+  'skill',
+  'other',
 ]
 
 export default function AddCompetencyPopUp({
   open,
   onClose,
 }: AddCompetencyPopUpProps) {
+  const { t } = useTranslation()
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [validForLimitedTime, setValidForLimitedTime] = useState(true)
@@ -48,7 +50,7 @@ export default function AddCompetencyPopUp({
           color: tones.info.main,
         }}
       >
-        Add competence
+        {t('adminCompetencies.dialog.title')}
       </DialogTitle>
 
       <DialogContent
@@ -61,7 +63,7 @@ export default function AddCompetencyPopUp({
       >
         <Box>
           <Typography component="div" variant="subtitle1" sx={{ mb: 0.5 }}>
-            Name{' '}
+            {t('adminCompetencies.dialog.name')}{' '}
             <Box component="span" sx={{ color: tones.danger.main }}>
               *
             </Box>
@@ -79,7 +81,7 @@ export default function AddCompetencyPopUp({
 
         <Box>
           <Typography component="div" variant="subtitle1" sx={{ mb: 0.5 }}>
-            Type{' '}
+            {t('adminCompetencies.dialog.type')}{' '}
             <Box component="span" sx={{ color: tones.danger.main }}>
               *
             </Box>
@@ -95,8 +97,8 @@ export default function AddCompetencyPopUp({
             }}
           >
             {competencyTypes.map((competencyType) => (
-              <MenuItem key={competencyType.value} value={competencyType.value}>
-                {competencyType.label}
+              <MenuItem key={competencyType} value={competencyType}>
+                {t(`adminCompetencies.types.${competencyType}`)}
               </MenuItem>
             ))}
           </TextField>
@@ -104,7 +106,7 @@ export default function AddCompetencyPopUp({
 
         <FormControl>
           <Typography component="div" variant="subtitle1">
-            Validity{' '}
+            {t('adminCompetencies.dialog.validity')}{' '}
             <Box component="span" sx={{ color: tones.danger.main }}>
               *
             </Box>
@@ -119,7 +121,7 @@ export default function AddCompetencyPopUp({
                 }}
               />
             }
-            label="Valid for a limited time"
+            label={t('adminCompetencies.dialog.limitedTime')}
           />
           <FormControlLabel
             control={
@@ -131,13 +133,15 @@ export default function AddCompetencyPopUp({
                 }}
               />
             }
-            label="Does not expire"
+            label={t('adminCompetencies.dialog.noExpiry')}
           />
         </FormControl>
 
         {validForLimitedTime && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body1">Valid for</Typography>
+            <Typography variant="body1">
+              {t('adminCompetencies.dialog.validFor')}
+            </Typography>
             <TextField
               type="number"
               size="small"
@@ -148,14 +152,16 @@ export default function AddCompetencyPopUp({
               slotProps={{ htmlInput: { min: 0 } }}
               sx={{ width: 64 }}
             />
-            <Typography variant="body1">Years</Typography>
+            <Typography variant="body1">
+              {t('adminCompetencies.dialog.years')}
+            </Typography>
           </Box>
         )}
       </DialogContent>
 
       <DialogActions sx={{ px: 2, pb: 2, gap: 2 }}>
         <Button onClick={onClose} variant="outlined" color="inherit">
-          Cancel
+          {t('adminCompetencies.dialog.cancel')}
         </Button>
         <Button
           type="button"
@@ -164,7 +170,7 @@ export default function AddCompetencyPopUp({
             bgcolor: tones.info.main,
           }}
         >
-          Add competence
+          {t('adminCompetencies.dialog.add')}
         </Button>
       </DialogActions>
     </Dialog>
