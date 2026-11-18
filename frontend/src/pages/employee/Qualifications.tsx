@@ -16,9 +16,11 @@ import {
   type EmployeeQualification,
 } from '../../types/overview'
 
+// Only ids are stored. The dialog reads the competence from the loaded data,
+// so it shows the new values right after a renewal change is saved.
 interface SelectedCompetence {
-  competence: EmployeeCompetency
-  qualificationName: string
+  competencyId: number
+  qualificationId: number
 }
 
 export default function Qualifications() {
@@ -40,12 +42,22 @@ export default function Qualifications() {
     addQualification,
     removeQualification,
     toggleFavorite,
+    saveRenewalPlan,
+    renewCompetency,
   } = useQualifications(userId)
 
   const [pendingRemoval, setPendingRemoval] =
     useState<EmployeeQualification | null>(null)
 
   const [selected, setSelected] = useState<SelectedCompetence | null>(null)
+
+  const selectedQualification = selected
+    ? catalogue.find((q) => q.qualificationId === selected.qualificationId)
+    : undefined
+  const selectedCompetence =
+    selectedQualification?.requiredCompetencies.find(
+      (c) => c.competencyId === selected?.competencyId
+    ) ?? null
 
   const handleConfirmRemove = () => {
     if (pendingRemoval) {
@@ -56,11 +68,11 @@ export default function Qualifications() {
 
   const openCompetence = (
     competence: EmployeeCompetency,
-    qualification: { name: string }
+    qualification: { qualificationId: number }
   ) => {
     setSelected({
-      competence,
-      qualificationName: qualification.name,
+      competencyId: competence.competencyId,
+      qualificationId: qualification.qualificationId,
     })
   }
 
@@ -103,10 +115,16 @@ export default function Qualifications() {
       />
 
       <CompetenceDetailDialog
-        competence={selected?.competence ?? null}
-        qualificationName={selected?.qualificationName}
+        competence={selectedCompetence}
+        qualificationName={selectedQualification?.name}
         onClose={() => {
           setSelected(null)
+        }}
+        onSaveRenewalPlan={(competence, plan) => {
+          void saveRenewalPlan(competence, plan)
+        }}
+        onConfirmRenewal={(competence, issueDate) => {
+          void renewCompetency(competence, issueDate)
         }}
       />
 

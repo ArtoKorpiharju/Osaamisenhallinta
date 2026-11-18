@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
@@ -107,13 +108,22 @@ export default function CompetenceList({
         boxSizing: 'border-box',
       }}
     >
-      <ExpandableTable
-        ariaLabel={t('qualifications.competences.tableLabel')}
-        rows={competences}
-        columns={columns}
-        getRowId={(competency) => String(competency.competencyId)}
-        onRowClick={onCompetenceClick}
-      />
+      {/* Frame around the header row and the competences, like the other tables. */}
+      <Box
+        sx={{
+          border: `1px solid ${alpha(tones.info.main, 0.3)}`,
+          borderRadius: 1,
+          overflow: 'hidden',
+        }}
+      >
+        <ExpandableTable
+          ariaLabel={t('qualifications.competences.tableLabel')}
+          rows={competences}
+          columns={columns}
+          getRowId={(competency) => String(competency.competencyId)}
+          onRowClick={onCompetenceClick}
+        />
+      </Box>
     </Box>
   )
 }

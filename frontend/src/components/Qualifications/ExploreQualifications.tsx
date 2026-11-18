@@ -44,7 +44,16 @@ const sortValues: Record<
   (q: CatalogueQualification) => string | number
 > = {
   name: (q) => q.name,
+  // Number of missing requirements, so ascending order shows the
+  // qualifications that are closest to being complete first.
+  requirements: (q) => q.requirementsTotal - q.requirementsMet,
 }
+
+const compareValues = (a: string | number, b: string | number) =>
+  String(a).localeCompare(String(b), 'fi', {
+    numeric: true,
+    sensitivity: 'base',
+  })
 
 export default function ExploreQualifications({
   qualifications,
@@ -64,15 +73,16 @@ export default function ExploreQualifications({
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase()
     const getValue = sortValues[sort.by ?? 'name'] ?? sortValues.name
-    const sorted = qualifications
+    const direction = sort.direction === 'asc' ? 1 : -1
+
+    // Ties are always broken by name in A-Z order, whatever the direction.
+    return qualifications
       .filter((q) => q.name.toLowerCase().includes(query))
-      .sort((a, b) =>
-        String(getValue(a)).localeCompare(String(getValue(b)), 'fi', {
-          numeric: true,
-          sensitivity: 'base',
-        })
+      .sort(
+        (a, b) =>
+          direction * compareValues(getValue(a), getValue(b)) ||
+          compareValues(a.name, b.name)
       )
-    return sort.direction === 'asc' ? sorted : sorted.reverse()
   }, [qualifications, search, sort.by, sort.direction])
 
   const pageRows = visible.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
@@ -106,6 +116,8 @@ export default function ExploreQualifications({
       label: t('qualifications.columns.requirementsMet'),
       align: 'center',
       width: '34%',
+      // Only marks the column as sortable, the sorting itself is done above.
+      sortValue: sortValues.requirements,
       render: (q) =>
         `${q.requirementsMet.toString()}/${q.requirementsTotal.toString()}`,
     },

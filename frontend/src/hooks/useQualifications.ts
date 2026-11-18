@@ -7,7 +7,14 @@ import {
   fetchEmployeeQualifications,
   updateQualificationFavourite,
 } from '../services/employee/employeeQualifications'
-import { fetchEmployeeCompetencies } from '../services/employee/employeeCompetencies'
+import {
+  assignCompetency,
+  deleteRenewalPlan,
+  fetchEmployeeCompetencies,
+  saveRenewalPlan as saveRenewalPlanRequest,
+  updateCompetencyIssueDate,
+  type RenewalPlanRequest,
+} from '../services/employee/employeeCompetencies'
 import {
   fetchQualificationCatalogue,
   type CatalogueApiResponse,
@@ -38,7 +45,7 @@ export default function useQualifications(userId: number | undefined) {
   const [loading, setLoading] = useState(true)
   // Error from loading the page data.
   const [error, setError] = useState<string | null>(null)
-  // Error from add, remove or favourite. Shown separately so the tables stay visible.
+  // Error from add, remove, favourite or renewal. Shown separately so the tables stay visible.
   const [actionError, setActionError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -91,6 +98,19 @@ export default function useQualifications(userId: number | undefined) {
     () => new Set(myQualifications.map((q) => q.qualificationId)),
     [myQualifications]
   )
+
+  // Reload the employee's own data after a renewal change. The backend
+  // recalculates statuses, valid-until dates and requirement counts.
+  const reload = useCallback(async () => {
+    if (userId === undefined) return
+
+    const [mine, competencies] = await Promise.all([
+      fetchEmployeeQualifications(userId),
+      fetchEmployeeCompetencies(userId),
+    ])
+    setMyQualifications(mine)
+    setEmployeeCompetencies(competencies)
+  }, [userId])
 
   const addQualification = useCallback(
     async (qualification: CatalogueQualification) => {
@@ -185,6 +205,62 @@ export default function useQualifications(userId: number | undefined) {
     [userId, myQualifications]
   )
 
+  // Save the renewal plan, or delete it when `plan` is null.
+  // Plans can only be attached to competencies the employee already has.
+  const saveRenewalPlan = useCallback(
+    async (competence: EmployeeCompetency, plan: RenewalPlanRequest | null) => {
+      const employeeCompetencyId = competence.employeeCompetencyId
+      if (userId === undefined || employeeCompetencyId === null) return
+
+      try {
+        if (plan === null) {
+          await deleteRenewalPlan(userId, employeeCompetencyId)
+        } else {
+          await saveRenewalPlanRequest(userId, employeeCompetencyId, plan)
+        }
+        await reload()
+      } catch (err: unknown) {
+        setActionError(
+          getApiErrorMessage(err, 'Could not save renewal plan', {
+            400: 'Invalid renewal plan',
+            404: 'Competency could not be found',
+          })
+        )
+      }
+    },
+    [userId, reload]
+  )
+
+  // Renew a competency with a new issue date. A missing competency is
+  // assigned to the employee, an existing one gets its issue date updated.
+  const renewCompetency = useCallback(
+    async (competence: EmployeeCompetency, issueDate: string) => {
+      if (userId === undefined) return
+
+      try {
+        if (competence.employeeCompetencyId === null) {
+          await assignCompetency(userId, competence.competencyId, issueDate)
+        } else {
+          await updateCompetencyIssueDate(
+            userId,
+            competence.employeeCompetencyId,
+            issueDate
+          )
+        }
+        await reload()
+      } catch (err: unknown) {
+        setActionError(
+          getApiErrorMessage(err, 'Could not renew competency', {
+            400: 'Invalid issue date',
+            404: 'Competency could not be found',
+            409: 'You already have this competency',
+          })
+        )
+      }
+    },
+    [userId, reload]
+  )
+
   const clearActionError = useCallback(() => {
     setActionError(null)
   }, [])
@@ -200,5 +276,7 @@ export default function useQualifications(userId: number | undefined) {
     addQualification,
     removeQualification,
     toggleFavorite,
+    saveRenewalPlan,
+    renewCompetency,
   }
 }

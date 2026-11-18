@@ -17,7 +17,7 @@ type CompetencyStatusApiResponse =
 export type CompetencyTypeApiResponse =
   'TRAINING' | 'LICENSE' | 'CERTIFICATION' | 'SKILL' | 'OTHER'
 
-interface RenewalPlanApiResponse {
+export interface RenewalPlanApiResponse {
   id: number
   employeeCompetencyId: number
   renewalDate: string
@@ -84,7 +84,7 @@ export function isCompetencyTypeApiResponse(
 }
 
 // Check if an API response value contains valid renewal plan
-function isRenewalPlanApiResponse(
+export function isRenewalPlanApiResponse(
   value: unknown
 ): value is RenewalPlanApiResponse {
   if (!isRecord(value)) return false
@@ -196,7 +196,7 @@ export function mapCompetencyType(
 }
 
 // Maps a renewal plan from the API response to the frontend RenewalPlan type.
-function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
+export function mapRenewalPlan(value: RenewalPlanApiResponse): RenewalPlan {
   return {
     id: value.id,
     employeeCompetencyId: value.employeeCompetencyId,
