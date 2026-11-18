@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,7 +17,6 @@ import com.osaamisenhallinta.qualification.dto.QualificationDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,62 +32,56 @@ class QualificationServiceTest {
 
   @Mock private QualificationRepository qualificationRepository;
 
-  @Mock private Qualification mockQualificationEntity;
+  private Competency competencyEntity = new Competency(
+      1L,
+      "Fire Safety Training",
+      CompetencyType.TRAINING,
+      12
+  );
 
-  @Mock private Qualification mockQualificationEntity2;
+  private Qualification qualificationEntity = new Qualification(
+      1L,
+      "Warehouse Operator",
+      Set.of(competencyEntity)
+  );
 
-  @Mock private Competency mockCompetencyEntity;
+  private Qualification qualificationEntity2 = new Qualification(
+      2L,
+      "Testing",
+      Set.of(competencyEntity)
+  );
 
   @Mock private EmployeeQualificationRepository employeeQualificationRepository;
 
   @Mock private CompetencyRepository competencyRepository;
 
-  private final Long qualificationId = 1L;
-
-  private final Long competencyId = 1L;
-
   private final Long testCompetencyId = 999L;
 
-
-  @BeforeEach
-  void setUp() {
-    
-    // Required competency
-    lenient().when(mockCompetencyEntity.getId()).thenReturn(competencyId);
-    lenient().when(mockCompetencyEntity.getName()).thenReturn("Fire Safety Training");
-    lenient().when(mockCompetencyEntity.getType()).thenReturn(CompetencyType.TRAINING);
-    lenient().when(mockCompetencyEntity.getValidityMonths()).thenReturn(12);
-    
-    // Qualification
-    lenient().when(mockQualificationEntity.getId()).thenReturn(qualificationId);
-    lenient().when(mockQualificationEntity.getName()).thenReturn("Warehouse Operator");
-    lenient().when(mockQualificationEntity.getRequiredCompetencies())
-        .thenReturn(Set.of(mockCompetencyEntity));
-  }
     
   @Test 
   void getQualificationById_ShouldReturnQualificationDtoWhenQualificationExists() {
-    when(qualificationRepository.findById(qualificationId))
-        .thenReturn(Optional.of(mockQualificationEntity));
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
 
-    QualificationDto result = qualificationService.getQualificationById(qualificationId);
+    QualificationDto result = qualificationService
+        .getQualificationById(qualificationEntity.getId());
 
     assertNotNull(result);
-    assertEquals(qualificationId, result.qualificationId());
-    assertEquals(mockQualificationEntity.getName(), result.qualificationName());
-    assertEquals(mockQualificationEntity.getRequiredCompetencies().size(),
+    assertEquals(qualificationEntity.getId(), result.qualificationId());
+    assertEquals(qualificationEntity.getName(), result.qualificationName());
+    assertEquals(qualificationEntity.getRequiredCompetencies().size(),
         result.requiredCompetencies().size());
-    assertEquals(mockCompetencyEntity.getName(), 
+    assertEquals(competencyEntity.getName(), 
         result.requiredCompetencies().get(0).competencyName());
   }
 
   @Test 
   void getQualificationById_ShouldBubbleUpExceptionWhenQualificationNotFound() {
-    when(qualificationRepository.findById(qualificationId))
+    when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.empty());
 
     ResponseStatusException result = assertThrows(ResponseStatusException.class,
-        () -> qualificationService.getQualificationById(qualificationId));
+        () -> qualificationService.getQualificationById(qualificationEntity.getId()));
       
     assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
   }
@@ -97,7 +89,7 @@ class QualificationServiceTest {
   @Test 
   void getAllQualifications_ShouldMapAndReturnAllQualificationsWhenOnlyOneExists() {
     when(qualificationRepository.findAll())
-        .thenReturn(List.of(mockQualificationEntity));
+        .thenReturn(List.of(qualificationEntity));
 
     List<QualificationDto> result = qualificationService.getAllQualifications();
 
@@ -117,7 +109,7 @@ class QualificationServiceTest {
   @Test 
   void getAllQualifications_ShouldMapAndReturnAllQualificationsWhenMultipleExist() {
     when(qualificationRepository.findAll())
-        .thenReturn(List.of(mockQualificationEntity, mockQualificationEntity2));
+        .thenReturn(List.of(qualificationEntity, qualificationEntity2));
 
     List<QualificationDto> result = qualificationService.getAllQualifications();
 
@@ -126,21 +118,21 @@ class QualificationServiceTest {
 
   @Test 
   void createQualification_ShouldReturnQualificationDtoWhenQualificationCreated() {
-    when(qualificationRepository.existsByName(mockQualificationEntity.getName()))
+    when(qualificationRepository.existsByName(qualificationEntity.getName()))
         .thenReturn(false);
-    when(competencyRepository.findAllById(Set.of(competencyId)))
-        .thenReturn(List.of(mockCompetencyEntity));
+    when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
+        .thenReturn(List.of(competencyEntity));
     when(qualificationRepository.save(any(Qualification.class)))
-        .thenReturn(mockQualificationEntity);
+        .thenReturn(qualificationEntity);
 
     QualificationDto result = qualificationService.createQualification(
-        mockQualificationEntity.getName(), 
-        List.of(competencyId));
+        qualificationEntity.getName(), 
+        List.of(competencyEntity.getId()));
 
     assertNotNull(result);
-    assertEquals(qualificationId, result.qualificationId());
-    assertEquals(mockQualificationEntity.getName(), result.qualificationName());
-    assertEquals(mockQualificationEntity.getRequiredCompetencies().size(), 
+    assertEquals(qualificationEntity.getId(), result.qualificationId());
+    assertEquals(qualificationEntity.getName(), result.qualificationName());
+    assertEquals(qualificationEntity.getRequiredCompetencies().size(), 
         result.requiredCompetencies().size());
 
     verify(qualificationRepository).save(any(Qualification.class));
@@ -148,13 +140,13 @@ class QualificationServiceTest {
 
   @Test
   void createQualification_ShouldBubbleUpExceptionWhenQualificationExists() {
-    when(qualificationRepository.existsByName(mockQualificationEntity.getName()))
+    when(qualificationRepository.existsByName(qualificationEntity.getName()))
         .thenReturn(true);
 
     ResponseStatusException result = assertThrows(ResponseStatusException.class,
         () -> qualificationService.createQualification(
-          mockQualificationEntity.getName(), 
-          List.of(competencyId)));
+          qualificationEntity.getName(), 
+          List.of(competencyEntity.getId())));
 
     assertEquals(HttpStatus.CONFLICT, result.getStatusCode());
     verify(qualificationRepository, never()).save(any(Qualification.class));
@@ -162,16 +154,16 @@ class QualificationServiceTest {
 
   @Test
   void createQualification_ShouldBubbleUpWhenSomeRequiredCompetenciesMissing() {
-    when(qualificationRepository.existsByName(mockQualificationEntity.getName()))
+    when(qualificationRepository.existsByName(qualificationEntity.getName()))
         .thenReturn(false);
 
-    when(competencyRepository.findAllById(Set.of(competencyId, testCompetencyId)))
-        .thenReturn(List.of(mockCompetencyEntity));
+    when(competencyRepository.findAllById(Set.of(competencyEntity.getId(), testCompetencyId)))
+        .thenReturn(List.of(competencyEntity));
 
     ResponseStatusException result = assertThrows(ResponseStatusException.class,
         () -> qualificationService.createQualification(
-          mockQualificationEntity.getName(),
-          List.of(competencyId, testCompetencyId)));
+          qualificationEntity.getName(),
+          List.of(competencyEntity.getId(), testCompetencyId)));
 
     assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     verify(qualificationRepository, never()).save(any(Qualification.class));
@@ -179,26 +171,27 @@ class QualificationServiceTest {
 
   @Test
   void deleteQualification_ShouldBubbleUpExceptionWhenQualificationNotFound() {
-    when(qualificationRepository.findById(qualificationId))
+    when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.empty());
     
     ResponseStatusException result = assertThrows(ResponseStatusException.class,
-        () -> qualificationService.deleteQualification(qualificationId));
+        () -> qualificationService.deleteQualification(qualificationEntity.getId()));
       
     assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 
-    verify(employeeQualificationRepository, never()).deleteByQualificationId(qualificationId);
-    verify(qualificationRepository, never()).delete(mockQualificationEntity);
+    verify(employeeQualificationRepository, never())
+        .deleteByQualificationId(qualificationEntity.getId());
+    verify(qualificationRepository, never()).delete(qualificationEntity);
   }
 
   @Test
   void deleteQualification_ShouldDeleteRelatedRecordsAndQualificationWhenAllowed() {
-    when(qualificationRepository.findById(qualificationId))
-        .thenReturn(Optional.of(mockQualificationEntity));
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
 
-    qualificationService.deleteQualification(qualificationId);
+    qualificationService.deleteQualification(qualificationEntity.getId());
 
-    verify(employeeQualificationRepository).deleteByQualificationId(qualificationId);
-    verify(qualificationRepository).delete(mockQualificationEntity);
+    verify(employeeQualificationRepository).deleteByQualificationId(qualificationEntity.getId());
+    verify(qualificationRepository).delete(qualificationEntity);
   }
 }

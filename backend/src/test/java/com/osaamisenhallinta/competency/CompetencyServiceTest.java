@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,7 +14,6 @@ import com.osaamisenhallinta.employee.EmployeeCompetencyRepository;
 import com.osaamisenhallinta.renewal.RenewalPlanRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,50 +29,43 @@ class CompetencyServiceTest {
 
   @Mock private CompetencyRepository competencyRepository;
 
-  @Mock private Competency mockCompetencyEntity;
-  
-  @Mock private Competency mockCompetencyEntity2;
+  private Competency competencyEntity = new Competency(
+      1L,
+      "Fire Safety Training",
+      CompetencyType.TRAINING,
+      12
+  );
 
   @Mock private RenewalPlanRepository renewalPlanRepository;
 
   @Mock private EmployeeCompetencyRepository employeeCompetencyRepository;
 
-  private final Long competencyId = 1L;
-
-  @BeforeEach
-  void setUp() {
-    lenient().when(mockCompetencyEntity.getId()).thenReturn(competencyId);
-    lenient().when(mockCompetencyEntity.getName()).thenReturn("Fire Safety Training");
-    lenient().when(mockCompetencyEntity.getType()).thenReturn(CompetencyType.TRAINING);
-    lenient().when(mockCompetencyEntity.getValidityMonths()).thenReturn(12);
-  }
-
   @Test 
   void getCompetencyById_ShouldReturnCompetencyDtoWhenCompetencyExists() {
     // Arrange = define
-    when(competencyRepository.findById(competencyId))
-        .thenReturn(Optional.of(mockCompetencyEntity));
+    when(competencyRepository.findById(competencyEntity.getId()))
+        .thenReturn(Optional.of(competencyEntity));
 
     // Act
-    CompetencyDto result = competencyService.getCompetencyById(competencyId);
+    CompetencyDto result = competencyService.getCompetencyById(competencyEntity.getId());
     
     // Assert
     assertNotNull(result);
-    assertEquals(competencyId, result.competencyId());
-    assertEquals(mockCompetencyEntity.getName(), result.competencyName());
-    assertEquals(mockCompetencyEntity.getType(), result.competencyType());
-    assertEquals(mockCompetencyEntity.getValidityMonths(), result.validityMonths());
+    assertEquals(competencyEntity.getId(), result.competencyId());
+    assertEquals(competencyEntity.getName(), result.competencyName());
+    assertEquals(competencyEntity.getType(), result.competencyType());
+    assertEquals(competencyEntity.getValidityMonths(), result.validityMonths());
   }
 
   @Test
   void getCompetencyById_ShouldBubbleUpExceptionWhenCompetencyNotFound() {
     // Arrange = define
-    when(competencyRepository.findById(competencyId))
+    when(competencyRepository.findById(competencyEntity.getId()))
         .thenReturn(Optional.empty());
 
     // Assert & act
     ResponseStatusException response = assertThrows(ResponseStatusException.class, 
-        () -> competencyService.getCompetencyById(competencyId));
+        () -> competencyService.getCompetencyById(competencyEntity.getId()));
 
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
@@ -83,7 +74,7 @@ class CompetencyServiceTest {
   void getAllCompetencies_ShouldMapAndReturnAllCompetenciesWhenOnlyOneExists() {
     // Arrange
     when(competencyRepository.findAll())
-        .thenReturn(List.of(mockCompetencyEntity));
+        .thenReturn(List.of(competencyEntity));
 
     // Act
     List<CompetencyDto> result = competencyService.getAllCompetencies();
@@ -107,9 +98,15 @@ class CompetencyServiceTest {
 
   @Test 
   void getAllCompetencies_ShouldMapAndReturnAllCompetenciesWhenMultipleExist() {
+    Competency competencyEntity2 = new Competency(
+        "Testing",
+        CompetencyType.OTHER,
+        null
+    );
+
     // Arrange
     when(competencyRepository.findAll())
-        .thenReturn(List.of(mockCompetencyEntity, mockCompetencyEntity2));
+        .thenReturn(List.of(competencyEntity, competencyEntity2));
 
     // Act
     List<CompetencyDto> result = competencyService.getAllCompetencies();
@@ -122,23 +119,23 @@ class CompetencyServiceTest {
   void createCompetency_ShouldReturnCompetencyDtoWhenCompetencyCreated() {
 
     // Arrange
-    when(competencyRepository.existsByName(mockCompetencyEntity.getName()))
+    when(competencyRepository.existsByName(competencyEntity.getName()))
         .thenReturn(false);
     when(competencyRepository.save(any(Competency.class)))
-        .thenReturn(mockCompetencyEntity);
+        .thenReturn(competencyEntity);
 
     // Act
     CompetencyDto result = competencyService.createCompetency(
-        mockCompetencyEntity.getName(),
-        mockCompetencyEntity.getType(), 
-        mockCompetencyEntity.getValidityMonths());
+        competencyEntity.getName(),
+        competencyEntity.getType(), 
+        competencyEntity.getValidityMonths());
 
     // Assert
     assertNotNull(result);
-    assertEquals(competencyId, result.competencyId());
-    assertEquals(mockCompetencyEntity.getName(), result.competencyName());
-    assertEquals(mockCompetencyEntity.getType(), result.competencyType());
-    assertEquals(mockCompetencyEntity.getValidityMonths(), result.validityMonths());
+    assertEquals(competencyEntity.getId(), result.competencyId());
+    assertEquals(competencyEntity.getName(), result.competencyName());
+    assertEquals(competencyEntity.getType(), result.competencyType());
+    assertEquals(competencyEntity.getValidityMonths(), result.validityMonths());
 
     verify(competencyRepository).save(any(Competency.class));
   }
@@ -146,15 +143,15 @@ class CompetencyServiceTest {
   @Test
   void createCompetency_ShouldBubbleUpExceptionWhenCompetencyExists() {
     // Arrange
-    when(competencyRepository.existsByName(mockCompetencyEntity.getName()))
+    when(competencyRepository.existsByName(competencyEntity.getName()))
         .thenReturn(true);
 
     // Assert & act
     ResponseStatusException response = assertThrows(ResponseStatusException.class, 
         () -> competencyService.createCompetency(
-        mockCompetencyEntity.getName(),
-        mockCompetencyEntity.getType(), 
-        mockCompetencyEntity.getValidityMonths()));
+        competencyEntity.getName(),
+        competencyEntity.getType(), 
+        competencyEntity.getValidityMonths()));
 
     assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 
@@ -164,12 +161,12 @@ class CompetencyServiceTest {
   @Test
   void deleteCompetency_ShouldBubbleUpExceptionWhenCompetencyNotFound() {
     // Arrange
-    when(competencyRepository.findById(competencyId))
+    when(competencyRepository.findById(competencyEntity.getId()))
         .thenReturn(Optional.empty());
 
     // Assert & act
     ResponseStatusException response = assertThrows(ResponseStatusException.class,
-        () -> competencyService.deleteCompetency(competencyId));
+        () -> competencyService.deleteCompetency(competencyEntity.getId()));
 
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
@@ -177,36 +174,36 @@ class CompetencyServiceTest {
   @Test
   void deleteCompetency_ShouldBubbleUpExceptionWhenCompetencyIsUsedByQualification() {
     // Arrange
-    when(competencyRepository.findById(competencyId))
-        .thenReturn(Optional.of(mockCompetencyEntity));
-    when(competencyRepository.isUsedByQualification(competencyId))
+    when(competencyRepository.findById(competencyEntity.getId()))
+        .thenReturn(Optional.of(competencyEntity));
+    when(competencyRepository.isUsedByQualification(competencyEntity.getId()))
         .thenReturn(true);
 
     // Assert & act
     ResponseStatusException response = assertThrows(ResponseStatusException.class,
-        () -> competencyService.deleteCompetency(competencyId));
+        () -> competencyService.deleteCompetency(competencyEntity.getId()));
 
     assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 
-    verify(renewalPlanRepository, never()).deleteByCompetencyId(competencyId);
-    verify(employeeCompetencyRepository, never()).deleteByCompetencyId(competencyId);
-    verify(competencyRepository, never()).delete(mockCompetencyEntity);
+    verify(renewalPlanRepository, never()).deleteByCompetencyId(competencyEntity.getId());
+    verify(employeeCompetencyRepository, never()).deleteByCompetencyId(competencyEntity.getId());
+    verify(competencyRepository, never()).delete(competencyEntity);
   }
 
   @Test
   void deleteCompetency_ShouldDeleteRelatedRecordsAndCompetencyWhenAllowed() {
     // Arrange
-    when(competencyRepository.findById(competencyId))
-        .thenReturn(Optional.of(mockCompetencyEntity));
-    when(competencyRepository.isUsedByQualification(competencyId))
+    when(competencyRepository.findById(competencyEntity.getId()))
+        .thenReturn(Optional.of(competencyEntity));
+    when(competencyRepository.isUsedByQualification(competencyEntity.getId()))
         .thenReturn(false);
 
     // Act
-    competencyService.deleteCompetency(competencyId);
+    competencyService.deleteCompetency(competencyEntity.getId());
 
     // Assert
-    verify(renewalPlanRepository).deleteByCompetencyId(competencyId);
-    verify(employeeCompetencyRepository).deleteByCompetencyId(competencyId);
-    verify(competencyRepository).delete(mockCompetencyEntity);
+    verify(renewalPlanRepository).deleteByCompetencyId(competencyEntity.getId());
+    verify(employeeCompetencyRepository).deleteByCompetencyId(competencyEntity.getId());
+    verify(competencyRepository).delete(competencyEntity);
   }
 }

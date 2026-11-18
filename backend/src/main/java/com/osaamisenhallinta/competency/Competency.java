@@ -53,5 +53,13 @@ public class Competency {
     this.validityMonths = validityMonths;
   }
 
+  /** A constructor for testing a competency. */
+  public Competency(Long id, String name, CompetencyType type, Integer validityMonths) {
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.validityMonths = validityMonths;
+  }
+
   protected Competency() {}
 }
