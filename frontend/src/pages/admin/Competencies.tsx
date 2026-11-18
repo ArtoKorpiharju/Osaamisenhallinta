@@ -165,33 +165,29 @@ function AdminCompetencies() {
           <Alert severity="info">{t('adminCompetencies.loading')}</Alert>
         )}
         {error && <Alert severity="error">{error}</Alert>}
-        {!loading && error === null && (
-          <>
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 2,
-                color: 'text.secondary',
-              }}
-            >
-              {t('adminCompetencies.resultCount', {
-                count: filteredCompetencies.length,
-              })}
-            </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            mt: 2,
+            color: 'text.secondary',
+          }}
+        >
+          {t('adminCompetencies.resultCount', {
+            count: filteredCompetencies.length,
+          })}
+        </Typography>
 
-            <CompetenciesTable
-              items={filteredCompetencies}
-              deleting={deleting}
-              onItemClick={() => {
-                void navigate('/admin/competencies')
-              }}
-              onDelete={(competency) => {
-                setDeleteError(null)
-                setCompetencyToDelete(competency)
-              }}
-            />
-          </>
-        )}
+        <CompetenciesTable
+          items={error === null ? filteredCompetencies : []}
+          deleting={deleting}
+          onItemClick={() => {
+            void navigate('/admin/competencies')
+          }}
+          onDelete={(competency) => {
+            setDeleteError(null)
+            setCompetencyToDelete(competency)
+          }}
+        />
       </Box>
       <AddCompetencyPopUp
         open={addCompetencyOpen}
