@@ -65,7 +65,8 @@ function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
 // Create action cards for expired or expiring soon competencies.
 // Show renewal details when a plan exists; otherwise offer renewal actions.
 function createActionItems(
-  competencies: EmployeeCompetency[]
+  competencies: EmployeeCompetency[],
+  formatRenewalPlanned: (date: string) => string
 ): ActionRequiredItem[] {
   return competencies.flatMap((competency) => {
     const isInvalid = competency.status === 'expired'
@@ -94,7 +95,7 @@ function createActionItems(
       note: plan
         ? {
             text:
-              plan.renewalComment ?? `Renewal planned for ${plan.renewalDate}`,
+              plan.renewalComment ?? formatRenewalPlanned(plan.renewalDate),
             tone: 'info',
           }
         : { text: 'No renewal planned', tone: 'danger' },
@@ -120,7 +121,9 @@ export default function EmployeeOverview() {
   )
 
   const summary = calculateSummary(competencies)
-  const actionItems = createActionItems(competencies)
+  const actionItems = createActionItems(competencies, (date) =>
+    t('employeeOverview.actionRequired.renewalPlanned', { date })
+  )
 
   useEffect(() => {
     if (userId === undefined) return
@@ -129,16 +132,16 @@ export default function EmployeeOverview() {
       .then(setEmployeeOverview)
       .catch((err: unknown) => {
         setError(
-          getApiErrorMessage(err, 'Could not load employee overview data', {
-            400: 'Bad request for employee overview data',
-            404: 'Employee overview data could not be found',
+          getApiErrorMessage(err, t('employeeOverview.errors.load'), {
+            400: t('employeeOverview.errors.badRequest'),
+            404: t('employeeOverview.errors.notFound'),
           })
         )
       })
       .finally(() => {
         setLoading(false)
       })
-  }, [userId])
+  }, [userId, t])
 
   return (
     <PageContainer>
@@ -149,7 +152,7 @@ export default function EmployeeOverview() {
 
       {/** Display an info alert while employee overview is being fetched. */}
       {loading && userId !== undefined && (
-        <Alert severity="info">Fetching employee overview data…</Alert>
+        <Alert severity="info">{t('employeeOverview.loading')}</Alert>
       )}
 
       <SummaryCards

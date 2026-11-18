@@ -30,10 +30,26 @@ const resources = {
       },
       common: {
         critical: 'Critical',
+        loadingSeedUsers: 'Fetching seed users…',
+        unknownUser: 'Unknown User',
+        errors: {
+          loadSeedUsers: 'Could not load seed users.',
+          seedUsersNotFound: 'Seed users could not be found.',
+          roleUserNotFound: 'No seed user found for the selected role.',
+        },
+      },
+      pages: {
+        notFound: 'Page not found',
       },
       employeeOverview: {
         title: 'Employee Overview',
         viewAllDetails: 'View all details',
+        loading: 'Fetching employee overview data…',
+        errors: {
+          load: 'Could not load employee overview data.',
+          badRequest: 'Bad request for employee overview data.',
+          notFound: 'Employee overview data could not be found.',
+        },
         summary: {
           invalid: {
             title: 'Invalid',
@@ -86,6 +102,7 @@ const resources = {
             uploadRenewalCertificate: 'Upload renewal certificate',
           },
           noRenewalPlanned: 'No renewal planned',
+          renewalPlanned: 'Renewal planned for {{date}}',
         },
       },
       supervisorOverview: {
@@ -230,10 +247,27 @@ const resources = {
       },
       common: {
         critical: 'Kriittinen',
+        loadingSeedUsers: 'Haetaan käyttäjiä…',
+        unknownUser: 'Tuntematon käyttäjä',
+        errors: {
+          loadSeedUsers: 'Käyttäjien lataaminen epäonnistui.',
+          seedUsersNotFound: 'Käyttäjiä ei löytynyt.',
+          roleUserNotFound: 'Valitulle roolille ei löytynyt käyttäjää.',
+        },
+      },
+      pages: {
+        notFound: 'Sivua ei löytynyt',
       },
       employeeOverview: {
         title: 'Työntekijän yleisnäkymä',
         viewAllDetails: 'Näytä kaikki tiedot',
+        loading: 'Ladataan työntekijän yleisnäkymää…',
+        errors: {
+          load: 'Työntekijän yleisnäkymän lataaminen epäonnistui.',
+          badRequest:
+            'Työntekijän yleisnäkymää koskeva pyyntö oli virheellinen.',
+          notFound: 'Työntekijän yleisnäkymän tietoja ei löytynyt.',
+        },
         summary: {
           invalid: {
             title: 'Ei voimassa',
@@ -286,6 +320,7 @@ const resources = {
             uploadRenewalCertificate: 'Lataa uusimistodistus',
           },
           noRenewalPlanned: 'Uusimista ei ole suunniteltu',
+          renewalPlanned: 'Uusiminen suunniteltu {{date}}',
         },
       },
       supervisorOverview: {

@@ -1,6 +1,7 @@
 import { Alert, Box } from '@mui/material'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import Navigation from '../components/Navigation'
 import TopBar from '../components/TopBar'
@@ -61,6 +62,7 @@ function getUserNameForRole(
 
 // The root layout component that wraps the entire application.
 export default function RootLayout() {
+  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -77,15 +79,15 @@ export default function RootLayout() {
       .then(setSeedUsers)
       .catch((err: unknown) => {
         setUsersError(
-          getApiErrorMessage(err, 'Could not load seed users', {
-            404: 'Seed users could not be found',
+          getApiErrorMessage(err, t('common.errors.loadSeedUsers'), {
+            404: t('common.errors.seedUsersNotFound'),
           })
         )
       })
       .finally(() => {
         setUsersLoading(false)
       })
-  }, [])
+  }, [t])
 
   // Handle role change by navigating to the corresponding path for the new role.
   const handleRoleChange = (newRole: Role) => {
@@ -96,7 +98,7 @@ export default function RootLayout() {
     const user = getUserForRole(seedUsers, newRole)
 
     if (!user) {
-      setUsersError(`No seed user found for role ${newRole}`)
+      setUsersError(t('common.errors.roleUserNotFound'))
       return
     }
 
@@ -141,7 +143,9 @@ export default function RootLayout() {
           {usersError && <Alert severity="error">{usersError}</Alert>}
 
           {/** Display an info alert while seed users are being fetched. */}
-          {usersLoading && <Alert severity="info">Fetching seed users…</Alert>}
+          {usersLoading && (
+            <Alert severity="info">{t('common.loadingSeedUsers')}</Alert>
+          )}
           <Outlet
             context={{
               userId: getUserForRole(seedUsers, role)?.id,
