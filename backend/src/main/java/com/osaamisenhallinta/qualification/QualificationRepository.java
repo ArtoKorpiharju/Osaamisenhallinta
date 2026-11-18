@@ -20,11 +20,13 @@ public interface QualificationRepository extends JpaRepository<Qualification, Lo
 
   @Query(
       """
-    SELECT DISTINCT q
-    FROM Qualification q
-    LEFT JOIN FETCH q.requiredCompetencies
-    """)
+      SELECT DISTINCT q
+      FROM Qualification q
+      LEFT JOIN FETCH q.requiredCompetencies
+      """)
   List<Qualification> findAll();
+
+  boolean existsByName(String name);
 
   /**
    * Retrieves a qualification by its ID, or throws an exception if not found.

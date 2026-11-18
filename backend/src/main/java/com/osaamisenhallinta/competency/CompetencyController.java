@@ -1,5 +1,7 @@
 package com.osaamisenhallinta.competency;
 
+import com.osaamisenhallinta.competency.dto.CompetencyDto;
+import com.osaamisenhallinta.competency.dto.CreateCompetencyDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +36,7 @@ public class CompetencyController {
         @ApiResponse(responseCode = "200", description = "Successful operation"),
         @ApiResponse(
             responseCode = "400",
-            description = "Missing or invalid parameter(s)",
+            description = "Invalid parameter",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "Competency not found", content = @Content)
       })
@@ -76,7 +78,7 @@ public class CompetencyController {
         @ApiResponse(responseCode = "204", description = "Competency successfully deleted"),
         @ApiResponse(
             responseCode = "400",
-            description = "Missing or invalid parameter(s)",
+            description = "Invalid parameter",
             content = @Content),
         @ApiResponse(
             responseCode = "404",
