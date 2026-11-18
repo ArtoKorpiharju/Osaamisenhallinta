@@ -4,7 +4,6 @@ import { alpha } from '@mui/material/styles'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 
 import ExpandableTable, {type ExpandableTableColumn,} from '../ExpandableTable'
-import Panel from '../Panel'
 import { tones } from '../../config/tones'
 
 import {
