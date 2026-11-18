@@ -1,7 +1,6 @@
 package com.osaamisenhallinta.qualification;
 
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -15,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.osaamisenhallinta.competency.dto.CompetencyDto;
 import com.osaamisenhallinta.qualification.dto.QualificationDto;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -30,40 +28,34 @@ class QualificationControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @MockitoBean private QualificationService qualificationService;
+  
+  private CompetencyDto competencyDto = new CompetencyDto(
+      1L,
+      null,
+      null,
+      null);
 
-  @MockitoBean private QualificationDto mockQualificationDto;
-
-  @MockitoBean private CompetencyDto mockCompetencyDto;
-
-  private final Long qualificationId = 1L;
-
-  private final Long competencyId = 1L;
+  private QualificationDto qualificationDto = new QualificationDto(
+      1L, 
+      "Warehouse Operator", 
+      List.of(competencyDto));
 
   private final Long testCompetencyId = 999L;
 
-  @BeforeEach
-  void setUp() {
-    lenient().when(mockQualificationDto.qualificationId()).thenReturn(qualificationId);
-    lenient().when(mockQualificationDto.qualificationName()).thenReturn("Warehouse Operator");
-    lenient().when(mockQualificationDto.requiredCompetencies())
-      .thenReturn(List.of(mockCompetencyDto));
-    lenient().when(mockCompetencyDto.competencyId()).thenReturn(competencyId);
-  }
-
   @Test
   void getQualificationById_ShouldReturnOkAndQualificationDtoWhenSuccessful() throws Exception {
-    when(qualificationService.getQualificationById(qualificationId))
-        .thenReturn(mockQualificationDto);
+    when(qualificationService.getQualificationById(qualificationDto.qualificationId()))
+        .thenReturn(qualificationDto);
 
-    mockMvc.perform(get("/api/qualifications/{id}", qualificationId))
+    mockMvc.perform(get("/api/qualifications/{id}", qualificationDto.qualificationId()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.qualificationId").value(qualificationId))
-        .andExpect(jsonPath("$.qualificationName").value(mockQualificationDto.qualificationName()))
+        .andExpect(jsonPath("$.qualificationId").value(qualificationDto.qualificationId()))
+        .andExpect(jsonPath("$.qualificationName").value(qualificationDto.qualificationName()))
         .andExpect(jsonPath("$.requiredCompetencies.length()").value(1))
         .andExpect(jsonPath("$.requiredCompetencies[0].competencyId")
-          .value(competencyId));
+          .value(competencyDto.competencyId()));
 
-    verify(qualificationService).getQualificationById(qualificationId);
+    verify(qualificationService).getQualificationById(qualificationDto.qualificationId());
   }
 
   @Test
@@ -76,25 +68,46 @@ class QualificationControllerTest {
 
   @Test 
   void getQualificationById_ShouldReturnNotFoundWhenQualificationDoesNotExist() throws Exception {
-    when(qualificationService.getQualificationById(qualificationId))
+    when(qualificationService.getQualificationById(qualificationDto.qualificationId()))
         .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
 
-    mockMvc.perform(get("/api/qualifications/{id}", qualificationId))
+    mockMvc.perform(get("/api/qualifications/{id}", qualificationDto.qualificationId()))
         .andExpect(status().isNotFound());
      
-    verify(qualificationService).getQualificationById(qualificationId);
+    verify(qualificationService).getQualificationById(qualificationDto.qualificationId());
   }
 
   @Test 
-  void getAllQualifications_ShouldReturnOkAndCorrectList() throws Exception {
+  void getAllQualifications_ShouldReturnOkAndCorrectListWithOnlyOneQualification() 
+      throws Exception {
     when(qualificationService.getAllQualifications())
-        .thenReturn(List.of(mockQualificationDto));
+        .thenReturn(List.of(qualificationDto));
     
     mockMvc.perform(get("/api/qualifications"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(1))
         .andExpect(jsonPath("$[0].qualificationName")
-          .value(mockQualificationDto.qualificationName()));
+          .value(qualificationDto.qualificationName()));
+
+    verify(qualificationService).getAllQualifications();
+  }
+
+  @Test 
+  void getAllQualifications_ShouldReturnOkAndCorrectListWithMultipleQualifications() 
+      throws Exception {
+    QualificationDto mockQualificationDto = new QualificationDto(
+        2L,
+        "Testing",
+        List.of(competencyDto)
+    );
+    when(qualificationService.getAllQualifications())
+        .thenReturn(List.of(qualificationDto, mockQualificationDto));
+    
+    mockMvc.perform(get("/api/qualifications"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(2))
+        .andExpect(jsonPath("$[0].qualificationName")
+          .value(qualificationDto.qualificationName()));
 
     verify(qualificationService).getAllQualifications();
   }
@@ -114,9 +127,9 @@ class QualificationControllerTest {
   @Test 
   void createQualification_ShouldReturnCreatedAndQualificationDtoWhenSuccessful() throws Exception {
     when(qualificationService.createQualification(
-      mockQualificationDto.qualificationName(),
-      List.of(competencyId)))
-        .thenReturn(mockQualificationDto);
+      qualificationDto.qualificationName(),
+      List.of(competencyDto.competencyId())))
+        .thenReturn(qualificationDto);
 
     mockMvc.perform(post("/api/qualifications")
         .contentType(MediaType.APPLICATION_JSON)
@@ -127,16 +140,16 @@ class QualificationControllerTest {
             }
             """))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.qualificationId").value(qualificationId))
+        .andExpect(jsonPath("$.qualificationId").value(qualificationDto.qualificationId()))
         .andExpect(jsonPath("$.qualificationName")
-          .value(mockQualificationDto.qualificationName()))
+          .value(qualificationDto.qualificationName()))
         .andExpect(jsonPath("$.requiredCompetencies.length()").value(1))
         .andExpect(jsonPath("$.requiredCompetencies[0].competencyId")
-          .value(competencyId));
+          .value(competencyDto.competencyId()));
 
     verify(qualificationService).createQualification(
-        mockQualificationDto.qualificationName(),
-        List.of(competencyId));
+        qualificationDto.qualificationName(),
+        List.of(competencyDto.competencyId()));
   }
 
   @Test
@@ -157,7 +170,7 @@ class QualificationControllerTest {
   @Test
   void createQualification_ShouldReturnBadRequestWhenNameLongerThan255Characters() 
       throws Exception {
-    String longName = "A".repeat(257);
+    String longName = "A".repeat(256);
     mockMvc.perform(post("/api/qualifications")
         .contentType(MediaType.APPLICATION_JSON)
         .content("""
@@ -202,12 +215,43 @@ class QualificationControllerTest {
     verifyNoInteractions(qualificationService);
   }
 
+  @Test
+  void createQualification_ShouldReturnBadRequestWhenRequiredCompetencyIdNull() throws Exception {
+    mockMvc.perform(post("/api/qualifications")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Warehouse Operator",
+                "requiredCompetenciesIds": [null]
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void createQualification_ShouldReturnBadRequestWhenRequiredCompetencyIdNotUnique() 
+      throws Exception {
+    mockMvc.perform(post("/api/qualifications")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Warehouse Operator",
+                "requiredCompetenciesIds": [1, 1]
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
   @Test 
   void createQualification_ShouldReturnNotFoundWhenSomeRequiredCompetenciesNotFound() 
       throws Exception {
     when(qualificationService.createQualification(
-        mockQualificationDto.qualificationName(),
-        List.of(competencyId, testCompetencyId)))
+        qualificationDto.qualificationName(),
+        List.of(competencyDto.competencyId(), testCompetencyId)))
           .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, 
             "Some required competencies not found"));
 
@@ -222,15 +266,15 @@ class QualificationControllerTest {
         .andExpect(status().isNotFound());
 
     verify(qualificationService).createQualification(
-        mockQualificationDto.qualificationName(),
-        List.of(competencyId, testCompetencyId));
+        qualificationDto.qualificationName(),
+        List.of(competencyDto.competencyId(), testCompetencyId));
   }
 
   @Test
   void createQualification_ShouldReturnConflictWhenQualificationExists() throws Exception {
     when(qualificationService.createQualification(
-        mockQualificationDto.qualificationName(),
-        List.of(competencyId)))
+        qualificationDto.qualificationName(),
+        List.of(competencyDto.competencyId())))
           .thenThrow(new ResponseStatusException(
             HttpStatus.CONFLICT, "Qualification already exists"));
 
@@ -245,16 +289,16 @@ class QualificationControllerTest {
         .andExpect(status().isConflict());
 
     verify(qualificationService).createQualification(
-        mockQualificationDto.qualificationName(),
-        List.of(competencyId));
+        qualificationDto.qualificationName(),
+        List.of(competencyDto.competencyId()));
   }
 
   @Test 
   void deleteQualification_ShouldReturnNoContentWhenDeletionSuccessful() throws Exception {
-    mockMvc.perform(delete("/api/qualifications/{id}", qualificationId))
+    mockMvc.perform(delete("/api/qualifications/{id}", qualificationDto.qualificationId()))
         .andExpect(status().isNoContent());
 
-    verify(qualificationService).deleteQualification(qualificationId);
+    verify(qualificationService).deleteQualification(qualificationDto.qualificationId());
   }
 
   @Test
@@ -268,11 +312,11 @@ class QualificationControllerTest {
   @Test 
   void deleteQualification_ShouldReturnNotFoundWhenQualificationDoesNotExist() throws Exception {
     doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-        .when(qualificationService).deleteQualification(qualificationId);
+        .when(qualificationService).deleteQualification(qualificationDto.qualificationId());
 
-    mockMvc.perform(delete("/api/qualifications/{id}", qualificationId))
+    mockMvc.perform(delete("/api/qualifications/{id}", qualificationDto.qualificationId()))
         .andExpect(status().isNotFound());
 
-    verify(qualificationService).deleteQualification(qualificationId);
+    verify(qualificationService).deleteQualification(qualificationDto.qualificationId());
   }
 }

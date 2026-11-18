@@ -1,7 +1,6 @@
 package com.osaamisenhallinta.competency;
 
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -14,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.osaamisenhallinta.competency.dto.CompetencyDto;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -30,31 +28,26 @@ class CompetencyControllerTest {
 
   @MockitoBean private CompetencyService competencyService;
 
-  @MockitoBean private CompetencyDto mockCompetencyDto;
-
-  private final Long competencyId = 1L;
-
-  @BeforeEach
-  void setUp() {
-    lenient().when(mockCompetencyDto.competencyId()).thenReturn(competencyId);
-    lenient().when(mockCompetencyDto.competencyName()).thenReturn("Fire Safety Training");
-    lenient().when(mockCompetencyDto.competencyType()).thenReturn(CompetencyType.TRAINING);
-    lenient().when(mockCompetencyDto.validityMonths()).thenReturn(12);
-  }
+  private CompetencyDto competencyDto = new CompetencyDto(
+      1L,
+      "Fire Safety Training",
+      CompetencyType.TRAINING,
+      12
+  );
 
   @Test 
   void getCompetencyById_ShouldReturnOkAndCompetencyDtoWhenSuccessful() throws Exception {
-    when(competencyService.getCompetencyById(competencyId))
-        .thenReturn(mockCompetencyDto);
+    when(competencyService.getCompetencyById(competencyDto.competencyId()))
+        .thenReturn(competencyDto);
 
-    mockMvc.perform(get("/api/competencies/{id}", competencyId))
+    mockMvc.perform(get("/api/competencies/{id}", competencyDto.competencyId()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.competencyId").value(competencyId))
-        .andExpect(jsonPath("$.competencyName").value(mockCompetencyDto.competencyName()))
-        .andExpect(jsonPath("$.competencyType").value(mockCompetencyDto.competencyType().name()))
-        .andExpect(jsonPath("$.validityMonths").value(mockCompetencyDto.validityMonths()));
+        .andExpect(jsonPath("$.competencyId").value(competencyDto.competencyId()))
+        .andExpect(jsonPath("$.competencyName").value(competencyDto.competencyName()))
+        .andExpect(jsonPath("$.competencyType").value(competencyDto.competencyType().name()))
+        .andExpect(jsonPath("$.validityMonths").value(competencyDto.validityMonths()));
 
-    verify(competencyService).getCompetencyById(competencyId);
+    verify(competencyService).getCompetencyById(competencyDto.competencyId());
   }
 
   @Test
@@ -67,26 +60,46 @@ class CompetencyControllerTest {
 
   @Test
   void getCompetencyById_ShouldReturnNotFoundWhenCompetencyDoesNotExist() throws Exception {
-    when(competencyService.getCompetencyById(competencyId))
+    when(competencyService.getCompetencyById(competencyDto.competencyId()))
         .thenThrow(new ResponseStatusException(
           HttpStatus.NOT_FOUND, "Competency not found"));
 
-    mockMvc.perform(get("/api/competencies/{id}", competencyId))
+    mockMvc.perform(get("/api/competencies/{id}", competencyDto.competencyId()))
         .andExpect(status().isNotFound());
 
-    verify(competencyService).getCompetencyById(competencyId);
+    verify(competencyService).getCompetencyById(competencyDto.competencyId());
   }
 
   @Test 
-  void getAllCompetencies_ShouldReturnOkAndCorrectList() throws Exception {
+  void getAllCompetencies_ShouldReturnOkAndCorrectListWithOnlyOneCompetency() throws Exception {
     when(competencyService.getAllCompetencies())
-        .thenReturn(List.of(mockCompetencyDto));
+        .thenReturn(List.of(competencyDto));
       
     mockMvc.perform(get("/api/competencies"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(1))
         .andExpect(jsonPath("$[0].competencyName")
-          .value(mockCompetencyDto.competencyName()));
+          .value(competencyDto.competencyName()));
+
+    verify(competencyService).getAllCompetencies();
+  }
+
+  @Test 
+  void getAllCompetencies_ShouldReturnOkAndCorrectListWithMultipleCompetencies() throws Exception {
+    CompetencyDto mockCompetencyDto = new CompetencyDto(
+        2L,
+        "Testing",
+        CompetencyType.OTHER,
+        null
+    );
+    when(competencyService.getAllCompetencies())
+        .thenReturn(List.of(competencyDto, mockCompetencyDto));
+      
+    mockMvc.perform(get("/api/competencies"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(2))
+        .andExpect(jsonPath("$[0].competencyName")
+          .value(competencyDto.competencyName()));
 
     verify(competencyService).getAllCompetencies();
   }
@@ -106,10 +119,10 @@ class CompetencyControllerTest {
   @Test
   void createCompetency_ShouldReturnCreatedAndCompetencyDtoWhenSuccessful() throws Exception {
     when(competencyService.createCompetency(
-      mockCompetencyDto.competencyName(), 
-      mockCompetencyDto.competencyType(), 
-      mockCompetencyDto.validityMonths()))
-        .thenReturn(mockCompetencyDto);
+      competencyDto.competencyName(), 
+      competencyDto.competencyType(), 
+      competencyDto.validityMonths()))
+        .thenReturn(competencyDto);
 
     mockMvc.perform(post("/api/competencies")
         .contentType(MediaType.APPLICATION_JSON)
@@ -121,14 +134,14 @@ class CompetencyControllerTest {
             }
             """))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.competencyName").value(mockCompetencyDto.competencyName()))
-        .andExpect(jsonPath("$.competencyType").value(mockCompetencyDto.competencyType().name()))
-        .andExpect(jsonPath("$.validityMonths").value(mockCompetencyDto.validityMonths()));
+        .andExpect(jsonPath("$.competencyName").value(competencyDto.competencyName()))
+        .andExpect(jsonPath("$.competencyType").value(competencyDto.competencyType().name()))
+        .andExpect(jsonPath("$.validityMonths").value(competencyDto.validityMonths()));
 
     verify(competencyService).createCompetency(
-        mockCompetencyDto.competencyName(), 
-        mockCompetencyDto.competencyType(), 
-        mockCompetencyDto.validityMonths());
+        competencyDto.competencyName(), 
+        competencyDto.competencyType(), 
+        competencyDto.validityMonths());
   }
   
   @Test
@@ -149,7 +162,7 @@ class CompetencyControllerTest {
 
   @Test
   void createCompetency_ShouldReturnBadRequestWhenNameLongerThan255Characters() throws Exception {
-    String longName = "A".repeat(257);
+    String longName = "A".repeat(256);
     mockMvc.perform(post("/api/competencies")
         .contentType(MediaType.APPLICATION_JSON)
         .content("""
@@ -215,9 +228,9 @@ class CompetencyControllerTest {
   @Test
   void createCompetency_ShouldReturnConflictWhenCompetencyExists() throws Exception {
     when(competencyService.createCompetency(
-        mockCompetencyDto.competencyName(), 
-        mockCompetencyDto.competencyType(), 
-        mockCompetencyDto.validityMonths()))
+        competencyDto.competencyName(), 
+        competencyDto.competencyType(), 
+        competencyDto.validityMonths()))
         .thenThrow(
           new ResponseStatusException(HttpStatus.CONFLICT, "Competency already exists"));
 
@@ -233,17 +246,17 @@ class CompetencyControllerTest {
         .andExpect(status().isConflict());
 
     verify(competencyService).createCompetency(
-        mockCompetencyDto.competencyName(), 
-        mockCompetencyDto.competencyType(), 
-        mockCompetencyDto.validityMonths());
+        competencyDto.competencyName(), 
+        competencyDto.competencyType(), 
+        competencyDto.validityMonths());
   }
 
   @Test 
   void deleteCompetency_ShouldReturnNoContentWhenDeletionSuccessful() throws Exception {
-    mockMvc.perform(delete("/api/competencies/{id}", competencyId))
+    mockMvc.perform(delete("/api/competencies/{id}", competencyDto.competencyId()))
         .andExpect(status().isNoContent());
 
-    verify(competencyService).deleteCompetency(competencyId);
+    verify(competencyService).deleteCompetency(competencyDto.competencyId());
   }
 
   @Test
@@ -257,22 +270,22 @@ class CompetencyControllerTest {
   @Test
   void deleteCompetency_ShouldReturnNotFoundWhenCompetencyDoesNotExist() throws Exception {
     doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-        .when(competencyService).deleteCompetency(competencyId);
+        .when(competencyService).deleteCompetency(competencyDto.competencyId());
 
-    mockMvc.perform(delete("/api/competencies/{id}", competencyId))
+    mockMvc.perform(delete("/api/competencies/{id}", competencyDto.competencyId()))
         .andExpect(status().isNotFound());
 
-    verify(competencyService).deleteCompetency(competencyId);
+    verify(competencyService).deleteCompetency(competencyDto.competencyId());
   }
 
   @Test 
   void deleteCompetency_ShouldReturnConflictWhenCompetencyInUse() throws Exception {
     doThrow(new ResponseStatusException(HttpStatus.CONFLICT))
-        .when(competencyService).deleteCompetency(competencyId);
+        .when(competencyService).deleteCompetency(competencyDto.competencyId());
 
-    mockMvc.perform(delete("/api/competencies/{id}", competencyId))
+    mockMvc.perform(delete("/api/competencies/{id}", competencyDto.competencyId()))
         .andExpect(status().isConflict());
 
-    verify(competencyService).deleteCompetency(competencyId);
+    verify(competencyService).deleteCompetency(competencyDto.competencyId());
   }
 }

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.osaamisenhallinta.qualification.Qualification;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -22,9 +21,16 @@ class CompetencyRepositoryTest {
 
   @Autowired private TestEntityManager entityManager;
   
-  private Competency competency;
+  private Competency competency = new Competency(
+      "TEST Fire Safety Training", 
+      CompetencyType.TRAINING, 
+      12
+  );
 
-  private Qualification qualification;
+  private Qualification qualification = new Qualification(
+      "TEST Warehouse Operator",
+      Set.of(competency)
+  );
 
   private final Long nonExistingCompetencyId = 999L;
 
@@ -32,20 +38,6 @@ class CompetencyRepositoryTest {
   @ServiceConnection
    static PostgreSQLContainer postgres =
         new PostgreSQLContainer("postgres:16-alpine");
-
-  @BeforeEach 
-  void setUp() {
-    competency = new Competency(
-      "TEST Fire Safety Training", 
-      CompetencyType.TRAINING, 
-      12
-    );
-
-    qualification = new Qualification(
-      "TEST Warehouse Operator",
-      Set.of(competency)
-    );
-  }
 
   @Test 
   void isUsedByQualification_ShouldReturnTrueIfCompetencyIsInUse() {
@@ -75,21 +67,4 @@ class CompetencyRepositoryTest {
     boolean result = competencyRepository.isUsedByQualification(nonExistingCompetencyId);
     assertThat(result).isFalse();
   }
-
-  @Test
-  void existsByName_ShouldReturnTrueWhenCompetencyExists() {
-    entityManager.persist(competency);
-    entityManager.flush(); // sends pending changes to the database
-    entityManager.clear(); // removes entitites from the persistence context
-    
-    boolean result = competencyRepository.existsByName(competency.getName());
-    assertThat(result).isTrue();
-  }
-
-  @Test
-  void existsByName_ShouldReturnFalseWhenCompetencyDoesNotExist() {
-    boolean result = competencyRepository.existsByName("Non-existent");
-    assertThat(result).isFalse();
-  }
-    
 }

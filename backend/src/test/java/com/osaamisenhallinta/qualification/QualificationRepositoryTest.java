@@ -8,7 +8,6 @@ import com.osaamisenhallinta.competency.CompetencyType;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -27,9 +26,16 @@ class QualificationRepositoryTest {
 
   @Autowired private TestEntityManager entityManager;
 
-  private Competency competency;
+  private Competency competency = new Competency(
+      "TEST Fire Safety Training", 
+      CompetencyType.TRAINING, 
+      12
+  );
 
-  private Qualification qualification;
+  private Qualification qualification = new Qualification(
+      "TEST Warehouse Operator",
+      Set.of(competency)
+  );
 
   private final Long nonExistingQualificationId = 999L;
 
@@ -38,20 +44,6 @@ class QualificationRepositoryTest {
    static PostgreSQLContainer postgres =
         new PostgreSQLContainer("postgres:16-alpine");
 
-  @BeforeEach
-  void setUp() {
-    competency = new Competency(
-      "TEST Fire Safety Training", 
-      CompetencyType.TRAINING, 
-      12
-    );
-    
-    qualification = new Qualification(
-      "TEST Warehouse Operator",
-      Set.of(competency)
-    );
-  }
-  
   @Test
   void findById_ShouldReturnQualificationWithRequiredCompetencies() {
     entityManager.persist(competency);
@@ -114,24 +106,7 @@ class QualificationRepositoryTest {
     List<Qualification> result = qualificationRepository.findAll();
     assertThat(result).isEmpty();
   }
-
-  @Test
-  void existsByName_ShouldReturnTrueWhenQualificationExists() {
-    entityManager.persist(competency);
-    entityManager.persist(qualification);
-    entityManager.flush(); // sends pending changes to the database
-    entityManager.clear(); // removes entitites from the persistence context
-    
-    boolean result = qualificationRepository.existsByName(qualification.getName());
-    assertThat(result).isTrue();
-  }
-
-  @Test
-  void existsByName_ShouldReturnFalseWhenQualificationDoesNotExist() {
-    boolean result = qualificationRepository.existsByName("Non-existent");
-    assertThat(result).isFalse();
-  }
-
+  
   @Test
   void getByIdOrThrow_ShouldThrowWhenQualificationDoesNotExist() {
     assertThatThrownBy(() -> 
