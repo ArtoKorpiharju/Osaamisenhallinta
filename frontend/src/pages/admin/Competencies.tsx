@@ -16,6 +16,7 @@ import PageTitle from '../../components/PageTitle'
 import PageContainer from '../../components/PageContainer'
 import CompetenciesTable from '../../components/AdminCompetencies/CompetenciesTable'
 import AddCompetencyPopUp from '../../components/AdminCompetencies/AddCompetencyPopUp'
+import DeleteCompetencyPopUp from '../../components/AdminCompetencies/DeleteCompetencyPopUp'
 import { tones } from '../../config/tones'
 import { getApiErrorMessage } from '../../services/api'
 import {
@@ -36,6 +37,8 @@ function AdminCompetencies() {
   const [competencies, setCompetencies] = useState<AdminCompetency[]>([])
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [competencyToDelete, setCompetencyToDelete] =
+    useState<AdminCompetency | null>(null)
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState(false)
 
@@ -66,7 +69,16 @@ function AdminCompetencies() {
     setCompetencies((current) => [...current, createdCompetency])
   }
 
-  const handleDeleteCompetency = async (competency: AdminCompetency) => {
+  const closeDeleteDialog = () => {
+    if (deleting) return
+    setDeleteError(null)
+    setCompetencyToDelete(null)
+  }
+
+  const handleDeleteCompetency = async () => {
+    if (competencyToDelete === null) return
+
+    const competency = competencyToDelete
     setDeleteError(null)
     setDeleting(true)
 
@@ -75,6 +87,7 @@ function AdminCompetencies() {
       setCompetencies((current) =>
         current.filter((item) => item.id !== competency.id)
       )
+      setCompetencyToDelete(null)
     } catch (deleteError: unknown) {
       setDeleteError(
         getApiErrorMessage(deleteError, t('adminCompetencies.errors.delete'), {
@@ -152,7 +165,6 @@ function AdminCompetencies() {
           <Alert severity="info">{t('adminCompetencies.loading')}</Alert>
         )}
         {error && <Alert severity="error">{error}</Alert>}
-        {deleteError && <Alert severity="error">{deleteError}</Alert>}
         {!loading && error === null && (
           <>
             <Typography
@@ -174,7 +186,8 @@ function AdminCompetencies() {
                 void navigate('/admin/competencies')
               }}
               onDelete={(competency) => {
-                void handleDeleteCompetency(competency)
+                setDeleteError(null)
+                setCompetencyToDelete(competency)
               }}
             />
           </>
@@ -185,6 +198,15 @@ function AdminCompetencies() {
         onAdd={handleAddCompetency}
         onClose={() => {
           setAddCompetencyOpen(false)
+        }}
+      />
+      <DeleteCompetencyPopUp
+        competency={competencyToDelete}
+        deleting={deleting}
+        error={deleteError}
+        onClose={closeDeleteDialog}
+        onConfirm={() => {
+          void handleDeleteCompetency()
         }}
       />
     </PageContainer>
