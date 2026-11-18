@@ -273,7 +273,7 @@ export default function ExploreCompetencies({
               variant="standard"
               value={rowsPerPage}
               onChange={(event) => {
-                setRowsPerPage(Number(event.target.value))
+                setRowsPerPage(event.target.value)
                 setPage(0)
               }}
               inputProps={{ 'aria-label': 'Rows per page' }}

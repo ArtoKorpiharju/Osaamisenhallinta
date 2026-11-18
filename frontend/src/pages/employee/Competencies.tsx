@@ -59,12 +59,8 @@ const handleConfirmRemove = () => {
     const target = pendingRemoval
     setPendingRemoval(null)
 
-    if (
-      target === null ||
-      target.employeeCompetencyId === null ||
-      userId === undefined
-    ) {
-      return
+  if (target?.employeeCompetencyId == null || userId === undefined) {
+    return
     }
 
     const removedId = target.employeeCompetencyId
