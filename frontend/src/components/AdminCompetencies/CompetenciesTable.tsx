@@ -105,19 +105,18 @@ function CompetenciesTable({
       // To make the datatable headers and titles the right color
       sx={{
         '& .MuiDataGrid-columnHeaderTitle': { color: tones.info.main },
-        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders': {
-          backgroundColor: headerBackground,
-        },
         '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-filler--horizontal':
           {
             backgroundColor: headerBackground,
           },
-        '& .MuiDataGrid-root .MuiDataGrid-scrollbarFiller': {
-          backgroundColor: headerBackground,
-        },
-        '& .MuiDataGrid-columnHeader': {
-          backgroundColor: headerBackground,
-        },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-scrollbarFiller':
+          {
+            backgroundColor: headerBackground,
+          },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-columnHeader':
+          {
+            backgroundColor: headerBackground,
+          },
       }}
     >
       <DataTable
