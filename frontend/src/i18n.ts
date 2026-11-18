@@ -158,7 +158,8 @@ const resources = {
           delete: 'Could not delete competency.',
           deleteBadRequest: 'The competency ID is invalid.',
           deleteNotFound: 'The competency could not be found.',
-          inUse: 'This competency is used by a qualification and cannot be deleted.',
+          inUse:
+            'This competency is used by a qualification and cannot be deleted.',
         },
         resultCount_one: '{{count}} competency',
         resultCount_other: '{{count}} competencies',
@@ -193,7 +194,8 @@ const resources = {
         },
         deleteDialog: {
           title: 'Delete competency?',
-          message: 'Are you sure you want to delete "{{name}}"? This cannot be undone.',
+          message:
+            'Are you sure you want to delete "{{name}}"? This cannot be undone.',
           cancel: 'Cancel',
           confirm: 'Delete',
           deleting: 'Deleting...',
@@ -355,7 +357,8 @@ const resources = {
           delete: 'Osaamisen poistaminen epäonnistui.',
           deleteBadRequest: 'Osaamisen tunniste oli virheellinen.',
           deleteNotFound: 'Osaamista ei löytynyt.',
-          inUse: 'Osaaminen on käytössä kelpoisuusvaatimuksessa, eikä sitä voi poistaa.',
+          inUse:
+            'Osaaminen on käytössä kelpoisuusvaatimuksessa, eikä sitä voi poistaa.',
         },
         resultCount_one: '{{count}} osaaminen',
         resultCount_other: '{{count}} osaamista',
@@ -390,7 +393,8 @@ const resources = {
         },
         deleteDialog: {
           title: 'Poistetaanko osaaminen?',
-          message: 'Haluatko varmasti poistaa osaamisen "{{name}}"? Tätä toimintoa ei voi perua.',
+          message:
+            'Haluatko varmasti poistaa osaamisen "{{name}}"? Tätä toimintoa ei voi perua.',
           cancel: 'Peruuta',
           confirm: 'Poista',
           deleting: 'Poistetaan...',
