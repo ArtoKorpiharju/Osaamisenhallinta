@@ -1,4 +1,4 @@
-import { fetchApiData } from '../api'
+import { fetchApiData, sendApiRequest  } from '../api'
 import { type EmployeeCompetency } from '../../types/overview'
 import { isCompetencyApiResponse, mapCompetency } from './employee'
 
@@ -13,4 +13,16 @@ export async function fetchEmployeeCompetencies(
   }
 
   return data.map(mapCompetency)
+}
+
+// Remove a competency from the employee.
+// DELETE /api/employees/{employeeId}/competencies/{employeeCompetencyId}
+export async function deleteEmployeeCompetency(
+  employeeId: number,
+  employeeCompetencyId: number
+): Promise<void> {
+  await sendApiRequest(
+    `/api/employees/${String(employeeId)}/competencies/${String(employeeCompetencyId)}`,
+    'DELETE'
+  )
 }

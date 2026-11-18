@@ -33,7 +33,7 @@ test("employee navigation opens each page", async ({ page }) => {
 
   for (const [label, heading] of [
     ["Qualifications", "Employee Qualifications"],
-    ["Competencies", "Employee Competencies"],
+    ["Competencies", "My Competencies"],
   ]) {
     await page.getByRole("link", { name: label }).click();
     await expect(page).toHaveURL(`/employee/${label.toLowerCase()}`);
