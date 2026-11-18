@@ -2,6 +2,7 @@ import { Box, IconButton, Typography } from '@mui/material'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { useTranslation } from 'react-i18next'
 
+import { tones } from '../../config/tones'
 import { type AdminCompetency } from '../../services/admin/admin'
 import DataTable, { type DataTableColumn } from '../DataTable'
 
@@ -100,13 +101,30 @@ function CompetenciesTable({
   ]
 
   return (
-    <DataTable
-      columns={columns}
-      rows={items}
-      getRowId={(item) => item.id}
-      highlightColumnHeaders
-      onRowClick={onItemClick}
-    />
+    <Box
+      // To make the datatable headers and titles the right color
+      sx={{
+        '& .MuiDataGrid-columnHeaderTitle': { color: tones.info.main },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders': {
+          backgroundColor: '#e6eef5',
+        },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-filler--horizontal':
+          {
+            backgroundColor: '#e6eef5',
+          },
+        '& .MuiDataGrid-root .MuiDataGrid-scrollbarFiller': {
+          backgroundColor: '#e6eef5',
+        },
+        '& .MuiDataGrid-columnHeader': { backgroundColor: '#e6eef5' },
+      }}
+    >
+      <DataTable
+        columns={columns}
+        rows={items}
+        getRowId={(item) => item.id}
+        onRowClick={onItemClick}
+      />
+    </Box>
   )
 }
 

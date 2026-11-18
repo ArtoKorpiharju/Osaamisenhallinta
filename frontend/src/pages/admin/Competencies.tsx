@@ -143,7 +143,7 @@ function AdminCompetencies() {
 
       <Box>
         <TextField
-          label={t('adminCompetencies.searchLabel')}
+          placeholder={t('adminCompetencies.searchLabel')}
           size="small"
           value={search}
           onChange={(event) => {

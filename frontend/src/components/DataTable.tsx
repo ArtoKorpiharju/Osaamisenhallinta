@@ -6,6 +6,7 @@ import {
   type GridRowParams,
   type GridValidRowModel,
 } from '@mui/x-data-grid'
+import { tones } from '../config/tones'
 
 export interface DataTableColumn<T extends GridValidRowModel> {
   id: string
@@ -21,7 +22,6 @@ interface DataTableProps<T extends GridValidRowModel> {
   rows: T[]
   getRowId: (row: T) => string | number
   onRowClick?: (row: T) => void
-  highlightColumnHeaders?: boolean
 }
 
 function DataTable<T extends GridValidRowModel>({
@@ -30,7 +30,6 @@ function DataTable<T extends GridValidRowModel>({
   rows,
   getRowId,
   onRowClick,
-  highlightColumnHeaders = false,
 }: DataTableProps<T>) {
   const gridColumns: GridColDef<T>[] = columns.map((column) => ({
     field: column.id,
@@ -55,8 +54,8 @@ function DataTable<T extends GridValidRowModel>({
           component="h2"
           variant="h6"
           sx={{
-            backgroundColor: '#e6eef5',
-            color: '#5f6368',
+            backgroundColor: tones.info.background,
+            color: tones.info.main,
             fontWeight: 700,
             paddingX: 3,
             paddingY: 2,
@@ -92,9 +91,6 @@ function DataTable<T extends GridValidRowModel>({
           '& .MuiDataGrid-row:hover': {
             backgroundColor: '#dbeafe',
           },
-          '& .MuiDataGrid-columnHeader': highlightColumnHeaders
-            ? { backgroundColor: '#e6eef5' }
-            : {},
         }}
       />
     </Paper>
