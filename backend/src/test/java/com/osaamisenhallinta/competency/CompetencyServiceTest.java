@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.osaamisenhallinta.competency.dto.CompetencyDto;
 import com.osaamisenhallinta.employee.EmployeeCompetencyRepository;
 import com.osaamisenhallinta.renewal.RenewalPlanRepository;
+import com.osaamisenhallinta.testsupport.TestDataFactory;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class CompetencyServiceTest {
 
   @Mock private CompetencyRepository competencyRepository;
 
-  private Competency competencyEntity = new Competency(
+  private Competency competencyEntity = TestDataFactory.competencyWithId(
       1L,
       "Fire Safety Training",
       CompetencyType.TRAINING,

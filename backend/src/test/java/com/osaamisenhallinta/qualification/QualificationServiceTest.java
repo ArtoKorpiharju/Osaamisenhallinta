@@ -14,6 +14,7 @@ import com.osaamisenhallinta.competency.CompetencyRepository;
 import com.osaamisenhallinta.competency.CompetencyType;
 import com.osaamisenhallinta.employee.EmployeeQualificationRepository;
 import com.osaamisenhallinta.qualification.dto.QualificationDto;
+import com.osaamisenhallinta.testsupport.TestDataFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,22 +33,16 @@ class QualificationServiceTest {
 
   @Mock private QualificationRepository qualificationRepository;
 
-  private Competency competencyEntity = new Competency(
+  private Competency competencyEntity = TestDataFactory.competencyWithId(
       1L,
       "Fire Safety Training",
       CompetencyType.TRAINING,
       12
   );
 
-  private Qualification qualificationEntity = new Qualification(
+  private Qualification qualificationEntity = TestDataFactory.qualificationWithId(
       1L,
       "Warehouse Operator",
-      Set.of(competencyEntity)
-  );
-
-  private Qualification qualificationEntity2 = new Qualification(
-      2L,
-      "Testing",
       Set.of(competencyEntity)
   );
 
@@ -108,6 +103,10 @@ class QualificationServiceTest {
 
   @Test 
   void getAllQualifications_ShouldMapAndReturnAllQualificationsWhenMultipleExist() {
+    Qualification qualificationEntity2 = new Qualification(
+        "Testing",
+        Set.of(competencyEntity)
+    );
     when(qualificationRepository.findAll())
         .thenReturn(List.of(qualificationEntity, qualificationEntity2));
 

@@ -48,12 +48,5 @@ public class Qualification {
     this.requiredCompetencies = new HashSet<>(requiredCompetencies);
   }
 
-  /** A constructor for testing a qualification. */
-  public Qualification(Long id, String name, Set<Competency> requiredCompetencies) {
-    this.id = id;
-    this.name = name;
-    this.requiredCompetencies = new HashSet<>(requiredCompetencies);
-  }
-
   protected Qualification() {}
 }
