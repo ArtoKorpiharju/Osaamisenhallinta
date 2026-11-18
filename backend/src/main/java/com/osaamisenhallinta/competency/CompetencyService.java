@@ -1,5 +1,6 @@
 package com.osaamisenhallinta.competency;
 
+import com.osaamisenhallinta.competency.dto.CompetencyDto;
 import com.osaamisenhallinta.employee.EmployeeCompetencyRepository;
 import com.osaamisenhallinta.renewal.RenewalPlanRepository;
 import java.util.List;
@@ -52,7 +53,7 @@ public class CompetencyService {
    * @param name The name of the competency.
    * @param type The type of the competency.
    * @param validityMonths How long the competency is valid for.
-   * @return An CompetencyDto containing competency details.
+   * @return A CompetencyDto containing competency details.
    * @throws ResponseStatusException if the competency already exists.
    */
   @Transactional
@@ -63,7 +64,7 @@ public class CompetencyService {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Competency already exists");
     }
 
-    // Create a new competency object
+    // Create a new competency
     Competency newCompetency = new Competency(name, type, validityMonths);
     newCompetency = competencyRepository.save(newCompetency);
     return mapToDto(newCompetency);

@@ -26,9 +26,10 @@ public class QualificationEvaluator {
    * Calculates several data about a qualification of an employee based on the their competencies.
    * Qualification status (QUALIFIED, EXPIRING_SOON, NOT_QUALIFIED) is determined based on the
    * employee's competencies and their expiration dates. The validUntil date is the earliest
-   * expiration date of the required competencies. The totalRequirementsCount is the number of
-   * required competencies for the qualification, and the metRequirementsCount is the number of
-   * those requirements that the employee currently meets.
+   * expiration date of the required competencies, or null if the employee does not meet all
+   * requirements. The requirementStatuses list contains the status of each required competency. The
+   * totalRequirementsCount is the number of required competencies for the qualification, and the
+   * metRequirementsCount is the number of those requirements that the employee currently meets.
    *
    * <p>The complexity is O(M * N) where M is the number of required competencies and N is the
    * number of employee competencies. Because M is small (and also generally N is small), this is
@@ -128,9 +129,10 @@ public class QualificationEvaluator {
     } else {
       qualificationStatus = QualificationStatus.NOT_QUALIFIED;
     }
+    LocalDate validUntil = allRequirementsMet ? earliestExpiration : null;
     return new QualificationEvaluationResult(
         qualificationStatus,
-        earliestExpiration,
+        validUntil,
         totalRequirementsCount,
         metRequirementsCount,
         requirementStatuses);

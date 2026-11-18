@@ -1,5 +1,6 @@
-package com.osaamisenhallinta.competency;
+package com.osaamisenhallinta.competency.dto;
 
+import com.osaamisenhallinta.competency.CompetencyType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
