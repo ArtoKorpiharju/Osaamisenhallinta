@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router'
 
 import MyCompetenciesTable from '../../components/Competencies/MyCompetenciesTable'
+import RemoveCompetencyDialog from '../../components/Competencies/RemoveCompetencyDialog'
 import SearchCompetence from '../../components/Competencies/SearchCompetence'
 import PageContainer from '../../components/PageContainer'
 import PageTitle from '../../components/PageTitle'
 import { getApiErrorMessage } from '../../services/api'
-import { fetchCompetencies } from '../../services/competencies'
-import { fetchEmployeeCompetencies } from '../../services/employee/employeeCompetencies'
+import { fetchCompetencies} from '../../services/competencies'
+import { fetchEmployeeCompetencies, deleteEmployeeCompetency
+} from '../../services/employee/employeeCompetencies'
 import { type EmployeeCompetency } from '../../types/overview'
 import ExploreCompetencies, {
   type CatalogueCompetency,
@@ -22,6 +24,8 @@ export default function EmployeeCompetencies() {
   const [error, setError] = useState<string | null>(null)
   const [catalogueError, setCatalogueError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+    const [pendingRemoval, setPendingRemoval] =
+      useState<EmployeeCompetency | null>(null)
 
   // Fetch the whole competency catalogue once.
   useEffect(() => {
@@ -51,6 +55,36 @@ export default function EmployeeCompetencies() {
       })
   }, [userId])
 
+const handleConfirmRemove = () => {
+    const target = pendingRemoval
+    setPendingRemoval(null)
+
+    if (
+      target === null ||
+      target.employeeCompetencyId === null ||
+      userId === undefined
+    ) {
+      return
+    }
+
+    const removedId = target.employeeCompetencyId
+
+    deleteEmployeeCompetency(userId, removedId)
+      .then(() => {
+        setError(null)
+        setCompetencies((current) =>
+          current.filter((c) => c.employeeCompetencyId !== removedId)
+        )
+      })
+      .catch((err: unknown) => {
+        setError(
+          getApiErrorMessage(err, 'Could not remove competency', {
+            404: 'Competency could not be found',
+          })
+        )
+      })
+  }
+
   return (
     <PageContainer>
       <Paper
@@ -66,7 +100,12 @@ export default function EmployeeCompetencies() {
         )}
 
         <SearchCompetence competencies={competencies}>
-          {(filtered) => <MyCompetenciesTable competencies={filtered} />}
+          {(filtered) => (
+            <MyCompetenciesTable
+              competencies={filtered}
+              onRemove={setPendingRemoval}
+            />
+          )}
         </SearchCompetence>
       </Paper>
 
@@ -85,6 +124,15 @@ export default function EmployeeCompetencies() {
           />
         </Box>
       </Paper>
+
+      <RemoveCompetencyDialog
+        open={pendingRemoval !== null}
+        competencyName={pendingRemoval?.name}
+        onConfirm={handleConfirmRemove}
+        onCancel={() => {
+          setPendingRemoval(null)
+        }}
+      />
     </PageContainer>
   )
 }
