@@ -17,7 +17,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import type { CompetencyType } from '../../types/overview'
-import { tones } from '../../config/tones'
+import { headerBackground, tones } from '../../config/tones'
 import { getApiErrorMessage } from '../../services/api'
 import type { CreateAdminCompetencyInput } from '../../services/admin/admin'
 
@@ -90,7 +90,7 @@ export default function AddCompetencyPopUp({
       <DialogTitle
         variant="h2"
         sx={{
-          bgcolor: '#e4edf5',
+          bgcolor: headerBackground,
           color: tones.info.main,
         }}
       >

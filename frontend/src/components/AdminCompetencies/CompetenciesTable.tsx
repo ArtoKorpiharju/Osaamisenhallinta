@@ -2,7 +2,7 @@ import { Box, IconButton, Typography } from '@mui/material'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { useTranslation } from 'react-i18next'
 
-import { tones } from '../../config/tones'
+import { headerBackground, tones } from '../../config/tones'
 import { type AdminCompetency } from '../../services/admin/admin'
 import DataTable, { type DataTableColumn } from '../DataTable'
 
@@ -106,16 +106,18 @@ function CompetenciesTable({
       sx={{
         '& .MuiDataGrid-columnHeaderTitle': { color: tones.info.main },
         '& .MuiDataGrid-root .MuiDataGrid-columnHeaders': {
-          backgroundColor: '#e6eef5',
+          backgroundColor: headerBackground,
         },
         '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-filler--horizontal':
           {
-            backgroundColor: '#e6eef5',
+            backgroundColor: headerBackground,
           },
         '& .MuiDataGrid-root .MuiDataGrid-scrollbarFiller': {
-          backgroundColor: '#e6eef5',
+          backgroundColor: headerBackground,
         },
-        '& .MuiDataGrid-columnHeader': { backgroundColor: '#e6eef5' },
+        '& .MuiDataGrid-columnHeader': {
+          backgroundColor: headerBackground,
+        },
       }}
     >
       <DataTable

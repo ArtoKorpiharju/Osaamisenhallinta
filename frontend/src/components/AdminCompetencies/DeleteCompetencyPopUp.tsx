@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import { tones } from '../../config/tones'
+import { headerBackground, tones } from '../../config/tones'
 import { type AdminCompetency } from '../../services/admin/admin'
 
 interface DeleteCompetencyPopUpProps {
@@ -39,7 +39,7 @@ export default function DeleteCompetencyPopUp({
       <DialogTitle
         variant="h2"
         sx={{
-          bgcolor: '#e4edf5',
+          bgcolor: headerBackground,
           color: tones.info.main,
         }}
       >
