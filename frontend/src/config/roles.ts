@@ -4,6 +4,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import HistoryIcon from '@mui/icons-material/History'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
+import PersonIcon from '@mui/icons-material/Person'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 export const roles = [
@@ -51,9 +52,9 @@ export const pagesPerRole: Record<Role, Page[]> = {
       icon: HomeOutlinedIcon,
     },
     {
-      labelKey: 'navigation.renewals',
-      path: '/supervisor/renewals',
-      icon: EventRepeatIcon,
+      labelKey: 'navigation.myUnit',
+      path: '/supervisor/my-unit',
+      icon: PersonIcon,
     },
   ],
   admin: [
