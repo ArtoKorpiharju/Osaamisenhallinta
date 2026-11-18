@@ -6,6 +6,7 @@ export interface SeedUser {
   firstName: string
   lastName: string
   role: ApiRole
+  supervisedUnit: number | null // Unit id for supervisors, otherwise null
 }
 
 // Check if a value is a SeedUser object.
@@ -22,7 +23,10 @@ function isSeedUser(value: unknown): value is SeedUser {
     typeof seedUser.firstName === 'string' &&
     typeof seedUser.lastName === 'string' &&
     typeof seedUser.role === 'string' &&
-    roles.some((role) => role.apiRole === seedUser.role)
+    roles.some((role) => role.apiRole === seedUser.role) &&
+    ((typeof seedUser.supervisedUnit === 'number' &&
+      Number.isInteger(seedUser.supervisedUnit)) ||
+      seedUser.supervisedUnit === null)
   )
 }
 
