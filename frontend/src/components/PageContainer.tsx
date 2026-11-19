@@ -17,7 +17,7 @@ export default function PageContainer({
         flexDirection: 'column',
         gap,
         width: '100%',
-        p: 3,
+        p: { xs: 0.5, sm: 3 },
         boxSizing: 'border-box',
       }}
     >

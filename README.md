@@ -88,7 +88,13 @@ Run `npm run test` (Vitest + Testing Library)
 
 All commands assume the current working directory is root
 
-1. Start by installing playwright by running:
+1. Install project's dependencies
+
+```bash
+npm install
+```
+
+2. Install playwright by running:
 
 ```bash
 npx playwright install
@@ -100,7 +106,7 @@ If Playwright reports that required system dependencies are missing, run
 npx playwright install-deps
 ```
 
-2. Run tests by command:
+3. Run tests by command:
 
 ```bash
 npx playwright test
@@ -114,7 +120,7 @@ docker compose down -v
 
 before testing again
 
-3. Playwright usually automatically opens web page on failed tests
+4. Playwright usually automatically opens web page on failed tests
 
 You can also get report of the last test run by:
 

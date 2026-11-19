@@ -35,21 +35,22 @@ export default function ActionRequired({
       label:
         action.id === 'plan-renewal'
           ? t('employeeOverview.actionRequired.actions.planRenewal')
-          : action.id === 'view-renewal-plan'
-            ? t('employeeOverview.actionRequired.actions.viewRenewalPlan')
-            : action.id === 'upload-certificate'
-              ? t(
-                  'employeeOverview.actionRequired.actions.uploadRenewalCertificate'
-                )
-              : action.label,
+          : action.id === 'add-competency-information'
+            ? t(
+                'employeeOverview.actionRequired.actions.addCompetencyInformation'
+              )
+            : action.label,
     })),
     note:
       item.note === undefined
         ? undefined
         : {
             ...item.note,
-            text:
-              item.note.tone === 'danger'
+            text: item.actions.some(
+              (action) => action.id === 'add-competency-information'
+            )
+              ? t('employeeOverview.actionRequired.competencyMissing')
+              : item.note.tone === 'danger'
                 ? t('employeeOverview.actionRequired.noRenewalPlanned')
                 : item.note.text,
           },
