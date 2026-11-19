@@ -1,0 +1,132 @@
+import { Box, IconButton, Typography } from '@mui/material'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import { useTranslation } from 'react-i18next'
+
+import { headerBackground, tones } from '../../config/tones'
+import { type AdminCompetency } from '../../services/admin/admin'
+import DataTable, { type DataTableColumn } from '../DataTable'
+
+interface CompetenciesTableProps {
+  items: AdminCompetency[]
+  onItemClick?: (item: AdminCompetency) => void
+  onDelete?: (item: AdminCompetency) => void
+  deleting?: boolean
+}
+
+function CompetenciesTable({
+  items,
+  onItemClick,
+  onDelete,
+  deleting = false,
+}: CompetenciesTableProps) {
+  const { t } = useTranslation()
+
+  const formatValidity = (validityMonths: number | null) => {
+    if (validityMonths === null) {
+      return t('adminCompetencies.table.noExpiry')
+    }
+
+    return t('adminCompetencies.table.month', {
+      count: validityMonths,
+    })
+  }
+
+  const columns: DataTableColumn<AdminCompetency>[] = [
+    {
+      id: 'name',
+      label: t('adminCompetencies.table.competency'),
+      minWidth: 260,
+      render: (item) => (
+        <Typography
+          component="span"
+          variant="subtitle2"
+          sx={{
+            fontWeight: 700,
+          }}
+        >
+          {item.name}
+        </Typography>
+      ),
+    },
+    {
+      id: 'Type',
+      label: t('adminCompetencies.table.type'),
+      minWidth: 120,
+      render: (item) => (
+        <Typography
+          component="span"
+          variant="subtitle2"
+          sx={{ fontWeight: 600 }}
+        >
+          {t(`adminCompetencies.types.${item.type.toLowerCase()}`, {
+            defaultValue: item.type,
+          })}
+        </Typography>
+      ),
+    },
+    {
+      id: 'validity',
+      label: t('adminCompetencies.table.validity'),
+      minWidth: 120,
+      render: (item) => (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <Typography
+            component="span"
+            variant="subtitle2"
+            sx={{ fontWeight: 600 }}
+          >
+            {formatValidity(item.validityMonths)}
+          </Typography>
+          <IconButton
+            size="small"
+            disabled={deleting}
+            onClick={(event) => {
+              event.stopPropagation()
+              onDelete?.(item)
+            }}
+          >
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ]
+
+  return (
+    <Box
+      // To make the datatable headers and titles the right color
+      sx={{
+        '& .MuiDataGrid-columnHeaderTitle': { color: tones.info.main },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-filler--horizontal':
+          {
+            backgroundColor: headerBackground,
+          },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-scrollbarFiller':
+          {
+            backgroundColor: headerBackground,
+          },
+        '& .MuiDataGrid-root .MuiDataGrid-columnHeaders .MuiDataGrid-columnHeader':
+          {
+            backgroundColor: headerBackground,
+          },
+      }}
+    >
+      <DataTable
+        columns={columns}
+        rows={items}
+        getRowId={(item) => item.id}
+        onRowClick={onItemClick}
+      />
+    </Box>
+  )
+}
+
+export default CompetenciesTable

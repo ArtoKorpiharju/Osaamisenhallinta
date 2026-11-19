@@ -30,10 +30,26 @@ const resources = {
       },
       common: {
         critical: 'Critical',
+        loadingSeedUsers: 'Fetching seed users…',
+        unknownUser: 'Unknown User',
+        errors: {
+          loadSeedUsers: 'Could not load seed users.',
+          seedUsersNotFound: 'Seed users could not be found.',
+          roleUserNotFound: 'No seed user found for the selected role.',
+        },
+      },
+      pages: {
+        notFound: 'Page not found',
       },
       employeeOverview: {
         title: 'Employee Overview',
         viewAllDetails: 'View all details',
+        loading: 'Fetching employee overview data…',
+        errors: {
+          load: 'Could not load employee overview data.',
+          badRequest: 'Bad request for employee overview data.',
+          notFound: 'Employee overview data could not be found.',
+        },
         summary: {
           invalid: {
             title: 'Invalid',
@@ -86,6 +102,7 @@ const resources = {
             uploadRenewalCertificate: 'Upload renewal certificate',
           },
           noRenewalPlanned: 'No renewal planned',
+          renewalPlanned: 'Renewal planned for {{date}}',
         },
       },
       supervisorOverview: {
@@ -140,6 +157,67 @@ const resources = {
           addQualification: 'Add qualification',
         },
       },
+      adminCompetencies: {
+        title: 'Competencies',
+        description: 'Manage competencies',
+        addButton: 'Add new competency',
+        searchLabel: 'Search competencies',
+        loading: 'Loading competencies...',
+        errors: {
+          load: 'Could not load competencies.',
+          badRequest: 'The competencies request was invalid.',
+          notFound: 'Competencies could not be found.',
+          validation:
+            'Enter a name and type. Limited validity must be at least 1 month.',
+          create: 'Could not add competency.',
+          createBadRequest: 'The competency details are invalid.',
+          conflict: 'A competency with this name already exists.',
+          delete: 'Could not delete competency.',
+          deleteBadRequest: 'The competency ID is invalid.',
+          deleteNotFound: 'The competency could not be found.',
+          inUse:
+            'This competency is used by a qualification and cannot be deleted.',
+        },
+        resultCount_one: '{{count}} competency',
+        resultCount_other: '{{count}} competencies',
+        table: {
+          competency: 'Competency',
+          type: 'Type',
+          validity: 'Validity',
+          noExpiry: 'Does not expire',
+          month_one: '{{count}} month',
+          month_other: '{{count}} months',
+        },
+        types: {
+          training: 'Training',
+          license: 'License',
+          certificate: 'Certificate',
+          skill: 'Skill',
+          other: 'Other',
+        },
+        dialog: {
+          title: 'Add competency',
+          name: 'Name',
+          type: 'Type',
+          validity: 'Validity',
+          limitedTime: 'Valid for a limited time',
+          noExpiry: 'Does not expire',
+          validFor: 'Valid for',
+          month_one: 'month',
+          month_other: 'months',
+          cancel: 'Cancel',
+          add: 'Add competency',
+          adding: 'Adding...',
+        },
+        deleteDialog: {
+          title: 'Delete competency?',
+          message:
+            'Are you sure you want to delete "{{name}}"? This cannot be undone.',
+          cancel: 'Cancel',
+          confirm: 'Delete',
+          deleting: 'Deleting...',
+        },
+      },
     },
   },
   fi: {
@@ -169,10 +247,27 @@ const resources = {
       },
       common: {
         critical: 'Kriittinen',
+        loadingSeedUsers: 'Haetaan käyttäjiä…',
+        unknownUser: 'Tuntematon käyttäjä',
+        errors: {
+          loadSeedUsers: 'Käyttäjien lataaminen epäonnistui.',
+          seedUsersNotFound: 'Käyttäjiä ei löytynyt.',
+          roleUserNotFound: 'Valitulle roolille ei löytynyt käyttäjää.',
+        },
+      },
+      pages: {
+        notFound: 'Sivua ei löytynyt',
       },
       employeeOverview: {
         title: 'Työntekijän yleisnäkymä',
         viewAllDetails: 'Näytä kaikki tiedot',
+        loading: 'Ladataan työntekijän yleisnäkymää…',
+        errors: {
+          load: 'Työntekijän yleisnäkymän lataaminen epäonnistui.',
+          badRequest:
+            'Työntekijän yleisnäkymää koskeva pyyntö oli virheellinen.',
+          notFound: 'Työntekijän yleisnäkymän tietoja ei löytynyt.',
+        },
         summary: {
           invalid: {
             title: 'Ei voimassa',
@@ -225,6 +320,7 @@ const resources = {
             uploadRenewalCertificate: 'Lataa uusimistodistus',
           },
           noRenewalPlanned: 'Uusimista ei ole suunniteltu',
+          renewalPlanned: 'Uusiminen suunniteltu {{date}}',
         },
       },
       supervisorOverview: {
@@ -276,6 +372,67 @@ const resources = {
           title: 'Pikatoiminnot',
           addCompetence: 'Lisää osaaminen',
           addQualification: 'Lisää kelpoisuus',
+        },
+      },
+      adminCompetencies: {
+        title: 'Osaamiset',
+        description: 'Hallinnoi osaamisia',
+        addButton: 'Lisää osaaminen',
+        searchLabel: 'Hae osaamisia',
+        loading: 'Ladataan osaamisia...',
+        errors: {
+          load: 'Osaamisten lataaminen epäonnistui.',
+          badRequest: 'Osaamispyyntö oli virheellinen.',
+          notFound: 'Osaamisia ei löytynyt.',
+          validation:
+            'Täytä nimi ja tyyppi. Määräaikaisen voimassaolon on oltava vähintään kuukausi.',
+          create: 'Osaamisen lisääminen epäonnistui.',
+          createBadRequest: 'Osaamisen tiedot olivat virheelliset.',
+          conflict: 'Samanniminen osaaminen on jo olemassa.',
+          delete: 'Osaamisen poistaminen epäonnistui.',
+          deleteBadRequest: 'Osaamisen tunniste oli virheellinen.',
+          deleteNotFound: 'Osaamista ei löytynyt.',
+          inUse:
+            'Osaaminen on käytössä kelpoisuusvaatimuksessa, eikä sitä voi poistaa.',
+        },
+        resultCount_one: '{{count}} osaaminen',
+        resultCount_other: '{{count}} osaamista',
+        table: {
+          competency: 'Osaaminen',
+          type: 'Tyyppi',
+          validity: 'Voimassaolo',
+          noExpiry: 'Ei vanhene',
+          month_one: '{{count}} kuukausi',
+          month_other: '{{count}} kuukautta',
+        },
+        types: {
+          training: 'Koulutus',
+          license: 'Lisenssi',
+          certificate: 'Sertifikaatti',
+          skill: 'Taito',
+          other: 'Muu',
+        },
+        dialog: {
+          title: 'Lisää osaaminen',
+          name: 'Nimi',
+          type: 'Tyyppi',
+          validity: 'Voimassaolo',
+          limitedTime: 'Voimassa määräajan',
+          noExpiry: 'Ei vanhene',
+          validFor: 'Voimassa',
+          month_one: 'kuukausi',
+          month_other: 'kuukautta',
+          cancel: 'Peruuta',
+          add: 'Lisää osaaminen',
+          adding: 'Lisätään...',
+        },
+        deleteDialog: {
+          title: 'Poistetaanko osaaminen?',
+          message:
+            'Haluatko varmasti poistaa osaamisen "{{name}}"? Tätä toimintoa ei voi perua.',
+          cancel: 'Peruuta',
+          confirm: 'Poista',
+          deleting: 'Poistetaan...',
         },
       },
     },

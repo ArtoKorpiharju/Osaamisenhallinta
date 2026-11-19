@@ -138,7 +138,7 @@ export default function TopBar({
           ></Avatar>
           <Box sx={{ textAlign: 'left' }}>
             <Typography sx={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2 }}>
-              {userName ?? 'Unknown User'}
+              {userName ?? t('common.unknownUser')}
             </Typography>
             <Typography
               sx={{ fontSize: 10, color: 'text.secondary', lineHeight: 1.2 }}

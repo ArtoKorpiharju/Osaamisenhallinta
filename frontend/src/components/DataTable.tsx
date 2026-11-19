@@ -6,6 +6,7 @@ import {
   type GridRowParams,
   type GridValidRowModel,
 } from '@mui/x-data-grid'
+import { tones } from '../config/tones'
 
 export interface DataTableColumn<T extends GridValidRowModel> {
   id: string
@@ -53,8 +54,8 @@ function DataTable<T extends GridValidRowModel>({
           component="h2"
           variant="h6"
           sx={{
-            backgroundColor: '#e6eef5',
-            color: '#5f6368',
+            backgroundColor: tones.info.background,
+            color: tones.info.main,
             fontWeight: 700,
             paddingX: 3,
             paddingY: 2,

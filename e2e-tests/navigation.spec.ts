@@ -46,7 +46,7 @@ test("admin navigation opens each page", async ({ page }) => {
 
   for (const [label, heading] of [
     ["Qualifications", "Admin Qualifications"],
-    ["Competencies", "Admin Competencies"],
+    ["Competencies", "Competencies"],
   ]) {
     await page.getByRole("link", { name: label }).click();
     await expect(page).toHaveURL(`/admin/${label.toLowerCase()}`);

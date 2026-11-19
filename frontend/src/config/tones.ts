@@ -22,3 +22,5 @@ export const tones: Record<Tone, ToneColors> = {
   star: { main: '#ffee00', text: '#000000', background: '#ffee00' },
   criticalBadge: { main: '#c9a227', text: '#8a6d00', background: '#fdf3c8' },
 }
+
+export const headerBackground = '#e6eef5'
