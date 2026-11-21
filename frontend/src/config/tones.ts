@@ -22,3 +22,14 @@ export const tones: Record<Tone, ToneColors> = {
   star: { main: '#ffee00', text: '#000000', background: '#ffee00' },
   criticalBadge: { main: '#c9a227', text: '#8a6d00', background: '#fdf3c8' },
 }
+
+export const qualificationFormColors = {
+  panel: '#f9f9fc',
+  fieldGroup: '#e5e9f1',
+  tableHeader: '#d4dcea',
+  input: '#f4f4f4',
+  outline: tones.info.main,
+  requiredMark: tones.danger.main,
+} as const
+
+export const qualificationListHeaderBackground = '#e4edf5'

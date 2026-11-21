@@ -145,6 +145,33 @@ const resources = {
   fi: {
     translation: {
       appName: 'Osaamisenhallinta',
+      adminQualifications: {
+        description: 'Hallitse kelpoisuuksia ja niiden osaamisvaatimuksia.',
+        loadError: 'Kelpoisuuksien lataaminen epäonnistui.',
+        loading: 'Ladataan kelpoisuuksia…',
+        empty: 'Kelpoisuuksia ei löytynyt.',
+        search: 'Hae kelpoisuuksia',
+        totalCount: 'Kelpoisuuksia yhteensä: {{total}}',
+        noSearchResults: 'Hakua vastaavia kelpoisuuksia ei löytynyt.',
+        addButton: '+ Lisää uusi kelpoisuus',
+        columns: {
+          name: 'Kelpoisuus',
+          requiredCompetencies: 'Vaaditut osaamiset',
+        },
+        backToList: '← Takaisin kelpoisuuksiin',
+        addTitle: 'Lisää kelpoisuus',
+        addDescription: 'Määritä kelpoisuuden nimi.',
+        details: 'Kelpoisuuden tiedot',
+        name: 'Nimi',
+        requiredCompetencies: 'Vaaditut osaamiset',
+        searchCompetencies: 'Lisää vaadittu osaaminen',
+        requirementsDescription:
+          'Kaikkien alla olevien osaamisten on oltava voimassa, jotta kelpoisuus myönnetään automaattisesti.',
+        competencyLoadError: 'Osaamisten lataaminen epäonnistui.',
+        removeCompetency: 'Poista {{name}}',
+        competencyColumn: 'Osaaminen',
+        cancel: 'Peruuta',
+        },
       languages: {
         english: 'Englanti',
         finnish: 'Suomi',
