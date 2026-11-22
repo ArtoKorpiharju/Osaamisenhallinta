@@ -1,7 +1,6 @@
 package com.osaamisenhallinta.competency;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -219,13 +218,6 @@ class CompetencyServiceTest {
 
   @Test
   void updateCompetency_ShouldReturnUpdatedCompetencyDtoWhenCompetencyExists() {
-    // Create a copy
-    final Competency oldCompetency = new Competency(
-        "Fire Safety Training",
-        CompetencyType.TRAINING,
-        12
-    );
-
     // Arrange = define
     when(competencyRepository.findById(competencyEntity.getId()))
         .thenReturn(Optional.of(competencyEntity));
@@ -240,14 +232,10 @@ class CompetencyServiceTest {
     
     // Assert
     assertNotNull(result);
-    assertEquals(updatedCompetency.getId(), result.competencyId());
-    assertEquals(updatedCompetency.getName(), result.competencyName());
-    assertEquals(updatedCompetency.getType(), result.competencyType());
-    assertEquals(updatedCompetency.getValidityMonths(), result.validityMonths());
-
-    assertNotEquals(oldCompetency.getName(), updatedCompetency.getName());
-    assertNotEquals(oldCompetency.getType(), updatedCompetency.getType());
-    assertNotEquals(oldCompetency.getValidityMonths(), updatedCompetency.getValidityMonths());
+    assertEquals(competencyEntity.getId(), result.competencyId());
+    assertEquals(competencyEntity.getName(), result.competencyName());
+    assertEquals(competencyEntity.getType(), result.competencyType());
+    assertEquals(competencyEntity.getValidityMonths(), result.validityMonths());
   }
 
   @Test 

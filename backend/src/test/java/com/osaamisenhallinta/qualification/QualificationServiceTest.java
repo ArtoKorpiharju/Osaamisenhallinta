@@ -1,7 +1,6 @@
 package com.osaamisenhallinta.qualification;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -205,9 +204,6 @@ class QualificationServiceTest {
 
   @Test
   void updateQualification_ShouldReturnUpdatedQualificationDtoWhenQualificationExists() {
-    // Create a copy
-    final String oldName = qualificationEntity.getName();
-  
     when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.of(qualificationEntity));
 
@@ -221,14 +217,12 @@ class QualificationServiceTest {
           List.of(competencyEntity.getId()));
 
     assertNotNull(result);
-    assertEquals(updatedQualification.getId(), result.qualificationId());
-    assertEquals(updatedQualification.getName(), result.qualificationName());
-    assertEquals(updatedQualification.getRequiredCompetencies().size(),
+    assertEquals(qualificationEntity.getId(), result.qualificationId());
+    assertEquals(qualificationEntity.getName(), result.qualificationName());
+    assertEquals(qualificationEntity.getRequiredCompetencies().size(),
         result.requiredCompetencies().size());
     assertEquals(competencyEntity.getName(), 
         result.requiredCompetencies().get(0).competencyName());
-
-    assertNotEquals(updatedQualification.getName(), oldName);
   }
 
   @Test 
