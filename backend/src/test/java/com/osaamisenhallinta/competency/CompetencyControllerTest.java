@@ -444,4 +444,34 @@ class CompetencyControllerTest {
         updatedDto.competencyType(), 
         updatedDto.validityMonths());
   }
+
+  @Test 
+  void updateCompetency_ShouldReturnConflictWhenCompetencyUnderThisNameExists() throws Exception {
+    String duplicateName = "First Aid Training";
+
+    when(competencyService.updateCompetency(
+        competencyDto.competencyId(),
+        duplicateName, 
+        updatedDto.competencyType(),
+        updatedDto.validityMonths()))
+        .thenThrow(new ResponseStatusException(
+          HttpStatus.CONFLICT, "Competency under this name already exists"));
+
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "First Aid Training",
+                "type": "OTHER",
+                "validityMonths": 14
+            }
+            """))
+        .andExpect(status().isConflict());
+
+    verify(competencyService).updateCompetency(
+        competencyDto.competencyId(),
+        duplicateName, 
+        updatedDto.competencyType(), 
+        updatedDto.validityMonths());
+  }
 }

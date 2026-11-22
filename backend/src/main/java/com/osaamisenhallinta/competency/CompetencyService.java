@@ -104,7 +104,8 @@ public class CompetencyService {
    * @param type The type of the competency.
    * @param validityMonths How long the competency is valid for.
    * @return A CompetencyDto containing updated competency details.
-   * @throws ResponseStatusException if the competency is not found.
+   * @throws ResponseStatusException if the competency is not found, 
+   *      or the competency under this name already exists.
    */
   @Transactional 
   public CompetencyDto updateCompetency(Long id, 
@@ -114,6 +115,13 @@ public class CompetencyService {
             .findById(id)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
+
+    // See if competency under this name already exists (name must be unique)
+    if (!name.equals(competency.getName())
+        && competencyRepository.existsByName(name)) {
+      throw new ResponseStatusException(
+        HttpStatus.CONFLICT, "Competency under this name already exists");
+    }
 
     competency.updateDetails(name, type, validityMonths);
     return mapToDto(competency);

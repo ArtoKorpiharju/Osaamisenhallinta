@@ -1,6 +1,7 @@
 package com.osaamisenhallinta.qualification;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -203,7 +204,10 @@ class QualificationServiceTest {
   }
 
   @Test
-  void updateQualification_ShouldReturnQualificationDtoWhenQualificationExists() {
+  void updateQualification_ShouldReturnUpdatedQualificationDtoWhenQualificationExists() {
+    // Create a copy
+    final String oldName = qualificationEntity.getName();
+  
     when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.of(qualificationEntity));
 
@@ -223,6 +227,8 @@ class QualificationServiceTest {
         result.requiredCompetencies().size());
     assertEquals(competencyEntity.getName(), 
         result.requiredCompetencies().get(0).competencyName());
+
+    assertNotEquals(updatedQualification.getName(), oldName);
   }
 
   @Test 
@@ -255,5 +261,28 @@ class QualificationServiceTest {
 
     assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     verify(qualificationRepository, never()).save(any(Qualification.class));
+  }
+
+  @Test 
+  void updateQualification_ShouldBubbleUpExceptionWhenQualificationUnderThisNameExists() {
+    String duplicateName = "First Aid Responder";
+
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
+
+    when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
+        .thenReturn(List.of(competencyEntity));
+
+    when(qualificationRepository.existsByName(duplicateName))
+        .thenReturn(true);
+
+    ResponseStatusException response = assertThrows(ResponseStatusException.class, 
+        () -> qualificationService.updateQualification(
+          qualificationEntity.getId(),
+          duplicateName,
+          List.of(competencyEntity.getId()))
+    );
+
+    assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
   }
 }

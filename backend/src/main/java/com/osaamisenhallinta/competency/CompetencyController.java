@@ -109,6 +109,10 @@ public class CompetencyController {
         @ApiResponse(
             responseCode = "404",
             description = "Competency not found",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Competency under this name already exists",
             content = @Content)
       })
   @PutMapping("/{id}")

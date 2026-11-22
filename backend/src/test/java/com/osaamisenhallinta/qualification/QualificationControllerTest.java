@@ -506,4 +506,31 @@ class QualificationControllerTest {
         updatedDto.qualificationName(),
         List.of(competencyDto.competencyId()));
   }
+
+  @Test 
+  void updateQualification_ShouldReturnConflictWhenQualificationUnderThisNameExists() 
+      throws Exception {
+    String duplicateName = "First Aid Responder";
+    when(qualificationService.updateQualification(
+        qualificationDto.qualificationId(),
+        duplicateName,
+        List.of(competencyDto.competencyId())))
+        .thenThrow(new ResponseStatusException(
+          HttpStatus.CONFLICT, "Qualification under this name already exists"));
+
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "First Aid Responder",
+                "requiredCompetenciesIds": [1]
+            }
+            """))
+        .andExpect(status().isConflict());
+
+    verify(qualificationService).updateQualification(
+        qualificationDto.qualificationId(),
+        duplicateName,
+        List.of(competencyDto.competencyId()));
+  }
 }

@@ -105,7 +105,8 @@ public class QualificationService {
    * @param name The name of the qualification.
    * @param requiredCompetenciesIds A list of IDs of the required competencies.
    * @return A QualificationDTO containing updated qualification details.
-   * @throws ResponseStatusException if the qualification is not found.
+   * @throws ResponseStatusException if the qualification is not found,
+   *      or the qualification under this name already exists.
    */
   @Transactional
   public QualificationDto updateQualification(
@@ -117,6 +118,14 @@ public class QualificationService {
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
 
     Set<Competency> requiredCompetencies = findRequiredCompetencies(requiredCompetenciesIds);
+
+    // See if qualification under this name already exists (name must be unique)
+    if (!name.equals(qualification.getName()) 
+        && qualificationRepository.existsByName(name)) {
+      throw new ResponseStatusException(
+        HttpStatus.CONFLICT, "Qualification under the name already exists");
+    }
+
     qualification.updateDetails(name, requiredCompetencies);
     return mapToDto(qualification);
   }

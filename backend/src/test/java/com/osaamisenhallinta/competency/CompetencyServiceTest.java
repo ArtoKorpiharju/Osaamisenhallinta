@@ -1,6 +1,7 @@
 package com.osaamisenhallinta.competency;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -217,7 +218,14 @@ class CompetencyServiceTest {
   }
 
   @Test
-  void updateCompetency_ShouldReturnCompetencyDtoWhenCompetencyExists() {
+  void updateCompetency_ShouldReturnUpdatedCompetencyDtoWhenCompetencyExists() {
+    // Create a copy
+    final Competency oldCompetency = new Competency(
+        "Fire Safety Training",
+        CompetencyType.TRAINING,
+        12
+    );
+
     // Arrange = define
     when(competencyRepository.findById(competencyEntity.getId()))
         .thenReturn(Optional.of(competencyEntity));
@@ -236,6 +244,10 @@ class CompetencyServiceTest {
     assertEquals(updatedCompetency.getName(), result.competencyName());
     assertEquals(updatedCompetency.getType(), result.competencyType());
     assertEquals(updatedCompetency.getValidityMonths(), result.validityMonths());
+
+    assertNotEquals(oldCompetency.getName(), updatedCompetency.getName());
+    assertNotEquals(oldCompetency.getType(), updatedCompetency.getType());
+    assertNotEquals(oldCompetency.getValidityMonths(), updatedCompetency.getValidityMonths());
   }
 
   @Test 
@@ -254,5 +266,26 @@ class CompetencyServiceTest {
     );
 
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+  }
+
+  @Test 
+  void updateCompetency_ShouldBubbleUpExceptionWhenCompetencyUnderThisNameExists() {
+    String duplicateName = "First Aid Training";
+
+    when(competencyRepository.findById(competencyEntity.getId()))
+        .thenReturn(Optional.of(competencyEntity));
+
+    when(competencyRepository.existsByName(duplicateName))
+        .thenReturn(true);
+
+    ResponseStatusException response = assertThrows(ResponseStatusException.class, 
+        () -> competencyService.updateCompetency(
+          competencyEntity.getId(),
+          duplicateName,
+          updatedCompetency.getType(),
+          updatedCompetency.getValidityMonths())
+    );
+
+    assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
   }
 }

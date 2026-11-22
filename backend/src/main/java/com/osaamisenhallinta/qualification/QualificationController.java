@@ -118,6 +118,10 @@ public class QualificationController {
         @ApiResponse(
             responseCode = "404",
             description = "Qualification not found; One or more competencies not found",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Qualification under this name already exists",
             content = @Content)
       })
   @PutMapping("/{id}")
