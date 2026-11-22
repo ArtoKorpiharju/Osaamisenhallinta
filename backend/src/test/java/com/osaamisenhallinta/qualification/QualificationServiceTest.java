@@ -40,10 +40,23 @@ class QualificationServiceTest {
       12
   );
 
+  private Competency competencyEntity2 = TestDataFactory.competencyWithId(
+      2L,
+      "Fire Aid Training",
+      CompetencyType.TRAINING,
+      null
+  );
+
   private Qualification qualificationEntity = TestDataFactory.qualificationWithId(
       1L,
       "Warehouse Operator",
       Set.of(competencyEntity)
+  );
+
+  private Qualification updatedQualification = TestDataFactory.qualificationWithId(
+      1L,
+      "New name",
+      Set.of(competencyEntity, competencyEntity2)
   );
 
   @Mock private EmployeeQualificationRepository employeeQualificationRepository;
@@ -119,8 +132,10 @@ class QualificationServiceTest {
   void createQualification_ShouldReturnQualificationDtoWhenQualificationCreated() {
     when(qualificationRepository.existsByName(qualificationEntity.getName()))
         .thenReturn(false);
+
     when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
         .thenReturn(List.of(competencyEntity));
+
     when(qualificationRepository.save(any(Qualification.class)))
         .thenReturn(qualificationEntity);
 
@@ -192,5 +207,94 @@ class QualificationServiceTest {
 
     verify(employeeQualificationRepository).deleteByQualificationId(qualificationEntity.getId());
     verify(qualificationRepository).delete(qualificationEntity);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnUpdatedQualificationDtoWhenQualificationExists() {
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
+
+    when(competencyRepository.findAllById(
+      Set.of(competencyEntity.getId(), competencyEntity2.getId())))
+        .thenReturn(List.of(competencyEntity, competencyEntity2));
+
+    QualificationDto result = qualificationService
+        .updateQualification(
+          qualificationEntity.getId(),
+          updatedQualification.getName(),
+          List.of(competencyEntity.getId(), competencyEntity2.getId()));
+
+    assertNotNull(result);
+
+    // Original entity (qualificationEntity) is identical to updatedQualification
+    assertEquals(qualificationEntity.getId(), updatedQualification.getId());
+    assertEquals(qualificationEntity.getName(), updatedQualification.getName());
+    assertEquals(qualificationEntity.getRequiredCompetencies().size(),
+        updatedQualification.getRequiredCompetencies().size());
+
+    // Results are identical to updated qualification (function returns correct values)
+    assertEquals(qualificationEntity.getId(), result.qualificationId());
+    assertEquals(qualificationEntity.getName(), result.qualificationName());
+    assertEquals(qualificationEntity.getRequiredCompetencies().size(),
+        result.requiredCompetencies().size());
+  }
+
+  @Test 
+  void updateQualification_ShouldBubbleUpExceptionWhenQualificationNotFound() {
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.empty());
+
+    ResponseStatusException result = assertThrows(ResponseStatusException.class,
+        () -> qualificationService.updateQualification(
+          qualificationEntity.getId(),
+          updatedQualification.getName(),
+          List.of(competencyEntity.getId(), competencyEntity2.getId())));
+      
+    assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+    verify(qualificationRepository, never()).save(any(Qualification.class));
+  }
+
+  @Test
+  void updateQualification_ShouldBubbleUpWhenSomeRequiredCompetenciesMissing() {
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
+
+    when(competencyRepository.findAllById(
+      Set.of(competencyEntity.getId(), competencyEntity2.getId())))
+        .thenReturn(List.of(competencyEntity));
+
+    ResponseStatusException result = assertThrows(ResponseStatusException.class,
+        () -> qualificationService.updateQualification(
+          qualificationEntity.getId(),
+          updatedQualification.getName(),
+          List.of(competencyEntity.getId(), competencyEntity2.getId())));
+
+    assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+    verify(qualificationRepository, never()).save(any(Qualification.class));
+  }
+
+  @Test 
+  void updateQualification_ShouldBubbleUpExceptionWhenQualificationUnderThisNameExists() {
+    String duplicateName = "First Aid Responder";
+
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
+
+    when(competencyRepository.findAllById(
+      Set.of(competencyEntity.getId(), competencyEntity2.getId())))
+        .thenReturn(List.of(competencyEntity, competencyEntity2));
+
+    when(qualificationRepository.existsByName(duplicateName))
+        .thenReturn(true);
+
+    ResponseStatusException response = assertThrows(ResponseStatusException.class, 
+        () -> qualificationService.updateQualification(
+          qualificationEntity.getId(),
+          duplicateName,
+          List.of(competencyEntity.getId(), competencyEntity2.getId()))
+    );
+
+    assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    verify(qualificationRepository, never()).save(any(Qualification.class));
   }
 }
