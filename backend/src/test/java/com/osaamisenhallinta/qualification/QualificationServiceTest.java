@@ -40,6 +40,13 @@ class QualificationServiceTest {
       12
   );
 
+  private Competency competencyEntity2 = TestDataFactory.competencyWithId(
+      2L,
+      "Fire Aid Training",
+      CompetencyType.TRAINING,
+      null
+  );
+
   private Qualification qualificationEntity = TestDataFactory.qualificationWithId(
       1L,
       "Warehouse Operator",
@@ -49,7 +56,7 @@ class QualificationServiceTest {
   private Qualification updatedQualification = TestDataFactory.qualificationWithId(
       1L,
       "New name",
-      Set.of(competencyEntity)
+      Set.of(competencyEntity, competencyEntity2)
   );
 
   @Mock private EmployeeQualificationRepository employeeQualificationRepository;
@@ -207,22 +214,29 @@ class QualificationServiceTest {
     when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.of(qualificationEntity));
 
-    when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
-        .thenReturn(List.of(competencyEntity));
+    when(competencyRepository.findAllById(
+      Set.of(competencyEntity.getId(), competencyEntity2.getId())))
+        .thenReturn(List.of(competencyEntity, competencyEntity2));
 
     QualificationDto result = qualificationService
         .updateQualification(
           qualificationEntity.getId(),
           updatedQualification.getName(),
-          List.of(competencyEntity.getId()));
+          List.of(competencyEntity.getId(), competencyEntity2.getId()));
 
     assertNotNull(result);
+
+    // Original entity (qualificationEntity) is identical to updatedQualification
+    assertEquals(qualificationEntity.getId(), updatedQualification.getId());
+    assertEquals(qualificationEntity.getName(), updatedQualification.getName());
+    assertEquals(qualificationEntity.getRequiredCompetencies().size(),
+        updatedQualification.getRequiredCompetencies().size());
+
+    // Results are identical to updated qualification (function returns correct values)
     assertEquals(qualificationEntity.getId(), result.qualificationId());
     assertEquals(qualificationEntity.getName(), result.qualificationName());
     assertEquals(qualificationEntity.getRequiredCompetencies().size(),
         result.requiredCompetencies().size());
-    assertEquals(competencyEntity.getName(), 
-        result.requiredCompetencies().get(0).competencyName());
   }
 
   @Test 
@@ -234,9 +248,10 @@ class QualificationServiceTest {
         () -> qualificationService.updateQualification(
           qualificationEntity.getId(),
           updatedQualification.getName(),
-          List.of(competencyEntity.getId())));
+          List.of(competencyEntity.getId(), competencyEntity2.getId())));
       
     assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+    verify(qualificationRepository, never()).save(any(Qualification.class));
   }
 
   @Test
@@ -244,14 +259,15 @@ class QualificationServiceTest {
     when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.of(qualificationEntity));
 
-    when(competencyRepository.findAllById(Set.of(competencyEntity.getId(), testCompetencyId)))
+    when(competencyRepository.findAllById(
+      Set.of(competencyEntity.getId(), competencyEntity2.getId())))
         .thenReturn(List.of(competencyEntity));
 
     ResponseStatusException result = assertThrows(ResponseStatusException.class,
         () -> qualificationService.updateQualification(
           qualificationEntity.getId(),
           updatedQualification.getName(),
-          List.of(competencyEntity.getId(), testCompetencyId)));
+          List.of(competencyEntity.getId(), competencyEntity2.getId())));
 
     assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     verify(qualificationRepository, never()).save(any(Qualification.class));
@@ -264,8 +280,9 @@ class QualificationServiceTest {
     when(qualificationRepository.findById(qualificationEntity.getId()))
         .thenReturn(Optional.of(qualificationEntity));
 
-    when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
-        .thenReturn(List.of(competencyEntity));
+    when(competencyRepository.findAllById(
+      Set.of(competencyEntity.getId(), competencyEntity2.getId())))
+        .thenReturn(List.of(competencyEntity, competencyEntity2));
 
     when(qualificationRepository.existsByName(duplicateName))
         .thenReturn(true);
@@ -274,9 +291,10 @@ class QualificationServiceTest {
         () -> qualificationService.updateQualification(
           qualificationEntity.getId(),
           duplicateName,
-          List.of(competencyEntity.getId()))
+          List.of(competencyEntity.getId(), competencyEntity2.getId()))
     );
 
     assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    verify(qualificationRepository, never()).save(any(Qualification.class));
   }
 }

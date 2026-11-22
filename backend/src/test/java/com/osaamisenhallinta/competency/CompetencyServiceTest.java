@@ -230,8 +230,15 @@ class CompetencyServiceTest {
         updatedCompetency.getValidityMonths()
     );
     
-    // Assert
     assertNotNull(result);
+
+    // Original entity (competencyEntity) is identical to updatedCompetency
+    assertEquals(competencyEntity.getId(), updatedCompetency.getId());
+    assertEquals(competencyEntity.getName(), updatedCompetency.getName());
+    assertEquals(competencyEntity.getType(), updatedCompetency.getType());
+    assertEquals(competencyEntity.getValidityMonths(), updatedCompetency.getValidityMonths());
+    
+    // Results are identical to updated competency (function returns correct values)
     assertEquals(competencyEntity.getId(), result.competencyId());
     assertEquals(competencyEntity.getName(), result.competencyName());
     assertEquals(competencyEntity.getType(), result.competencyType());
