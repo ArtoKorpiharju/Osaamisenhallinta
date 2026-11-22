@@ -19,7 +19,7 @@ public final class TestDataFactory {
     return competency;
   }
 
-  /** Constructor with id for competency.  */
+  /** Constructor with id for qualification.  */
   public static Qualification qualificationWithId(
       Long id, String name, Set<Competency> requiredCompetencies) {
     Qualification qualification = new Qualification(name, requiredCompetencies);

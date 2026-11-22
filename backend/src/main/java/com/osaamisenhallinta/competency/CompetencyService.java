@@ -97,6 +97,28 @@ public class CompetencyService {
   }
 
   /**
+   * Updates the target competency, or throws an exception if not found.
+   *
+   * @param id The ID of the competency to update.
+   * @param name The name of the competency.
+   * @param type The type of the competency.
+   * @param validityMonths How long the competency is valid for.
+   * @throws ResponseStatusException if the competency is not found.
+   */
+  @Transactional 
+  public CompetencyDto updateCompetency(Long id, 
+      String name, CompetencyType type, Integer validityMonths) {
+    final Competency competency =
+        competencyRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competency not found"));
+
+    competency.updateDetails(name, type, validityMonths);
+    return mapToDto(competency);
+  }
+
+  /**
    * Maps a competency entity to a DTO.
    *
    * @param id The ID of the competency.

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +36,13 @@ class CompetencyControllerTest {
       12
   );
 
+  private CompetencyDto updatedDto = new CompetencyDto(
+        competencyDto.competencyId(), 
+        "New name", 
+        CompetencyType.OTHER, 
+        14
+  );
+  
   @Test 
   void getCompetencyById_ShouldReturnOkAndCompetencyDtoWhenSuccessful() throws Exception {
     when(competencyService.getCompetencyById(competencyDto.competencyId()))
@@ -287,5 +295,153 @@ class CompetencyControllerTest {
         .andExpect(status().isConflict());
 
     verify(competencyService).deleteCompetency(competencyDto.competencyId());
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnOkAndCompetencyDtoWhenSuccessful() throws Exception {
+    when(competencyService.updateCompetency(
+        competencyDto.competencyId(),
+        updatedDto.competencyName(), 
+        updatedDto.competencyType(), 
+        updatedDto.validityMonths()))
+        .thenReturn(updatedDto);
+
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "New name",
+                "type": "OTHER",
+                "validityMonths": 14
+            }
+            """))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.competencyId").value(updatedDto.competencyId()))
+        .andExpect(jsonPath("$.competencyName").value(updatedDto.competencyName()))
+        .andExpect(jsonPath("$.competencyType").value(updatedDto.competencyType().name()))
+        .andExpect(jsonPath("$.validityMonths").value(updatedDto.validityMonths()));
+
+    verify(competencyService).updateCompetency(
+        competencyDto.competencyId(),
+        updatedDto.competencyName(), 
+        updatedDto.competencyType(), 
+        updatedDto.validityMonths());
+  }
+
+  @Test 
+  void updateCompetency_ShouldReturnBadRequestWhenIdInvalid() throws Exception {
+    mockMvc.perform(put("/api/competencies/abc"))
+        .andExpect(status().isBadRequest());
+    
+    verifyNoInteractions(competencyService);
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnBadRequestWhenNameMissing() throws Exception {
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "",
+                "type": "TRAINING",
+                "validityMonths": 12
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(competencyService);
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnBadRequestWhenNameLongerThan255Characters() throws Exception {
+    String longName = "A".repeat(256);
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "%s",
+                "type": "TRAINING",
+                "validityMonths": 12
+            }
+            """.formatted(longName)))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(competencyService);
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnBadRequestWhenCompetencyTypeNull() throws Exception {
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Fire Safety Training",
+                "type": null,
+                "validityMonths": 12
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(competencyService);
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnBadRequestWhenValidityMonthsLessThanOne() throws Exception {
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Fire Safety Training",
+                "type": "TRAINING",
+                "validityMonths": 0
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(competencyService);
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnBadRequestWhenJsonMalformed() throws Exception {
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Fire Safety Training,
+                "type": "TRAINING",
+                "validityMonths": 12
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(competencyService);
+  }
+
+  @Test 
+  void updateCompetency_ShouldReturnNotFoundWhenCompetencyDoesNotExist() throws Exception {
+    when(competencyService.updateCompetency(
+        competencyDto.competencyId(),
+        updatedDto.competencyName(), 
+        updatedDto.competencyType(),
+        updatedDto.validityMonths()))
+        .thenThrow(new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Competency not found"));
+
+    mockMvc.perform(put("/api/competencies/{id}", competencyDto.competencyId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "New name",
+                "type": "OTHER",
+                "validityMonths": 14
+            }
+            """))
+        .andExpect(status().isNotFound());
+
+    verify(competencyService).updateCompetency(
+        competencyDto.competencyId(),
+        updatedDto.competencyName(), 
+        updatedDto.competencyType(), 
+        updatedDto.validityMonths());
   }
 }

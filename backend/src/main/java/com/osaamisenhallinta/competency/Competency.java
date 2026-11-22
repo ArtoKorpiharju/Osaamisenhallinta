@@ -48,6 +48,11 @@ public class Competency {
 
   /** A constructor for creating a new competency. */
   public Competency(String name, CompetencyType type, Integer validityMonths) {
+    updateDetails(name, type, validityMonths);
+  }
+
+  /** Updating an existing competency. */
+  public void updateDetails(String name, CompetencyType type, Integer validityMonths) {
     this.name = name;
     this.type = type;
     this.validityMonths = validityMonths;

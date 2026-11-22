@@ -37,6 +37,14 @@ class CompetencyServiceTest {
       12
   );
 
+  private Competency updatedCompetency = TestDataFactory.competencyWithId(
+      1L,
+      "New name",
+      CompetencyType.OTHER,
+      14
+  );
+
+
   @Mock private RenewalPlanRepository renewalPlanRepository;
 
   @Mock private EmployeeCompetencyRepository employeeCompetencyRepository;
@@ -206,5 +214,45 @@ class CompetencyServiceTest {
     verify(renewalPlanRepository).deleteByCompetencyId(competencyEntity.getId());
     verify(employeeCompetencyRepository).deleteByCompetencyId(competencyEntity.getId());
     verify(competencyRepository).delete(competencyEntity);
+  }
+
+  @Test
+  void updateCompetency_ShouldReturnCompetencyDtoWhenCompetencyExists() {
+    // Arrange = define
+    when(competencyRepository.findById(competencyEntity.getId()))
+        .thenReturn(Optional.of(competencyEntity));
+
+    // Act
+    CompetencyDto result = competencyService.updateCompetency(
+        competencyEntity.getId(),
+        updatedCompetency.getName(),
+        updatedCompetency.getType(),
+        updatedCompetency.getValidityMonths()
+    );
+    
+    // Assert
+    assertNotNull(result);
+    assertEquals(updatedCompetency.getId(), result.competencyId());
+    assertEquals(updatedCompetency.getName(), result.competencyName());
+    assertEquals(updatedCompetency.getType(), result.competencyType());
+    assertEquals(updatedCompetency.getValidityMonths(), result.validityMonths());
+  }
+
+  @Test 
+  void updateCompetency_ShouldBubbleUpExceptionWhenCompetencyNotFound() {
+    // Arrange = define
+    when(competencyRepository.findById(competencyEntity.getId()))
+        .thenReturn(Optional.empty());
+
+    // Assert & act
+    ResponseStatusException response = assertThrows(ResponseStatusException.class, 
+        () -> competencyService.updateCompetency(
+          competencyEntity.getId(),
+          updatedCompetency.getName(),
+          updatedCompetency.getType(),
+          updatedCompetency.getValidityMonths())
+    );
+
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 }
