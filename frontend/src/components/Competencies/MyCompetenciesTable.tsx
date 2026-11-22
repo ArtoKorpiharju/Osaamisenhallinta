@@ -2,6 +2,7 @@
 import { Box, IconButton } from '@mui/material'
 import { alpha } from '@mui/material/styles'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
+import { useTranslation } from 'react-i18next'
 
 import ExpandableTable, {type ExpandableTableColumn,} from '../ExpandableTable'
 import { tones } from '../../config/tones'
@@ -24,36 +25,38 @@ export default function MyCompetenciesTable({
   competencies,
   onRemove,
 }: MyCompetenciesTableProps) {
+  const { t } = useTranslation()
+
   const columns: ExpandableTableColumn<EmployeeCompetency>[] = [
     {
       id: 'name',
-      label: 'My Competencies',
+      label: t('competencies.table.columns.name'),
       width: '38%',
       sortValue: (c) => c.name,
       render: (c) => c.name,
     },
     {
       id: 'type',
-      label: 'Type',
+      label: t('competencies.table.columns.type'),
       width: '17%',
-      sortValue: (c) => competencyTypeLabels[c.type],
-      render: (c) => competencyTypeLabels[c.type],
+      sortValue: (c) => t(`competencies.types.${c.type}`),
+      render: (c) => t(`competencies.types.${c.type}`),
     },
     {
       id: 'status',
-      label: 'Status',
+      label: t('competencies.table.columns.status'),
       width: '17%',
       sortValue: (c) => competencyStatusOrder[c.status],
       render: (c) => (
         <StatusChip
-          label={competencyStatusDisplay[c.status].label}
+          label={t(`competencies.statuses.${c.status}`)}
           tone={competencyStatusDisplay[c.status].tone}
         />
       ),
     },
     {
       id: 'renewals',
-      label: 'Renewals',
+      label: t('competencies.table.columns.renewals'),
       align: 'center',
       width: '17%',
       sortValue: (c) => c.renewalPlan?.renewalDate,
@@ -62,9 +65,9 @@ export default function MyCompetenciesTable({
     },
     {
       id: 'validUntil',
-      label: 'Valid until',
+      label: t('competencies.table.columns.validUntil'),
       align: 'right',
-      width: '17%',
+      width: '18%',
       sortValue: (c) => c.expirationDate,
       render: (c) => (
         <Box
@@ -89,7 +92,9 @@ export default function MyCompetenciesTable({
         <IconButton
           size="small"
           disabled={c.employeeCompetencyId === null}
-          aria-label={`Remove ${c.name}`}
+          aria-label={t('competencies.table.removeAriaLabel', {
+            name: c.name,
+          })}
           onClick={(event) => {
             // Do not trigger row click.
             event.stopPropagation()
@@ -107,31 +112,28 @@ export default function MyCompetenciesTable({
   ]
 
   return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        {/* Frame around the whole table. */}
-        <Box
-          sx={{
-            border: `1px solid ${alpha(tones.info.main, 0.3)}`,
-            borderRadius: 1,
-            overflow: 'hidden',
-          }}
-        >
-          <ExpandableTable
-            ariaLabel="My competencies"
-            rows={[...competencies].sort(
-              (a, b) =>
-                competencyStatusOrder[a.status] -
-                competencyStatusOrder[b.status]
-            )}
-            columns={columns}
-            getRowId={(c) =>
-              String(
-                c.employeeCompetencyId ?? `missing-${String(c.competencyId)}`
-              )
-            }
-            emptyMessage="You have no competencies yet."
-          />
-        </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+      {/* Frame around the whole table. */}
+      <Box
+        sx={{
+          border: `1px solid ${alpha(tones.info.main, 0.3)}`,
+          borderRadius: 1,
+          overflow: 'hidden',
+        }}
+      >
+        <ExpandableTable
+          ariaLabel={t('competencies.table.ariaLabel')}
+          rows={[...competencies].sort(
+            (a, b) =>
+              competencyStatusOrder[a.status] - competencyStatusOrder[b.status]
+          )}
+          columns={columns}
+          getRowId={(c) =>
+            String(c.employeeCompetencyId ?? `missing-${String(c.competencyId)}`)
+          }
+          emptyMessage={t('competencies.table.empty')}
+        />
       </Box>
+    </Box>
   )
 }

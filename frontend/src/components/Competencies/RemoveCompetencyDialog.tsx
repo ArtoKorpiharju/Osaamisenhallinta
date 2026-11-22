@@ -1,12 +1,7 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
 import { tones } from '../../config/tones'
 
@@ -23,15 +18,19 @@ export default function RemoveCompetencyDialog({
   onConfirm,
   onCancel,
 }: RemoveCompetencyDialogProps) {
+  const { t } = useTranslation()
+
   return (
     <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth>
       <DialogTitle sx={{ typography: 'h5', textAlign: 'center', pt: 3 }}>
-        Remove Competency?
+        {t('competencies.removeDialog.title')}
       </DialogTitle>
 
       <DialogContent>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          {competencyName ?? ''} will be removed from My Competencies -list
+          {t('competencies.removeDialog.message', {
+            name: competencyName ?? '',
+          })}
         </Typography>
       </DialogContent>
 
@@ -45,7 +44,7 @@ export default function RemoveCompetencyDialog({
             bgcolor: tones.info.main,
           }}
         >
-          Poista
+          {t('competencies.removeDialog.confirm')}
         </Button>
 
         <Button
@@ -63,7 +62,7 @@ export default function RemoveCompetencyDialog({
             },
           }}
         >
-          Peruuta
+          {t('competencies.removeDialog.cancel')}
         </Button>
       </DialogActions>
     </Dialog>

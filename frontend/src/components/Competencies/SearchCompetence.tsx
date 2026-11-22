@@ -2,10 +2,10 @@ import { type ReactNode, useMemo, useState } from 'react'
 
 import { alpha } from '@mui/material/styles'
 import { Box, Chip, InputAdornment, TextField, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import SearchIcon from '@mui/icons-material/Search'
 
-import { competencyTypeLabels } from '../../config/competency'
 import { tones } from '../../config/tones'
 import {
   type CompetencyType,
@@ -34,19 +34,21 @@ export default function SearchCompetence({
   competencies,
   children,
 }: SearchCompetenceProps) {
+  const { t } = useTranslation()
+
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
 
-  // Chip counts follow the search text, so numbers match what the table shows.
+
   const matchingSearch = useMemo(() => {
     const query = search.trim().toLowerCase()
 
     return competencies.filter(
       (c) =>
         c.name.toLowerCase().includes(query) ||
-        competencyTypeLabels[c.type].toLowerCase().includes(query)
+        t(`competencies.types.${c.type}`).toLowerCase().includes(query)
     )
-  }, [competencies, search])
+  }, [competencies, search, t])
 
   const counts = useMemo(() => {
     const result: Record<CompetencyType, number> = {
@@ -73,26 +75,25 @@ export default function SearchCompetence({
   const chips: { value: TypeFilter; label: string }[] = [
     {
       value: 'all',
-      label: `All (${String(matchingSearch.length)})`,
+      label: `${t('competencies.filters.all')} (${String(matchingSearch.length)})`,
     },
     // Only show types that have at least one competence.
     ...typeOrder
       .filter((type) => counts[type] > 0)
       .map((type) => ({
         value: type,
-        label: `${competencyTypeLabels[type]} (${String(counts[type])})`,
+        label: `${t(`competencies.types.${type}`)} (${String(counts[type])})`,
       })),
   ]
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Typography sx={{ fontSize: 13 }}>
-          View and manage your training, certificates, licences and other
-          competences
-        </Typography>
+      <Typography sx={{ fontSize: 13 }}>
+        {t('competencies.my.description')}
+      </Typography>
       <TextField
         size="small"
-        placeholder="Search by name or type...."
+        placeholder={t('competencies.my.searchPlaceholder')}
         value={search}
         onChange={(event) => {
           setSearch(event.target.value)
@@ -105,7 +106,7 @@ export default function SearchCompetence({
               </InputAdornment>
             ),
           },
-          htmlInput: { 'aria-label': 'Search competences' },
+          htmlInput: { 'aria-label': t('competencies.my.searchAriaLabel') },
         }}
         sx={{ maxWidth: 480, bgcolor: 'action.hover' }}
       />
@@ -141,7 +142,7 @@ export default function SearchCompetence({
       </Box>
 
       <Typography sx={{ fontSize: 13, fontWeight: 700 }}>
-        {filtered.length} {filtered.length === 1 ? 'Competence' : 'Competences'}
+        {t('competencies.count', { count: filtered.length })}
       </Typography>
 
       {children(filtered)}
