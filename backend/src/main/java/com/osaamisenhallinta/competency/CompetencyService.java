@@ -103,6 +103,7 @@ public class CompetencyService {
    * @param name The name of the competency.
    * @param type The type of the competency.
    * @param validityMonths How long the competency is valid for.
+   * @return A CompetencyDto containing updated competency details.
    * @throws ResponseStatusException if the competency is not found.
    */
   @Transactional 

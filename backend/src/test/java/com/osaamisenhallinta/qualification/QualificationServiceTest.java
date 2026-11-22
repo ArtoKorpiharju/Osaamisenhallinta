@@ -46,6 +46,12 @@ class QualificationServiceTest {
       Set.of(competencyEntity)
   );
 
+  private Qualification updatedQualification = TestDataFactory.qualificationWithId(
+      1L,
+      "New name",
+      Set.of(competencyEntity)
+  );
+
   @Mock private EmployeeQualificationRepository employeeQualificationRepository;
 
   @Mock private CompetencyRepository competencyRepository;
@@ -119,8 +125,10 @@ class QualificationServiceTest {
   void createQualification_ShouldReturnQualificationDtoWhenQualificationCreated() {
     when(qualificationRepository.existsByName(qualificationEntity.getName()))
         .thenReturn(false);
+
     when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
         .thenReturn(List.of(competencyEntity));
+
     when(qualificationRepository.save(any(Qualification.class)))
         .thenReturn(qualificationEntity);
 
@@ -192,5 +200,60 @@ class QualificationServiceTest {
 
     verify(employeeQualificationRepository).deleteByQualificationId(qualificationEntity.getId());
     verify(qualificationRepository).delete(qualificationEntity);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnQualificationDtoWhenQualificationExists() {
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
+
+    when(competencyRepository.findAllById(Set.of(competencyEntity.getId())))
+        .thenReturn(List.of(competencyEntity));
+
+    QualificationDto result = qualificationService
+        .updateQualification(
+          qualificationEntity.getId(),
+          updatedQualification.getName(),
+          List.of(competencyEntity.getId()));
+
+    assertNotNull(result);
+    assertEquals(updatedQualification.getId(), result.qualificationId());
+    assertEquals(updatedQualification.getName(), result.qualificationName());
+    assertEquals(updatedQualification.getRequiredCompetencies().size(),
+        result.requiredCompetencies().size());
+    assertEquals(competencyEntity.getName(), 
+        result.requiredCompetencies().get(0).competencyName());
+  }
+
+  @Test 
+  void updateQualification_ShouldBubbleUpExceptionWhenQualificationNotFound() {
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.empty());
+
+    ResponseStatusException result = assertThrows(ResponseStatusException.class,
+        () -> qualificationService.updateQualification(
+          qualificationEntity.getId(),
+          updatedQualification.getName(),
+          List.of(competencyEntity.getId())));
+      
+    assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+  }
+
+  @Test
+  void updateQualification_ShouldBubbleUpWhenSomeRequiredCompetenciesMissing() {
+    when(qualificationRepository.findById(qualificationEntity.getId()))
+        .thenReturn(Optional.of(qualificationEntity));
+
+    when(competencyRepository.findAllById(Set.of(competencyEntity.getId(), testCompetencyId)))
+        .thenReturn(List.of(competencyEntity));
+
+    ResponseStatusException result = assertThrows(ResponseStatusException.class,
+        () -> qualificationService.updateQualification(
+          qualificationEntity.getId(),
+          updatedQualification.getName(),
+          List.of(competencyEntity.getId(), testCompetencyId)));
+
+    assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+    verify(qualificationRepository, never()).save(any(Qualification.class));
   }
 }

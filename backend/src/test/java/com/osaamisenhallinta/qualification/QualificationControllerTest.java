@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +39,11 @@ class QualificationControllerTest {
   private QualificationDto qualificationDto = new QualificationDto(
       1L, 
       "Warehouse Operator", 
+      List.of(competencyDto));
+
+  private QualificationDto updatedDto = new QualificationDto(
+      1L, 
+      "New name", 
       List.of(competencyDto));
 
   private final Long testCompetencyId = 999L;
@@ -318,5 +324,186 @@ class QualificationControllerTest {
         .andExpect(status().isNotFound());
 
     verify(qualificationService).deleteQualification(qualificationDto.qualificationId());
+  }
+
+  @Test
+  void updateQualification_ShouldReturnOkAndQualificationDtoWhenSuccessful() throws Exception {
+    when(qualificationService.updateQualification(
+        qualificationDto.qualificationId(),
+        updatedDto.qualificationName(),
+        List.of(competencyDto.competencyId())))
+        .thenReturn(updatedDto);
+
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "New name",
+                "requiredCompetenciesIds": [1]
+            }
+            """))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.qualificationId").value(updatedDto.qualificationId()))
+        .andExpect(jsonPath("$.qualificationName").value(updatedDto.qualificationName()))
+        .andExpect(jsonPath("$.requiredCompetencies.length()").value(1))
+        .andExpect(jsonPath("$.requiredCompetencies[0].competencyId")
+          .value(competencyDto.competencyId()));
+
+    verify(qualificationService).updateQualification(
+        qualificationDto.qualificationId(),
+        updatedDto.qualificationName(),
+        List.of(competencyDto.competencyId()));
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenIdInvalid() throws Exception {
+    mockMvc.perform(put("/api/qualifications/abc"))
+        .andExpect(status().isBadRequest());
+    
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenNameMissing() throws Exception {
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "",
+                "requiredCompetenciesIds": [1]
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenNameLongerThan255Characters() 
+      throws Exception {
+    String longName = "A".repeat(256);
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "%s",
+                "requiredCompetenciesIds": [1]
+            }
+            """.formatted(longName)))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenRequiredCompetenciesMissing() 
+      throws Exception {
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Warehouse Operator",
+                "requiredCompetenciesIds": []
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenJsonMalformed() throws Exception {
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Warehouse Operator,
+                "requiredCompetenciesIds": [1]
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenRequiredCompetencyIdNull() throws Exception {
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Warehouse Operator",
+                "requiredCompetenciesIds": [null]
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test
+  void updateQualification_ShouldReturnBadRequestWhenRequiredCompetencyIdNotUnique() 
+      throws Exception {
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "Warehouse Operator",
+                "requiredCompetenciesIds": [1, 1]
+            }
+            """))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(qualificationService);
+  }
+
+  @Test 
+  void updateQualification_ShouldReturnNotFoundWhenSomeRequiredCompetenciesNotFound() 
+      throws Exception {
+    when(qualificationService.updateQualification(
+        qualificationDto.qualificationId(),
+        updatedDto.qualificationName(),
+        List.of(competencyDto.competencyId(), testCompetencyId)))
+          .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, 
+            "Some required competencies not found"));
+
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "New name",
+                "requiredCompetenciesIds": [1, 999]
+            }
+            """))
+        .andExpect(status().isNotFound());
+
+    verify(qualificationService).updateQualification(
+        qualificationDto.qualificationId(),
+        updatedDto.qualificationName(),
+        List.of(competencyDto.competencyId(), testCompetencyId));
+  }
+
+  @Test
+  void updateQualification_ShouldReturnNotFoundWhenQualificationDoesNotExist() throws Exception {
+    when(qualificationService.updateQualification(
+        qualificationDto.qualificationId(),
+        updatedDto.qualificationName(),
+        List.of(competencyDto.competencyId())))
+        .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
+
+    mockMvc.perform(put("/api/qualifications/{id}", qualificationDto.qualificationId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+                "name": "New name",
+                "requiredCompetenciesIds": [1]
+            }
+            """))
+        .andExpect(status().isNotFound());
+     
+    verify(qualificationService).updateQualification(
+        qualificationDto.qualificationId(),
+        updatedDto.qualificationName(),
+        List.of(competencyDto.competencyId()));
   }
 }

@@ -44,6 +44,11 @@ public class Qualification {
 
   /** A constructor for creating a new qualification. */
   public Qualification(String name, Set<Competency> requiredCompetencies) {
+    updateDetails(name, requiredCompetencies);
+  }
+
+  /** Updating an existing qualification. */
+  public void updateDetails(String name, Set<Competency> requiredCompetencies) {
     this.name = name;
     this.requiredCompetencies = new HashSet<>(requiredCompetencies);
   }
