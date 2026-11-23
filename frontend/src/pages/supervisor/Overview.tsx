@@ -7,7 +7,7 @@ import PageContainer from '../../components/PageContainer'
 import GenericStatCard from '../../components/GenericStatCard'
 import InvalidAndExpiringCompetenciesTable, {
   type ExpirationItem,
-} from '../../components/invalidAndExpiringCompetenciesTable'
+} from '../../components/InvalidAndExpiringCompetenciesTable'
 
 // Temporary frontend data. Replace with backend data later.
 const expirationItems: ExpirationItem[] = [

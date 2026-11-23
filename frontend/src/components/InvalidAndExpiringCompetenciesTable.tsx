@@ -34,7 +34,7 @@ const getUrgencyStyles = (days: number) => {
   }
 }
 
-interface invalidAndExpiringCompetenciesTableProps {
+interface InvalidAndExpiringCompetenciesTableProps {
   items: ExpirationItem[]
   onItemClick?: (item: ExpirationItem) => void
 }
@@ -42,7 +42,7 @@ interface invalidAndExpiringCompetenciesTableProps {
 function InvalidAndExpiringCompetenciesTable({
   items,
   onItemClick,
-}: invalidAndExpiringCompetenciesTableProps) {
+}: InvalidAndExpiringCompetenciesTableProps) {
   const { t } = useTranslation()
 
   const columns: DataTableColumn<ExpirationItem>[] = [

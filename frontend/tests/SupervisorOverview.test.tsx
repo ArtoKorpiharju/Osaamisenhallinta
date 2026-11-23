@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router'
 import SupervisorOverview from '../src/pages/supervisor/Overview'
 import UpcomingExpirationsTable, {
   type ExpirationItem,
-} from '../src/components/invalidAndExpiringCompetenciesTable'
+} from '../src/components/InvalidAndExpiringCompetenciesTable'
 
 // Render page at the given path with Router
 function renderWithRouter(page: ReactElement, path: string) {
