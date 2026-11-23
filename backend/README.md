@@ -76,12 +76,12 @@ Or cmd / Powershell:
 
 ## Useful commands
 
-On Windows, use `mvnw.cmd` instead of `./mvnw`. For example: `mvnw.cmd spring-boot:run`.
+On Windows, use `mvnw.cmd` instead of `./mvnw`. For example: `mvnw.cmd clean spring-boot:run`.
 
-- `./mvnw spring-boot:run`: start the backend
-- `./mvnw test`: run tests
-- `./mvnw compile`: compile the project
-- `./mvnw verify`: build and verify the project
-- `./mvnw spotless:check`: check code formatting
-- `./mvnw spotless:apply`: format the code
-- `./mvnw checkstyle:check`: check code style
+- `./mvnw clean spring-boot:run -Dspring-boot.run.profiles=local`: start the backend
+- `./mvnw clean test -Dspring.profiles.active=local`: run tests
+- `./mvnw clean verify -Dspring.profiles.active=local`: build and verify the project
+- `./mvnw clean compile`: compile the project
+- `./mvnw clean spotless:check`: check code formatting
+- `./mvnw clean spotless:apply`: format the code
+- `./mvnw clean checkstyle:check`: check code style

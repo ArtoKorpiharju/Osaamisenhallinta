@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router'
 import SupervisorOverview from '../src/pages/supervisor/Overview'
 import UpcomingExpirationsTable, {
   type ExpirationItem,
-} from '../src/components/UpcomingExpirationsTable'
+} from '../src/components/InvalidAndExpiringCompetenciesTable'
 
 // Render page at the given path with Router
 function renderWithRouter(page: ReactElement, path: string) {
@@ -41,14 +41,18 @@ describe('SupervisorOverview', () => {
     ).toBeInTheDocument()
 
     // Summary cards rendered
-    expect(screen.getByText('Expired competencies')).toBeInTheDocument()
-    expect(screen.getByText('Expiring within 90 days')).toBeInTheDocument()
-    expect(screen.getByText('Missing renewals')).toBeInTheDocument()
+    expect(screen.getByText('Invalid competencies')).toBeInTheDocument()
+    expect(
+      screen.getByText('Competencies expiring within 90 days')
+    ).toBeInTheDocument()
+    expect(screen.getByText('Require action')).toBeInTheDocument()
     expect(screen.getByText('Planned renewals')).toBeInTheDocument()
 
     // Upcoming expirations table
     expect(
-      screen.getByRole('heading', { name: 'Upcoming Expirations' })
+      screen.getByRole('heading', {
+        name: 'Invalid or soon-expiring competencies',
+      })
     ).toBeInTheDocument()
   })
 

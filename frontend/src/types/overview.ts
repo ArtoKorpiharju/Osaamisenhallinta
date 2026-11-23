@@ -73,7 +73,7 @@ export interface OverviewSummary {
 export interface ActionRequiredItem {
   id: string
   title: string
-  dueDate: string
+  dueDate?: string
   status: { label: string; tone: Tone }
   actions: { id: string; label: string }[]
   note?: { text: string; tone: 'danger' | 'info' }
