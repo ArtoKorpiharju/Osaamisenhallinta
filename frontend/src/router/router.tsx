@@ -12,6 +12,7 @@ import SupervisorRenewals from '../pages/supervisor/Renewals'
 
 import AdminOverview from '../pages/admin/Overview'
 import AdminQualifications from '../pages/admin/Qualifications'
+import AddQualification from '../pages/admin/AddQualification'
 import AdminCompetencies from '../pages/admin/Competencies'
 import AdminLog from '../pages/admin/Log'
 
@@ -46,6 +47,11 @@ export default function AppRouter() {
             <Route index element={<Navigate to="/admin/overview" replace />} />
             <Route path="overview" element={<AdminOverview />} />
             <Route path="qualifications" element={<AdminQualifications />} />
+            <Route path="qualifications/new" element={<AddQualification />} />
+            <Route
+              path="qualifications/:qualificationId/edit"
+              element={<AddQualification />}
+            />
             <Route path="competencies" element={<AdminCompetencies />} />
             <Route path="log" element={<AdminLog />} />
           </Route>

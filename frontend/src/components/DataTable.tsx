@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 import { Paper, Typography } from '@mui/material'
 import {
   DataGrid,
@@ -21,6 +21,7 @@ interface DataTableProps<T extends GridValidRowModel> {
   rows: T[]
   getRowId: (row: T) => string | number
   onRowClick?: (row: T) => void
+  noRowsOverlay?: ComponentType
 }
 
 function DataTable<T extends GridValidRowModel>({
@@ -29,6 +30,8 @@ function DataTable<T extends GridValidRowModel>({
   rows,
   getRowId,
   onRowClick,
+  noRowsOverlay,
+
 }: DataTableProps<T>) {
   const gridColumns: GridColDef<T>[] = columns.map((column) => ({
     field: column.id,
@@ -67,6 +70,7 @@ function DataTable<T extends GridValidRowModel>({
 
       <DataGrid
         rows={rows}
+        slots={noRowsOverlay ? { noRowsOverlay } : undefined}
         columns={gridColumns}
         getRowId={getRowId}
         hideFooter
