@@ -6,7 +6,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder'
 import { tones } from '../config/tones'
 
 interface FavoriteStarIconProps {
-  /** Tooltip / accessible title for the icon when it is shown on its own */
+  /** Tooltip/accessible title for the icon when it is shown on its own */
   title?: string
 }
 
