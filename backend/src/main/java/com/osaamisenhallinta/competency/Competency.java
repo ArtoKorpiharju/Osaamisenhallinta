@@ -53,5 +53,12 @@ public class Competency {
     this.validityMonths = validityMonths;
   }
 
+  /** Updating an existing competency. */
+  public void updateDetails(String name, CompetencyType type, Integer validityMonths) {
+    this.name = name;
+    this.type = type;
+    this.validityMonths = validityMonths;
+  }
+
   protected Competency() {}
 }

@@ -42,5 +42,17 @@ public class Qualification {
   @OneToMany(mappedBy = "qualification", fetch = FetchType.LAZY)
   private Set<EmployeeQualification> employeeQualifications = new HashSet<>();
 
+  /** A constructor for creating a new qualification. */
+  public Qualification(String name, Set<Competency> requiredCompetencies) {
+    this.name = name;
+    this.requiredCompetencies = new HashSet<>(requiredCompetencies);
+  }
+
+  /** Updating an existing qualification. */
+  public void updateDetails(String name, Set<Competency> requiredCompetencies) {
+    this.name = name;
+    this.requiredCompetencies = new HashSet<>(requiredCompetencies);
+  }
+
   protected Qualification() {}
 }

@@ -3,6 +3,9 @@ package com.osaamisenhallinta.employee;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /** Database access for employee qualifications. */
 public interface EmployeeQualificationRepository
@@ -27,4 +30,8 @@ public interface EmployeeQualificationRepository
                         + " for employee: "
                         + employeeId));
   }
+
+  @Modifying
+  @Query("DELETE FROM EmployeeQualification e WHERE e.qualification.id = :qualificationId")
+  void deleteByQualificationId(@Param("qualificationId") Long qualificationId);
 }
