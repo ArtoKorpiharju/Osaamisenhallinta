@@ -52,9 +52,9 @@ export default function SummaryCards({
         {...actionFor('expiring')}
       />
       <StatCard
-        title={t('employeeOverview.summary.missingRenewals.title')}
+        title={t('employeeOverview.summary.requireAction.title')}
         value={summary.missingRenewals}
-        description={t('employeeOverview.summary.missingRenewals.description')}
+        description={t('employeeOverview.summary.requireAction.description')}
         tone="renewal"
         {...actionFor('missingRenewals')}
       />

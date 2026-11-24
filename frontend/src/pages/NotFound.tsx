@@ -1,3 +1,5 @@
+import PageTitle from '../components/PageTitle'
+
 export default function NotFound() {
-  return <h1>Page not found</h1>
+  return <PageTitle>Page not found</PageTitle>
 }

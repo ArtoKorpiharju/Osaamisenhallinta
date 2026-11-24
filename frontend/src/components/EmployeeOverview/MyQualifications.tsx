@@ -22,6 +22,30 @@ interface MyQualificationsProps {
   onQualificationClick?: (qualification: EmployeeQualification) => void
 }
 
+// Returns true when at least one required competency is missing.
+function containsMissingCompetency(
+  qualification: EmployeeQualification
+): boolean {
+  return (
+    qualification.requiredCompetencies.length > 0 &&
+    qualification.requiredCompetencies.some(
+      (competency) => competency.status === 'missing'
+    )
+  )
+}
+
+// Returns true when at least one required competency has expired.
+function containsExpiredCompetency(
+  qualification: EmployeeQualification
+): boolean {
+  return (
+    qualification.requiredCompetencies.length > 0 &&
+    qualification.requiredCompetencies.some(
+      (competency) => competency.status === 'expired'
+    )
+  )
+}
+
 export default function MyQualifications({
   qualifications,
   onViewAll,
@@ -118,9 +142,12 @@ export default function MyQualifications({
       minWidth: 100,
       render: (qualification) => (
         <Box sx={{ fontWeight: 600 }}>
-          {qualification.validUntil
-            ? formatDate(qualification.validUntil)
-            : t('employeeOverview.qualifications.noExpiryDate')}
+          {containsMissingCompetency(qualification) ||
+          containsExpiredCompetency(qualification)
+            ? '-'
+            : qualification.validUntil
+              ? formatDate(qualification.validUntil)
+              : t('employeeOverview.qualifications.noExpiryDate')}
         </Box>
       ),
     },
