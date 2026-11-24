@@ -1,8 +1,6 @@
 import type { ComponentType } from 'react'
 import type { SvgIconProps } from '@mui/material/SvgIcon'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import EventRepeatIcon from '@mui/icons-material/EventRepeat'
-import HistoryIcon from '@mui/icons-material/History'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
@@ -38,22 +36,12 @@ export const pagesPerRole: Record<Role, Page[]> = {
       path: '/employee/competencies',
       icon: StarBorderIcon,
     },
-    {
-      labelKey: 'navigation.renewals',
-      path: '/employee/renewals',
-      icon: EventRepeatIcon,
-    },
   ],
   supervisor: [
     {
       labelKey: 'navigation.overview',
       path: '/supervisor/overview',
       icon: HomeOutlinedIcon,
-    },
-    {
-      labelKey: 'navigation.renewals',
-      path: '/supervisor/renewals',
-      icon: EventRepeatIcon,
     },
   ],
   admin: [
@@ -72,6 +60,5 @@ export const pagesPerRole: Record<Role, Page[]> = {
       path: '/admin/competencies',
       icon: StarBorderIcon,
     },
-    { labelKey: 'navigation.log', path: '/admin/log', icon: HistoryIcon },
   ],
 }

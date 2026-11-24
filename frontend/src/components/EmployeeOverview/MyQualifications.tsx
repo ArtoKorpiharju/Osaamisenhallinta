@@ -22,6 +22,68 @@ interface MyQualificationsProps {
   onQualificationClick?: (qualification: EmployeeQualification) => void
 }
 
+const statusOrder: Record<QualificationStatus, number> = {
+  notQualified: 0,
+  expiringSoon: 1,
+  qualified: 2,
+}
+
+// Returns true when at least one required competency is missing.
+function containsMissingCompetency(
+  qualification: EmployeeQualification
+): boolean {
+  return (
+    qualification.requiredCompetencies.length > 0 &&
+    qualification.requiredCompetencies.some(
+      (competency) => competency.status === 'missing'
+    )
+  )
+}
+
+// Returns true when at least one required competency has expired.
+function containsExpiredCompetency(
+  qualification: EmployeeQualification
+): boolean {
+  return (
+    qualification.requiredCompetencies.length > 0 &&
+    qualification.requiredCompetencies.some(
+      (competency) => competency.status === 'expired'
+    )
+  )
+}
+
+function Legend() {
+  const { t } = useTranslation()
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: '8px 24px',
+        color: '#174f83',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <StarIcon
+          fontSize="small"
+          sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
+        />
+        <Typography sx={{ fontSize: 13 }}>
+          = {t('employeeOverview.qualifications.favorite')}
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <CriticalBadge />
+        <Typography sx={{ fontSize: 13 }}>
+          = {t('employeeOverview.qualifications.employerRequirement')}
+        </Typography>
+      </Box>
+    </Box>
+  )
+}
+
 export default function MyQualifications({
   qualifications,
   onViewAll,
@@ -118,9 +180,12 @@ export default function MyQualifications({
       minWidth: 100,
       render: (qualification) => (
         <Box sx={{ fontWeight: 600 }}>
-          {qualification.validUntil
-            ? formatDate(qualification.validUntil)
-            : t('employeeOverview.qualifications.noExpiryDate')}
+          {containsMissingCompetency(qualification) ||
+          containsExpiredCompetency(qualification)
+            ? '-'
+            : qualification.validUntil
+              ? formatDate(qualification.validUntil)
+              : t('employeeOverview.qualifications.noExpiryDate')}
         </Box>
       ),
     },
