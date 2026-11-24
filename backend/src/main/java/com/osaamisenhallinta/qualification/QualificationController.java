@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -102,5 +103,30 @@ public class QualificationController {
   public void deleteQualification(@PathVariable Long id) {
     qualificationService.deleteQualification(id);
     return;
+  }
+
+  @Operation(summary = "Update an existing qualification")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+          responseCode = "200", 
+          description = "Qualification successfully updated"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid parameter",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Qualification not found; One or more competencies not found",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Qualification under this name already exists",
+            content = @Content)
+      })
+  @PutMapping("/{id}")
+  public QualificationDto updateQualification(
+      @PathVariable Long id, @Valid @RequestBody CreateQualificationDto dto) {
+    return qualificationService.updateQualification(id, dto.name(), dto.requiredCompetenciesIds());
   }
 }

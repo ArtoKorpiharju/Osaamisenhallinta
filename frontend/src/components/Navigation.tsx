@@ -15,17 +15,37 @@ import { type Role, pagesPerRole } from '../config/roles'
 
 interface NavigationProps {
   role: Role
+  variant: 'permanent' | 'temporary'
+  open: boolean
+  onClose: () => void
 }
 
 const drawerWidth = 240
 
-export default function Navigation({ role }: NavigationProps) {
+export default function Navigation({
+  role,
+  variant,
+  open,
+  onClose,
+}: NavigationProps) {
   const { t } = useTranslation()
   const navigationItems = pagesPerRole[role]
+  const isMobile = variant === 'temporary'
 
   return (
     <Drawer
-      variant="permanent"
+      variant={variant}
+      open={open}
+      onClose={onClose}
+      slotProps={
+        isMobile
+          ? // Keep the gray overlay visible while allowing the page behind it to scroll.
+            {
+              root: { disableScrollLock: true },
+              backdrop: { sx: { pointerEvents: 'none' } },
+            }
+          : undefined
+      }
       sx={{
         width: drawerWidth,
         flexShrink: 0,
@@ -45,6 +65,7 @@ export default function Navigation({ role }: NavigationProps) {
             key={item.path}
             component={NavLink}
             to={item.path}
+            onClick={isMobile ? onClose : undefined} // Closes the navbar on mobile when an item is pressed
             sx={{
               borderRadius: 1,
               '&.active': {

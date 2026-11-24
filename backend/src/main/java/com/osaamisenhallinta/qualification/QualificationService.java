@@ -67,18 +67,7 @@ public class QualificationService {
         HttpStatus.CONFLICT, "Qualification already exists");
     }
 
-    // Remove duplicate IDs
-    Set<Long> competencyIds = new HashSet<>(requiredCompetenciesIds);
-
-    // Convert the incoming competency IDs into competency entities
-    Set<Competency> requiredCompetencies = new HashSet<>(
-        competencyRepository.findAllById(competencyIds));
-
-    // Check if all the required competencies were found
-    if (requiredCompetencies.size() != competencyIds.size()) {
-      throw new ResponseStatusException(
-        HttpStatus.NOT_FOUND, "One or more competencies not found");
-    }
+    Set<Competency> requiredCompetencies = findRequiredCompetencies(requiredCompetenciesIds);
 
     // Create a new qualification
     Qualification newQualification = new Qualification(name, requiredCompetencies);
@@ -107,6 +96,63 @@ public class QualificationService {
 
     employeeQualificationRepository.deleteByQualificationId(id);
     qualificationRepository.delete(qualification);
+  }
+
+  /**
+   * Update an existing qualification, or throws an exception if qualification not found.
+   *
+   * @param id ID of the qualification to update.
+   * @param name The name of the qualification.
+   * @param requiredCompetenciesIds A list of IDs of the required competencies.
+   * @return A QualificationDTO containing updated qualification details.
+   * @throws ResponseStatusException if the qualification is not found,
+   *      or the qualification under this name already exists.
+   */
+  @Transactional
+  public QualificationDto updateQualification(
+      Long id, String name, List<Long> requiredCompetenciesIds) {
+    final Qualification qualification =
+        qualificationRepository
+          .findById(id)
+          .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qualification not found"));
+
+    Set<Competency> requiredCompetencies = findRequiredCompetencies(requiredCompetenciesIds);
+
+    // See if qualification under this name already exists (name must be unique)
+    if (!name.equals(qualification.getName()) 
+        && qualificationRepository.existsByName(name)) {
+      throw new ResponseStatusException(
+        HttpStatus.CONFLICT, "Qualification under the name already exists");
+    }
+
+    qualification.updateDetails(name, requiredCompetencies);
+    return mapToDto(qualification);
+  }
+
+  /**
+   * Converts a list of competency IDs into a set of competencies,
+   * or throws an exception if any competency not found.
+   *
+   * @param requiredCompetenciesIds A list of IDs of the required competencies.
+   * @return A set of required competencies.
+   * @throws ResponseStatusException if competency is not found.
+   */
+  private Set<Competency> findRequiredCompetencies(List<Long> requiredCompetenciesIds) {
+    // Remove duplicate IDs
+    Set<Long> competencyIds = new HashSet<>(requiredCompetenciesIds);
+
+    // Convert the incoming competency IDs into competency entities
+    Set<Competency> requiredCompetencies = new HashSet<>(
+        competencyRepository.findAllById(competencyIds));
+
+    // Check if all the required competencies were found
+    if (requiredCompetencies.size() != competencyIds.size()) {
+      throw new ResponseStatusException(
+        HttpStatus.NOT_FOUND, "One or more competencies not found");
+    }
+
+    return requiredCompetencies;
   }
 
   /**

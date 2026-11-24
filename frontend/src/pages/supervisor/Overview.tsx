@@ -5,9 +5,9 @@ import PageTitle from '../../components/PageTitle'
 import PageContainer from '../../components/PageContainer'
 
 import GenericStatCard from '../../components/GenericStatCard'
-import UpcomingExpirationsTable, {
+import InvalidAndExpiringCompetenciesTable, {
   type ExpirationItem,
-} from '../../components/UpcomingExpirationsTable'
+} from '../../components/InvalidAndExpiringCompetenciesTable'
 
 // Temporary frontend data. Replace with backend data later.
 const expirationItems: ExpirationItem[] = [
@@ -15,8 +15,8 @@ const expirationItems: ExpirationItem[] = [
     id: 1,
     employee: 'Emma Johnson',
     competency: 'Magnetic Flux Leakage (MFL)',
-    expires: '17.10.2026',
-    urgencyDays: 14,
+    expires: null,
+    urgencyDays: 0,
     renewalPlan: null,
   },
   {
@@ -24,8 +24,8 @@ const expirationItems: ExpirationItem[] = [
     employee: 'Alex Smith',
     competency: 'First Aid Training',
     expires: '26.10.2026',
-    urgencyDays: 23,
-    renewalPlan: '20.10.2026',
+    urgencyDays: 0,
+    renewalPlan: '20.12.2026',
   },
   {
     id: 3,
@@ -73,8 +73,9 @@ export default function SupervisorOverview() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const openRenewals = () => {
-    void navigate('/supervisor/renewals')
+  // Rename and modify this to navigate to the correct page
+  const openPageX = () => {
+    void navigate('/supervisor/overview')
   }
 
   return (
@@ -93,48 +94,50 @@ export default function SupervisorOverview() {
         }}
       >
         <GenericStatCard
-          title={t('supervisorOverview.summary.outdated.title')}
+          title={t('supervisorOverview.summary.invalid.title')}
           value={2}
-          description={t('supervisorOverview.summary.outdated.description')}
-          highlight={t('supervisorOverview.summary.outdated.highlight')}
+          description={t('supervisorOverview.summary.invalid.description')}
+          highlight={t('supervisorOverview.summary.invalid.highlight')}
           tone="danger"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
 
         <GenericStatCard
-          title={t('supervisorOverview.summary.expiring.title')}
-          value={6}
-          description={t('supervisorOverview.summary.expiring.description')}
+          title={t('supervisorOverview.summary.expiringSoon.title')}
+          value={5}
+          description={t('supervisorOverview.summary.expiringSoon.description')}
           tone="warning"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
 
         <GenericStatCard
-          title={t('supervisorOverview.summary.renewals.title')}
-          value={4}
-          description={t('supervisorOverview.summary.renewals.description')}
+          title={t('supervisorOverview.summary.requireAction.title')}
+          value={5}
+          description={t(
+            'supervisorOverview.summary.requireAction.description'
+          )}
           tone="renewal"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
 
         <GenericStatCard
-          title={t('supervisorOverview.summary.planned.title')}
-          value={3}
-          description={t('supervisorOverview.summary.planned.description')}
+          title={t('supervisorOverview.summary.plannedRenewals.title')}
+          value={2}
+          description={t(
+            'supervisorOverview.summary.plannedRenewals.description'
+          )}
           tone="success"
           actionLabel={t('supervisorOverview.viewAllDetails')}
-          onAction={openRenewals}
+          onAction={openPageX}
         />
       </Box>
 
-      <UpcomingExpirationsTable
+      <InvalidAndExpiringCompetenciesTable
         items={expirationItems}
-        onItemClick={() => {
-          void navigate('/supervisor/renewals')
-        }}
+        onItemClick={openPageX}
       />
     </PageContainer>
   )
