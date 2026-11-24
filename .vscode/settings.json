@@ -34,4 +34,5 @@
   "java.checkstyle.configuration": "/google_checks.xml",
 
   "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic",
 }

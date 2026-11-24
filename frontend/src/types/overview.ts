@@ -1,6 +1,7 @@
 import { type Tone } from '../config/tones'
 
-export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
+export type QualificationStatus =
+  'notQualified' | 'expired' | 'expiringSoon' | 'qualified'
 
 export type CompetencyStatus = 'expired' | 'missing' | 'expiringSoon' | 'valid'
 

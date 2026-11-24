@@ -39,9 +39,7 @@ export default function StatCard({
         borderLeft: `4px solid ${color}`,
       }}
     >
-      <Typography component="h3" sx={{ fontSize: 16, fontWeight: 700 }}>
-        {title}
-      </Typography>
+      <Typography variant="h3">{title}</Typography>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 1 }}>
         <Typography
@@ -51,13 +49,11 @@ export default function StatCard({
           {value}
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {description}
           </Typography>
           {highlight !== undefined && (
-            <Typography
-              sx={{ fontSize: 13, fontWeight: 600, color: tones.danger.main }}
-            >
+            <Typography variant="subtitle2" sx={{ color: tones.danger.main }}>
               {highlight}
             </Typography>
           )}
@@ -68,11 +64,12 @@ export default function StatCard({
         <Link
           component="button"
           type="button"
+          variant="caption"
           underline="always"
           onClick={() => {
             onAction()
           }}
-          sx={{ alignSelf: 'flex-end', fontSize: 11, color: '#174f83' }}
+          sx={{ alignSelf: 'flex-end', color: '#174f83' }}
         >
           {actionLabel}
         </Link>

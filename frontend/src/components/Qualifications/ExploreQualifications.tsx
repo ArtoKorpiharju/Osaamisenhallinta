@@ -1,0 +1,242 @@
+import { useMemo, useState } from 'react'
+
+import { alpha } from '@mui/material/styles'
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TablePagination,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material'
+import { useTranslation } from 'react-i18next'
+
+import AddIcon from '@mui/icons-material/Add'
+import ArrowRightIcon from '@mui/icons-material/ArrowRight'
+import SearchIcon from '@mui/icons-material/Search'
+
+import CriticalBadge from '../CriticalBadge'
+import ExpandableTable, {
+  type ExpandableTableColumn,
+  type SortState,
+} from '../ExpandableTable'
+import Panel from '../Panel'
+import { tones } from '../../config/tones'
+import { type EmployeeCompetency } from '../../types/overview'
+import { type CatalogueQualification } from '../../types/qualifications'
+import CompetenceList from './CompetenceList'
+
+interface ExploreQualificationsProps {
+  qualifications: readonly CatalogueQualification[]
+  // Ids of qualifications that are already in My Qualifications.
+  addedIds: ReadonlySet<number>
+  onAdd: (qualification: CatalogueQualification) => void
+  onCompetenceClick: (
+    competence: EmployeeCompetency,
+    qualification: CatalogueQualification
+  ) => void
+}
+
+// Sortable values per column id. Add an entry here when a column gets sortValue.
+const sortValues: Record<
+  string,
+  (q: CatalogueQualification) => string | number
+> = {
+  name: (q) => q.name,
+  // Number of missing requirements, so ascending order shows the
+  // qualifications that are closest to being complete first.
+  requirements: (q) => q.requirementsTotal - q.requirementsMet,
+}
+
+const compareValues = (a: string | number, b: string | number) =>
+  String(a).localeCompare(String(b), 'fi', {
+    numeric: true,
+    sensitivity: 'base',
+  })
+
+export default function ExploreQualifications({
+  qualifications,
+  addedIds,
+  onAdd,
+  onCompetenceClick,
+}: ExploreQualificationsProps) {
+  const { t } = useTranslation()
+
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState<SortState>({ by: 'name', direction: 'asc' })
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(4)
+
+  // Filter and sort the whole list first, then take one page.
+  // Sorting only the visible page would give a wrong order.
+  const visible = useMemo(() => {
+    const query = search.trim().toLowerCase()
+    const getValue = sortValues[sort.by ?? 'name'] ?? sortValues.name
+    const direction = sort.direction === 'asc' ? 1 : -1
+
+    // Ties are always broken by name in A-Z order, whatever the direction.
+    return qualifications
+      .filter((q) => q.name.toLowerCase().includes(query))
+      .sort(
+        (a, b) =>
+          direction * compareValues(getValue(a), getValue(b)) ||
+          compareValues(a.name, b.name)
+      )
+  }, [qualifications, search, sort.by, sort.direction])
+
+  const pageRows = visible.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+
+  const columns: ExpandableTableColumn<CatalogueQualification>[] = [
+    {
+      id: 'name',
+      label: t('qualifications.columns.qualifications'),
+      width: '38%',
+      // Only marks the column as sortable, the sorting itself is done above.
+      sortValue: sortValues.name,
+      render: (q, { expanded }) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ flexShrink: 0, width: 88 }}>
+            {q.isCritical && <CriticalBadge />}
+          </Box>
+          {q.name}
+          <ArrowRightIcon
+            fontSize="small"
+            aria-hidden
+            sx={{
+              transform: expanded ? 'rotate(90deg)' : 'none',
+              transition: 'transform 0.2s',
+            }}
+          />
+        </Box>
+      ),
+    },
+    {
+      id: 'requirements',
+      label: t('qualifications.columns.requirementsMet'),
+      align: 'center',
+      width: '34%',
+      // Only marks the column as sortable, the sorting itself is done above.
+      sortValue: sortValues.requirements,
+      render: (q) =>
+        `${q.requirementsMet.toString()}/${q.requirementsTotal.toString()}`,
+    },
+    {
+      id: 'action',
+      label: t('qualifications.columns.action'),
+      align: 'center',
+      width: '28%',
+      render: (q) => {
+        const added = addedIds.has(q.qualificationId)
+        return (
+          <Tooltip title={added ? '' : t('qualifications.explore.addTooltip')}>
+            <span>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={added ? undefined : <AddIcon />}
+                disabled={added}
+                onClick={(event) => {
+                  // Do not expand the row.
+                  event.stopPropagation()
+                  onAdd(q)
+                }}
+                sx={{
+                  borderRadius: 5,
+                  borderColor: tones.info.main,
+                  color: tones.info.main,
+                }}
+              >
+                {added
+                  ? t('qualifications.explore.added')
+                  : t('qualifications.explore.add')}
+              </Button>
+            </span>
+          </Tooltip>
+        )
+      },
+    },
+  ]
+
+  return (
+    <Panel title={t('qualifications.explore.title')}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Typography variant="body2">
+          {t('qualifications.explore.description')}
+        </Typography>
+
+        <TextField
+          size="small"
+          placeholder={t('qualifications.explore.searchPlaceholder')}
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value)
+            setPage(0)
+          }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
+            htmlInput: {
+              'aria-label': t('qualifications.explore.searchLabel'),
+            },
+          }}
+          sx={{ maxWidth: 480, bgcolor: 'action.hover' }}
+        />
+
+        <Box
+          sx={{
+            border: `1px solid ${alpha(tones.info.main, 0.3)}`,
+            borderRadius: 1,
+            overflow: 'hidden',
+          }}
+        >
+          <ExpandableTable
+            ariaLabel={t('qualifications.explore.tableLabel')}
+            rows={pageRows}
+            columns={columns}
+            getRowId={(q) => String(q.qualificationId)}
+            sort={sort}
+            onSortChange={(next) => {
+              setSort(next)
+              setPage(0)
+            }}
+            renderExpanded={(q) => (
+              <CompetenceList
+                competences={q.requiredCompetencies}
+                onCompetenceClick={(competence) => {
+                  onCompetenceClick(competence, q)
+                }}
+              />
+            )}
+            emptyMessage={t('qualifications.explore.empty')}
+          />
+        </Box>
+
+        <TablePagination
+          component="div"
+          count={visible.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[4, 8, 12]}
+          labelRowsPerPage={t('qualifications.explore.rowsPerPage')}
+          labelDisplayedRows={({ from, to, count }) =>
+            t('qualifications.explore.showing', { from, to, total: count })
+          }
+          getItemAriaLabel={(type) => t(`common.pagination.${type}`)}
+          onPageChange={(_event, newPage) => {
+            setPage(newPage)
+          }}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(Number(event.target.value))
+            setPage(0)
+          }}
+        />
+      </Box>
+    </Panel>
+  )
+}

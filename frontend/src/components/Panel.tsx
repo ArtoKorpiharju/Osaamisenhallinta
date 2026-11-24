@@ -39,10 +39,7 @@ export default function Panel({ title, headerAction, children }: PanelProps) {
           borderBottom: '1px solid #e0e3e8',
         }}
       >
-        <Typography
-          component="h2"
-          sx={{ fontSize: 18, fontWeight: 700, color: tones.info.main }}
-        >
+        <Typography variant="h2" sx={{ color: tones.info.main }}>
           {title}
         </Typography>
         {headerAction}

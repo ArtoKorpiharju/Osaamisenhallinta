@@ -50,7 +50,8 @@ export default function ActionCard({
       >
         <Typography
           component="h3"
-          sx={{ fontSize: 13, fontWeight: 500, color: 'text.secondary' }}
+          variant="subtitle2"
+          sx={{ color: 'text.secondary' }}
         >
           {title}
         </Typography>
@@ -67,7 +68,7 @@ export default function ActionCard({
           }}
         >
           <CalendarTodayIcon sx={{ fontSize: 11 }} />
-          <Typography sx={{ fontSize: 10 }}>{formatDate(date)}</Typography>
+          <Typography variant="caption">{formatDate(date)}</Typography>
         </Box>
       )}
 
@@ -80,11 +81,12 @@ export default function ActionCard({
               key={action.id}
               component="button"
               type="button"
+              variant="caption"
               underline="always"
               onClick={() => {
                 onAction?.(action.id)
               }}
-              sx={{ fontSize: 11, color: '#174f83' }}
+              sx={{ color: '#174f83' }}
             >
               {action.label}
             </Link>
@@ -108,7 +110,7 @@ export default function ActionCard({
           }}
         >
           <ErrorIcon sx={{ fontSize: 14, color: tones.danger.main }} />
-          <Typography sx={{ fontSize: 11, fontStyle: 'italic' }}>
+          <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
             {note.text}
           </Typography>
         </Box>
