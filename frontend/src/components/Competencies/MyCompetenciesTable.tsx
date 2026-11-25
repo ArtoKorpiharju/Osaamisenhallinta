@@ -10,7 +10,6 @@ import { tones } from '../../config/tones'
 import {
   competencyStatusDisplay,
   competencyStatusOrder,
-  competencyTypeLabels,
 } from '../../config/competency'
 import { type EmployeeCompetency } from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'

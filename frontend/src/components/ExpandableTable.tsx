@@ -10,6 +10,7 @@ import {
   TableSortLabel,
   Typography,
 } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 export interface ExpandableTableColumn<T> {
   id: string
@@ -34,11 +35,13 @@ interface ExpandableTableProps<T> {
   renderExpanded?: (row: T) => ReactNode
   onRowClick?: (row: T) => void
   hideHeader?: boolean
+  /** Shown when there are no rows. Defaults to the translated "No data" */
   emptyMessage?: ReactNode
   ariaLabel?: string
   /** Controlled sorting. When given, the parent sorts `rows` itself */
   sort?: SortState
   onSortChange?: (sort: SortState) => void
+  defaultExpandedIds?: readonly string[]
 }
 
 function sortRows<T>(
@@ -86,12 +89,17 @@ export default function ExpandableTable<T>({
   renderExpanded,
   onRowClick,
   hideHeader = false,
-  emptyMessage = 'No data',
+  emptyMessage,
   ariaLabel,
   sort,
   onSortChange,
+  defaultExpandedIds,
 }: ExpandableTableProps<T>) {
-  const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(new Set())
+  const { t } = useTranslation()
+
+  const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(
+    () => new Set(defaultExpandedIds)
+  )
   const [internalSort, setInternalSort] = useState<SortState>({
     by: null,
     direction: 'asc',
@@ -184,12 +192,10 @@ export default function ExpandableTable<T>({
                   py: 1.5,
                   bgcolor: '#e4edf5',
                   color: '#174f83',
-                  fontSize: 13,
-                  fontWeight: 700,
+                  typography: 'subtitle2',
                   borderBottom: '1px solid #e0e3e8',
                   '& .MuiTableSortLabel-root': {
                     color: '#174f83',
-                    fontWeight: 700,
                   },
                   '& .MuiTableSortLabel-root:hover': {
                     color: '#174f83',
@@ -226,8 +232,8 @@ export default function ExpandableTable<T>({
               align="center"
               sx={{ py: 3, borderBottom: 'none' }}
             >
-              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                {emptyMessage}
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {emptyMessage ?? t('common.noData')}
               </Typography>
             </TableCell>
           </TableRow>
@@ -275,8 +281,7 @@ export default function ExpandableTable<T>({
                       align={column.align}
                       sx={{
                         py: 1.25,
-                        fontSize: 13,
-                        fontWeight: 600,
+                        typography: 'subtitle2',
                         borderBottom: '1px solid #d5dee7',
                       }}
                     >
