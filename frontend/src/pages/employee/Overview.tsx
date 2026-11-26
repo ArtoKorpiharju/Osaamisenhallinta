@@ -19,7 +19,6 @@ import { getApiErrorMessage } from '../../services/api'
 
 const paths = {
   qualifications: '/employee/Qualifications',
-  renewals: '/employee/Renewals',
   competencies: '/employee/Competencies',
 }
 
@@ -27,12 +26,12 @@ const paths = {
 const detailPaths: Record<keyof OverviewSummary, string> = {
   outdated: paths.competencies,
   expiring: paths.competencies,
-  missingRenewals: paths.renewals,
-  plannedRenewals: paths.renewals,
+  missingRenewals: paths.competencies,
+  plannedRenewals: paths.competencies,
 }
 
 // Get summary-card counts from the employee's competencies.
-// Missing renewals count only expired or expiring competencies without a plan.
+// Missing renewals count only missing, expired or expiring competencies without a plan.
 // Planned renewals count any competency that has a plan.
 function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
   return competencies.reduce(
@@ -46,7 +45,8 @@ function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
       }
 
       if (
-        (competency.status === 'expired' ||
+        (competency.status === 'missing' ||
+          competency.status === 'expired' ||
           competency.status === 'expiringSoon') &&
         competency.renewalPlan === null
       ) {
@@ -62,42 +62,44 @@ function calculateSummary(competencies: EmployeeCompetency[]): OverviewSummary {
   )
 }
 
-// Create action cards for expired or expiring soon competencies.
-// Show renewal details when a plan exists; otherwise offer renewal actions.
+// Create action cards for missing, expired or expiring soon competencies.
+// Show renewal actions when renewal is not planned.
 function createActionItems(
   competencies: EmployeeCompetency[]
 ): ActionRequiredItem[] {
   return competencies.flatMap((competency) => {
+    const isMissing = competency.status === 'missing'
     const isInvalid = competency.status === 'expired'
     const isExpiringSoon = competency.status === 'expiringSoon'
 
-    // Only these statuses need attention, and the card needs an expiration date.
-    if ((!isInvalid && !isExpiringSoon) || competency.expirationDate === null) {
+    // These statuses don't need attention.
+    if (
+      competency.renewalPlan ||
+      (!isMissing && !isInvalid && !isExpiringSoon) ||
+      (competency.expirationDate === null && !isMissing)
+    ) {
       return []
     }
-
-    const plan = competency.renewalPlan
 
     const item: ActionRequiredItem = {
       id: String(competency.employeeCompetencyId),
       title: competency.name,
-      dueDate: competency.expirationDate,
-      status: isInvalid
-        ? { label: 'Invalid', tone: 'danger' }
-        : { label: 'Expiring soon', tone: 'warning' },
-      actions: plan
-        ? [{ id: 'view-renewal-plan', label: 'View renewal plan' }]
-        : [
-            { id: 'plan-renewal', label: 'Plan renewal' },
-            { id: 'upload-certificate', label: 'Upload renewal certificate' },
-          ],
-      note: plan
-        ? {
-            text:
-              plan.renewalComment ?? `Renewal planned for ${plan.renewalDate}`,
-            tone: 'info',
-          }
-        : { text: 'No renewal planned', tone: 'danger' },
+      ...(competency.expirationDate !== null && {
+        dueDate: competency.expirationDate,
+      }),
+      status:
+        isMissing || isInvalid
+          ? { label: 'Invalid', tone: 'danger' }
+          : { label: 'Expiring soon', tone: 'warning' },
+      actions: [
+        competency.status === 'missing'
+          ? {
+              id: 'add-competency-information',
+              label: 'Add competency information',
+            }
+          : { id: 'plan-renewal', label: 'Plan renewal' },
+      ],
+      note: { text: 'No renewal planned', tone: 'danger' },
     }
 
     return [item]
@@ -177,14 +179,21 @@ export default function EmployeeOverview() {
           }}
           onQualificationClick={(qualification) => {
             void navigate(
-              `${paths.qualifications}/${String(qualification.employeeQualificationId)}`
+              `${paths.qualifications}/${String(qualification.qualificationId)}`
             )
           }}
         />
         <ActionRequired
           items={actionItems}
-          onAction={() => {
-            void navigate(paths.renewals)
+          onAction={(_item, actionId) => {
+            switch (actionId) {
+              case 'add-competency-information':
+                void navigate(paths.competencies)
+                break
+              case 'plan-renewal':
+                void navigate(paths.competencies)
+                break
+            }
           }}
         />
       </Box>

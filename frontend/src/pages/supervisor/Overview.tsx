@@ -6,9 +6,9 @@ import PageTitle from '../../components/PageTitle'
 import PageContainer from '../../components/PageContainer'
 
 import GenericStatCard from '../../components/GenericStatCard'
-import UpcomingExpirationsTable, {
+import InvalidAndExpiringCompetenciesTable, {
   type ExpirationItem,
-} from '../../components/SupervisorOverview/UpcomingExpirationsTable'
+} from '../../components/SupervisorOverview/InvalidAndExpiringCompetenciesTable'
 import {
   type ExpiringCompetency,
   type OverviewSummary,
@@ -172,12 +172,12 @@ export default function SupervisorOverview() {
         }}
       >
         <GenericStatCard
-          title={t('supervisorOverview.summary.outdated.title')}
+          title={t('supervisorOverview.summary.invalid.title')}
           value={summary.outdated}
-          description={t('supervisorOverview.summary.outdated.description')}
+          description={t('supervisorOverview.summary.invalid.description')}
           highlight={
             summary.outdated > 0
-              ? t('supervisorOverview.summary.outdated.highlight')
+              ? t('supervisorOverview.summary.invalid.highlight')
               : undefined
           }
           tone="danger"
@@ -186,34 +186,38 @@ export default function SupervisorOverview() {
         />
 
         <GenericStatCard
-          title={t('supervisorOverview.summary.expiring.title')}
+          title={t('supervisorOverview.summary.expiringSoon.title')}
           value={summary.expiring}
-          description={t('supervisorOverview.summary.expiring.description')}
+          description={t('supervisorOverview.summary.expiringSoon.description')}
           tone="warning"
           actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openMyUnit}
         />
 
         <GenericStatCard
-          title={t('supervisorOverview.summary.renewals.title')}
+          title={t('supervisorOverview.summary.requireAction.title')}
           value={summary.missingRenewals}
-          description={t('supervisorOverview.summary.renewals.description')}
+          description={t(
+            'supervisorOverview.summary.requireAction.description'
+          )}
           tone="renewal"
           actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openMyUnit}
         />
 
         <GenericStatCard
-          title={t('supervisorOverview.summary.planned.title')}
+          title={t('supervisorOverview.summary.plannedRenewals.title')}
           value={summary.plannedRenewals}
-          description={t('supervisorOverview.summary.planned.description')}
+          description={t(
+            'supervisorOverview.summary.plannedRenewals.description'
+          )}
           tone="success"
           actionLabel={t('supervisorOverview.viewAllDetails')}
           onAction={openMyUnit}
         />
       </Box>
 
-      <UpcomingExpirationsTable
+      <InvalidAndExpiringCompetenciesTable
         items={expirationItems}
         onItemClick={openMyUnit}
       />

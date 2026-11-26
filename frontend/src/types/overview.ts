@@ -1,6 +1,7 @@
 import { type Tone } from '../config/tones'
 
-export type QualificationStatus = 'notQualified' | 'expiringSoon' | 'qualified'
+export type QualificationStatus =
+  'notQualified' | 'expired' | 'expiringSoon' | 'qualified'
 
 export type CompetencyStatus = 'expired' | 'missing' | 'expiringSoon' | 'valid'
 
@@ -110,7 +111,7 @@ export interface OverviewSummary {
 export interface ActionRequiredItem {
   id: string
   title: string
-  dueDate: string
+  dueDate?: string
   status: { label: string; tone: Tone }
   actions: { id: string; label: string }[]
   note?: { text: string; tone: 'danger' | 'info' }

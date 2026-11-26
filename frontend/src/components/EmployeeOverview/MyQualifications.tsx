@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import StarIcon from '@mui/icons-material/Star'
@@ -13,6 +13,8 @@ import {
   type QualificationStatus,
 } from '../../types/overview'
 import { formatDate } from '../../utils/formatDate'
+import QualificationLegend from '../QualificationLegend'
+import { compareQualifications } from '../../utils/qualifications'
 
 interface MyQualificationsProps {
   qualifications: readonly EmployeeQualification[]
@@ -20,41 +22,27 @@ interface MyQualificationsProps {
   onQualificationClick?: (qualification: EmployeeQualification) => void
 }
 
-const statusOrder: Record<QualificationStatus, number> = {
-  notQualified: 0,
-  expiringSoon: 1,
-  qualified: 2,
+// Returns true when at least one required competency is missing.
+function containsMissingCompetency(
+  qualification: EmployeeQualification
+): boolean {
+  return (
+    qualification.requiredCompetencies.length > 0 &&
+    qualification.requiredCompetencies.some(
+      (competency) => competency.status === 'missing'
+    )
+  )
 }
 
-function Legend() {
-  const { t } = useTranslation()
-
+// Returns true when at least one required competency has expired.
+function containsExpiredCompetency(
+  qualification: EmployeeQualification
+): boolean {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        gap: '8px 24px',
-        color: '#174f83',
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <StarIcon
-          fontSize="small"
-          sx={{ color: tones.star.main, stroke: 'black', strokeWidth: 0.5 }}
-        />
-        <Typography sx={{ fontSize: 13 }}>
-          = {t('employeeOverview.qualifications.favorite')}
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <CriticalBadge />
-        <Typography sx={{ fontSize: 13 }}>
-          = {t('employeeOverview.qualifications.employerRequirement')}
-        </Typography>
-      </Box>
-    </Box>
+    qualification.requiredCompetencies.length > 0 &&
+    qualification.requiredCompetencies.some(
+      (competency) => competency.status === 'expired'
+    )
   )
 }
 
@@ -69,6 +57,10 @@ export default function MyQualifications({
     QualificationStatus,
     { label: string; tone: Tone }
   > = {
+    expired: {
+      label: t('employeeOverview.qualifications.statuses.invalid'),
+      tone: 'danger',
+    },
     notQualified: {
       label: t('employeeOverview.qualifications.statuses.invalid'),
       tone: 'danger',
@@ -150,9 +142,12 @@ export default function MyQualifications({
       minWidth: 100,
       render: (qualification) => (
         <Box sx={{ fontWeight: 600 }}>
-          {qualification.validUntil
-            ? formatDate(qualification.validUntil)
-            : t('employeeOverview.qualifications.noExpiryDate')}
+          {containsMissingCompetency(qualification) ||
+          containsExpiredCompetency(qualification)
+            ? '-'
+            : qualification.validUntil
+              ? formatDate(qualification.validUntil)
+              : t('employeeOverview.qualifications.noExpiryDate')}
         </Box>
       ),
     },
@@ -168,7 +163,7 @@ export default function MyQualifications({
             size="small"
             color="inherit"
             onClick={onViewAll}
-            sx={{ textTransform: 'none', color: 'tones.info.main' }}
+            sx={{ textTransform: 'none', color: tones.info.main }}
           >
             {t('employeeOverview.qualifications.viewAll')}
           </Button>
@@ -183,14 +178,12 @@ export default function MyQualifications({
           height: '100%',
         }}
       >
-        <Legend />
+        <QualificationLegend />
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <GenericTable
             columns={columns}
-            rows={[...qualifications].sort(
-              (a, b) => statusOrder[a.status] - statusOrder[b.status]
-            )}
+            rows={[...qualifications].sort(compareQualifications)}
             getRowId={(qualification) => qualification.employeeQualificationId}
             onRowClick={onQualificationClick}
           />

@@ -1,3 +1,5 @@
+import PageTitle from '../../components/PageTitle'
+
 export default function EmployeeCompetencies() {
-  return <h1>Employee Competencies</h1>
+  return <PageTitle>Employee Competencies</PageTitle>
 }

@@ -1,3 +1,5 @@
+import PageTitle from '../../components/PageTitle'
+
 export default function AdminCompetencies() {
-  return <h1>Admin Competencies</h1>
+  return <PageTitle>Admin Competencies</PageTitle>
 }

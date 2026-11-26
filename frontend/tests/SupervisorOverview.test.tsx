@@ -11,7 +11,7 @@ import { MemoryRouter, Outlet, Route, Routes } from 'react-router'
 import SupervisorOverview from '../src/pages/supervisor/Overview'
 import UpcomingExpirationsTable, {
   type ExpirationItem,
-} from '../src/components/SupervisorOverview/UpcomingExpirationsTable'
+} from '../src/components/SupervisorOverview/InvalidAndExpiringCompetenciesTable'
 
 // Render page at the given path with Router
 function renderWithRouter(page: ReactElement, path: string, unitId?: number) {
@@ -155,14 +155,18 @@ describe('SupervisorOverview', () => {
     ).toBeInTheDocument()
 
     // Summary cards rendered
-    expect(screen.getByText('Expired competencies')).toBeInTheDocument()
-    expect(screen.getByText('Expiring soon')).toBeInTheDocument()
-    expect(screen.getByText('Missing renewals')).toBeInTheDocument()
+    expect(screen.getByText('Invalid competencies')).toBeInTheDocument()
+    expect(
+      screen.getByText('Competencies expiring within 90 days')
+    ).toBeInTheDocument()
+    expect(screen.getByText('Require action')).toBeInTheDocument()
     expect(screen.getByText('Planned renewals')).toBeInTheDocument()
 
     // Upcoming expirations table
     expect(
-      screen.getByRole('heading', { name: 'Upcoming Expirations' })
+      screen.getByRole('heading', {
+        name: 'Invalid or soon-expiring competencies',
+      })
     ).toBeInTheDocument()
   })
 
@@ -182,16 +186,16 @@ describe('SupervisorOverview', () => {
     })
 
     // Summary counts each employee competency once
+    expect(within(getSummaryCard('Invalid')).getByText('2')).toBeInTheDocument()
     expect(
-      within(getSummaryCard('Outdated')).getByText('2')
+      within(getSummaryCard('Expiring soon')).getByText('3')
     ).toBeInTheDocument()
     expect(
-      within(getSummaryCard('Expiring')).getByText('3')
+      within(getSummaryCard('Require action')).getByText('2')
     ).toBeInTheDocument()
     expect(
-      within(getSummaryCard('Renewals')).getByText('2')
+      within(getSummaryCard('Planned renewals')).getByText('2')
     ).toBeInTheDocument()
-    expect(within(getSummaryCard('Planned')).getByText('2')).toBeInTheDocument()
 
     // Missing competencies have no expiration date, so they are not in the table.
     // Rows are sorted by expiration date, then by employee name.

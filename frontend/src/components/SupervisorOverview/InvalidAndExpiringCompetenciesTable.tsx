@@ -9,7 +9,7 @@ export interface ExpirationItem {
   id: number
   employee: string
   competency: string
-  expires: string
+  expires: string | null
   urgencyDays: number
   renewalPlan: string | null
 }
@@ -35,21 +35,21 @@ const getUrgencyStyles = (days: number) => {
   }
 }
 
-interface UpcomingExpirationsTableProps {
+interface InvalidAndExpiringCompetenciesTableProps {
   items: ExpirationItem[]
   onItemClick?: (item: ExpirationItem) => void
 }
 
-function UpcomingExpirationsTable({
+function InvalidAndExpiringCompetenciesTable({
   items,
   onItemClick,
-}: UpcomingExpirationsTableProps) {
+}: InvalidAndExpiringCompetenciesTableProps) {
   const { t } = useTranslation()
 
   const columns: DataTableColumn<ExpirationItem>[] = [
     {
       id: 'employee',
-      label: t('supervisorOverview.expirations.columns.employee'),
+      label: t('supervisorOverview.invalidAndExpiring.columns.employee'),
       minWidth: 180,
       render: (item) => (
         <Typography
@@ -65,7 +65,7 @@ function UpcomingExpirationsTable({
     },
     {
       id: 'competency',
-      label: t('supervisorOverview.expirations.columns.competency'),
+      label: t('supervisorOverview.invalidAndExpiring.columns.competency'),
       minWidth: 300,
       render: (item) => (
         <Typography component="span" sx={{ fontWeight: 600 }}>
@@ -75,22 +75,27 @@ function UpcomingExpirationsTable({
     },
     {
       id: 'expires',
-      label: t('supervisorOverview.expirations.columns.expires'),
-      minWidth: 130,
-      render: (item) => (
-        <Typography component="span" sx={{ fontWeight: 600 }}>
-          {item.expires}
-        </Typography>
-      ),
+      label: t('supervisorOverview.invalidAndExpiring.columns.expires'),
+      minWidth: 140,
+      render: (item) =>
+        item.expires !== null ? (
+          <Typography component="span" sx={{ fontWeight: 600 }}>
+            {item.expires}
+          </Typography>
+        ) : (
+          <Typography component="span" sx={{ fontWeight: 600 }}>
+            {t('supervisorOverview.invalidAndExpiring.notCompleted')}
+          </Typography>
+        ),
     },
     {
       id: 'urgency',
-      label: t('supervisorOverview.expirations.columns.urgency'),
+      label: t('supervisorOverview.invalidAndExpiring.columns.urgency'),
       minWidth: 110,
       render: (item) => (
         <Chip
           label={`${String(item.urgencyDays)}${t(
-            'supervisorOverview.expirations.dayAbbreviation'
+            'supervisorOverview.invalidAndExpiring.dayAbbreviation'
           )}`}
           size="small"
           sx={{
@@ -102,12 +107,12 @@ function UpcomingExpirationsTable({
     },
     {
       id: 'renewalPlan',
-      label: t('supervisorOverview.expirations.columns.renewalPlan'),
+      label: t('supervisorOverview.invalidAndExpiring.columns.renewalPlan'),
       minWidth: 140,
       render: (item) =>
         item.renewalPlan === null ? (
           <Chip
-            label={t('supervisorOverview.expirations.notPlanned')}
+            label={t('supervisorOverview.invalidAndExpiring.notPlanned')}
             size="small"
             sx={{
               backgroundColor: tones.danger.background,
@@ -123,7 +128,7 @@ function UpcomingExpirationsTable({
   ]
 
   return (
-    <Panel title={t('supervisorOverview.expirations.title')}>
+    <Panel title={t('supervisorOverview.invalidAndExpiring.title')}>
       <DataTable
         columns={columns}
         rows={items}
@@ -134,4 +139,4 @@ function UpcomingExpirationsTable({
   )
 }
 
-export default UpcomingExpirationsTable
+export default InvalidAndExpiringCompetenciesTable

@@ -31,6 +31,13 @@ const resources = {
       },
       common: {
         critical: 'Critical',
+        noData: 'No data',
+        pagination: {
+          first: 'Go to first page',
+          previous: 'Go to previous page',
+          next: 'Go to next page',
+          last: 'Go to last page',
+        },
       },
       employeeOverview: {
         title: 'Employee Overview',
@@ -43,12 +50,12 @@ const resources = {
           },
           expiringSoon: {
             title: 'Expiring soon',
-            description: 'Expiring within 90 days',
+            description: 'Competencies expiring within 90 days',
           },
-          missingRenewals: {
-            title: 'Missing renewals',
+          requireAction: {
+            title: 'Require action',
             description:
-              'Invalid or soon expiring competencies without a planned renewal',
+              'Invalid or soon-expiring competencies that require action',
           },
           plannedRenewals: {
             title: 'Planned renewals',
@@ -83,9 +90,9 @@ const resources = {
           },
           actions: {
             planRenewal: 'Plan renewal',
-            viewRenewalPlan: 'View renewal plan',
-            uploadRenewalCertificate: 'Upload renewal certificate',
+            addCompetencyInformation: 'Add competency information',
           },
+          competencyMissing: 'The competency is missing',
           noRenewalPlanned: 'No renewal planned',
         },
       },
@@ -93,26 +100,27 @@ const resources = {
         title: 'Supervisor Overview',
         viewAllDetails: 'View all details',
         summary: {
-          outdated: {
-            title: 'Outdated',
-            description: 'Expired competencies',
+          invalid: {
+            title: 'Invalid',
+            description: 'Invalid competencies',
             highlight: 'Requires attention',
           },
-          expiring: {
-            title: 'Expiring',
-            description: 'Expiring soon',
+          expiringSoon: {
+            title: 'Expiring soon',
+            description: 'Competencies expiring within 90 days',
           },
-          renewals: {
-            title: 'Renewals',
-            description: 'Missing renewals',
+          requireAction: {
+            title: 'Require action',
+            description:
+              'Invalid or soon-expiring competencies with no planned actions',
           },
-          planned: {
-            title: 'Planned',
-            description: 'Planned renewals',
+          plannedRenewals: {
+            title: 'Planned renewals',
+            description: 'All planned renewals',
           },
         },
-        expirations: {
-          title: 'Upcoming Expirations',
+        invalidAndExpiring: {
+          title: 'Invalid or soon-expiring competencies',
           columns: {
             employee: 'Employee',
             competency: 'Competency',
@@ -120,6 +128,7 @@ const resources = {
             urgency: 'Urgency',
             renewalPlan: 'Renewal plan',
           },
+          notCompleted: 'Not completed',
           notPlanned: 'Not planned',
           dayAbbreviation: 'd',
         },
@@ -154,7 +163,7 @@ const resources = {
       adminOverview: {
         title: 'Admin Center',
         description:
-          'Manage competency definitions and qualification requirements.',
+          'Manage competence definitions and qualification requirements.',
         cards: {
           certificates: 'Total certificates',
           skills: 'Total skills',
@@ -166,6 +175,100 @@ const resources = {
           title: 'Quick actions',
           addCompetence: 'Add competence',
           addQualification: 'Add qualification',
+        },
+      },
+      qualifications: {
+        title: 'Employee Qualifications',
+        loading: 'Fetching qualifications…',
+        columns: {
+          myQualifications: 'My Qualifications',
+          qualifications: 'Qualifications',
+          status: 'Status',
+          requirementsMet: 'Requirements met',
+          validUntil: 'Valid until',
+          action: 'Action',
+        },
+        statuses: {
+          invalid: 'Invalid',
+          expiringSoon: 'Expiring soon',
+          qualified: 'Qualified',
+        },
+        competencyStatuses: {
+          invalid: 'Invalid',
+          missing: 'Missing',
+          expiringSoon: 'Expiring soon',
+          valid: 'Valid',
+        },
+        competenceTypes: {
+          training: 'Training',
+          license: 'License',
+          certification: 'Certification',
+          skill: 'Skill',
+          other: 'Other',
+        },
+        my: {
+          title: 'My Qualifications',
+          tableLabel: 'My qualifications',
+          empty: 'You have no qualifications yet.',
+          addToOverview: 'Add to Overview',
+          addNamedToOverview: 'Add {{name}} to Overview',
+          removeFromOverview: 'Remove {{name}} from Overview',
+          remove: 'Remove {{name}}',
+          criticalCannotRemove: '{{name}} is critical and cannot be removed',
+        },
+        explore: {
+          title: 'Explore Qualifications',
+          description:
+            'Discover qualifications and see what requirements they have',
+          searchPlaceholder: 'Search qualifications...',
+          searchLabel: 'Search qualifications',
+          tableLabel: 'Explore qualifications',
+          empty: 'No qualifications found.',
+          addTooltip: 'Add to My Qualifications',
+          add: 'Add',
+          added: 'Added',
+          rowsPerPage: 'Rows per page',
+          showing: 'Showing {{from}}-{{to}} of {{total}}',
+        },
+        competences: {
+          tableLabel: 'Required competences',
+          required: 'Required competences',
+          status: 'Status',
+          renewals: 'Renewals',
+          validUntil: 'Valid until',
+        },
+        renewal: {
+          notPlanned: 'Not planned',
+          planned: 'Planned - {{date}}',
+        },
+        removeDialog: {
+          title: 'Remove Qualification?',
+          message:
+            'This qualification will be removed from My Qualifications -list',
+          confirm: 'Remove',
+          cancel: 'Cancel',
+        },
+        detail: {
+          back: 'Back',
+          close: 'Close',
+          title: 'Competence details',
+          type: 'Type',
+          status: 'Status',
+          issueDate: 'Issue date',
+          validUntil: 'Valid until',
+          renewCompetency: 'Renew competency',
+          newIssueDate: 'New issue date',
+          confirmRenewal: 'Confirm renewal',
+          renewalPlan: 'Renewal plan',
+          plannedDate: 'Planned renewal date',
+          comment: 'Comment (optional)',
+          renewalStatus: 'Renewal status',
+          planned: 'Planned',
+          unsavedChanges: 'Unsaved changes',
+          saveChange: 'Save change',
+          noPlanTitle: 'No renewal plan available',
+          noPlanDescription:
+            'This competence has not been completed yet. Once you have completed it and added the issue date, you can create a renewal plan here.',
         },
       },
     },
@@ -198,6 +301,13 @@ const resources = {
       },
       common: {
         critical: 'Kriittinen',
+        noData: 'Ei tietoja',
+        pagination: {
+          first: 'Ensimmäinen sivu',
+          previous: 'Edellinen sivu',
+          next: 'Seuraava sivu',
+          last: 'Viimeinen sivu',
+        },
       },
       employeeOverview: {
         title: 'Työntekijän yleisnäkymä',
@@ -210,12 +320,12 @@ const resources = {
           },
           expiringSoon: {
             title: 'Vanhentumassa',
-            description: 'Vanhentuvat 90 päivän sisällä',
+            description: '90 päivän sisällä vanhentuvat osaamiset',
           },
-          missingRenewals: {
-            title: 'Puuttuvat uusimiset',
+          requireAction: {
+            title: 'Vaatii toimenpiteitä',
             description:
-              'Ei voimassa olevat tai pian vahentuvat osaamiset, joihin ei ole suunniteltu uusimista',
+              'Ei voimassa olevat tai pian vanhentuvat osaamiset, jotka vaativat toimenpiteitä',
           },
           plannedRenewals: {
             title: 'Suunnitellut uusimiset',
@@ -250,9 +360,9 @@ const resources = {
           },
           actions: {
             planRenewal: 'Suunnittele uusiminen',
-            viewRenewalPlan: 'Näytä uusimissuunnitelma',
-            uploadRenewalCertificate: 'Lataa uusimistodistus',
+            addCompetencyInformation: 'Lisää osaamisen tiedot',
           },
+          competencyMissing: 'Osaaminen puuttuu',
           noRenewalPlanned: 'Uusimista ei ole suunniteltu',
         },
       },
@@ -260,26 +370,27 @@ const resources = {
         title: 'Esihenkilön yleisnäkymä',
         viewAllDetails: 'Näytä kaikki tiedot',
         summary: {
-          outdated: {
-            title: 'Vanhentuneet',
-            description: 'Vanhentuneet osaamiset',
+          invalid: {
+            title: 'Ei voimassa',
+            description: 'Ei voimassa olevat osaamiset',
             highlight: 'Vaatii huomiota',
           },
-          expiring: {
+          expiringSoon: {
             title: 'Vanhentumassa',
-            description: 'Vanhentuvat 90 päivän sisällä',
+            description: '90 päivän sisällä vanhentuvat osaamiset',
           },
-          renewals: {
-            title: 'Uusimiset',
-            description: 'Puuttuvat uusimiset',
+          requireAction: {
+            title: 'Vaatii toimenpiteitä',
+            description:
+              'Ei voimassa olevat tai pian vanhentuvat osaamiset, jotka vaativat toimenpiteitä',
           },
-          planned: {
-            title: 'Suunnitellut',
-            description: 'Suunnitellut uusimiset',
+          plannedRenewals: {
+            title: 'Suunnitellut uusimiset',
+            description: 'Kaikki suunnitellut uusimiset',
           },
         },
-        expirations: {
-          title: 'Tulevat vanhentumiset',
+        invalidAndExpiring: {
+          title: 'Ei voimassa olevat ja pian vanhentuvat osaamiset',
           columns: {
             employee: 'Työntekijä',
             competency: 'Osaaminen',
@@ -287,6 +398,7 @@ const resources = {
             urgency: 'Kiireellisyys',
             renewalPlan: 'Uusimissuunnitelma',
           },
+          notCompleted: 'Ei suoritettu',
           notPlanned: 'Ei suunniteltu',
           dayAbbreviation: 'pv',
         },
@@ -331,6 +443,99 @@ const resources = {
           title: 'Pikatoiminnot',
           addCompetence: 'Lisää osaaminen',
           addQualification: 'Lisää kelpoisuus',
+        },
+      },
+      qualifications: {
+        title: 'Työntekijän Kelpoisuudet',
+        loading: 'Haetaan kelpoisuuksia…',
+        columns: {
+          myQualifications: 'Omat kelpoisuudet',
+          qualifications: 'Kelpoisuudet',
+          status: 'Tila',
+          requirementsMet: 'Täytetyt vaatimukset',
+          validUntil: 'Voimassa asti',
+          action: 'Toiminto',
+        },
+        statuses: {
+          invalid: 'Ei voimassa',
+          expiringSoon: 'Vanhentumassa',
+          qualified: 'Kelvollinen',
+        },
+        competencyStatuses: {
+          invalid: 'Ei voimassa',
+          missing: 'Puuttuu',
+          expiringSoon: 'Vanhentumassa',
+          valid: 'Voimassa',
+        },
+        competenceTypes: {
+          training: 'Koulutus',
+          license: 'Lisenssi',
+          certification: 'Sertifikaatti',
+          skill: 'Taito',
+          other: 'Muu',
+        },
+        my: {
+          title: 'Omat kelpoisuudet',
+          tableLabel: 'Omat kelpoisuudet',
+          empty: 'Sinulla ei ole vielä kelpoisuuksia.',
+          addToOverview: 'Lisää yleisnäkymään',
+          addNamedToOverview: 'Lisää {{name}} yleisnäkymään',
+          removeFromOverview: 'Poista {{name}} yleisnäkymästä',
+          remove: 'Poista {{name}}',
+          criticalCannotRemove: '{{name}} on kriittinen, eikä sitä voi poistaa',
+        },
+        explore: {
+          title: 'Tutustu kelpoisuuksiin',
+          description:
+            'Tutustu kelpoisuuksiin ja katso, mitä vaatimuksia niillä on',
+          searchPlaceholder: 'Hae kelpoisuuksia...',
+          searchLabel: 'Hae kelpoisuuksia',
+          tableLabel: 'Tutustu kelpoisuuksiin',
+          empty: 'Kelpoisuuksia ei löytynyt.',
+          addTooltip: 'Lisää omiin kelpoisuuksiin',
+          add: 'Lisää',
+          added: 'Lisätty',
+          rowsPerPage: 'Rivejä sivulla',
+          showing: 'Näytetään {{from}}–{{to}} / {{total}}',
+        },
+        competences: {
+          tableLabel: 'Vaadittavat osaamiset',
+          required: 'Vaadittavat osaamiset',
+          status: 'Tila',
+          renewals: 'Uusimiset',
+          validUntil: 'Voimassa asti',
+        },
+        renewal: {
+          notPlanned: 'Ei suunniteltu',
+          planned: 'Suunniteltu - {{date}}',
+        },
+        removeDialog: {
+          title: 'Poistetaanko kelpoisuus?',
+          message: 'Kelpoisuus poistetaan Omat kelpoisuudet -listalta',
+          confirm: 'Poista',
+          cancel: 'Peruuta',
+        },
+        detail: {
+          back: 'Takaisin',
+          close: 'Sulje',
+          title: 'Osaamisen tiedot',
+          type: 'Tyyppi',
+          status: 'Tila',
+          issueDate: 'Myöntämispäivä',
+          validUntil: 'Voimassa asti',
+          renewCompetency: 'Uusi osaaminen',
+          newIssueDate: 'Uusi myöntämispäivä',
+          confirmRenewal: 'Vahvista uusiminen',
+          renewalPlan: 'Uusimissuunnitelma',
+          plannedDate: 'Suunniteltu uusimispäivä',
+          comment: 'Kommentti (valinnainen)',
+          renewalStatus: 'Uusimisen tila',
+          planned: 'Suunniteltu',
+          unsavedChanges: 'Tallentamattomia muutoksia',
+          saveChange: 'Tallenna muutos',
+          noPlanTitle: 'Uusimissuunnitelmaa ei ole saatavilla',
+          noPlanDescription:
+            'Tätä osaamista ei ole vielä suoritettu. Kun olet suorittanut sen ja lisännyt myöntämispäivän, voit luoda uusimissuunnitelman tässä.',
         },
       },
     },
