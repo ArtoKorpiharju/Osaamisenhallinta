@@ -50,7 +50,7 @@ export async function deleteRenewalPlan(
   employeeCompetencyId: number
 ): Promise<void> {
   await sendApiRequest(
-    `/api/employees/${String(employeeId)}/competencies/${String(employeeCompetencyId)}`,
+      `/api/employees/${String(employeeId)}/competencies/${String(employeeCompetencyId)}/renewal-plan`,
     'DELETE'
   )
 }

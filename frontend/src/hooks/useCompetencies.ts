@@ -12,7 +12,7 @@ import {
   updateCompetencyIssueDate,
   type RenewalPlanRequest,
 } from '../services/employee/employeeCompetencies'
-import { type CatalogueCompetency } from '../components/Competencies/ExploreCompetencies'
+import { type CatalogueCompetency } from '../types/competencies'
 import { type EmployeeCompetency } from '../types/overview'
 
 export default function useCompetencies(userId: number | undefined) {

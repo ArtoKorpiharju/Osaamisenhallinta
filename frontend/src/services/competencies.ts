@@ -5,7 +5,7 @@ import {
   type CompetencyTypeApiResponse,
 } from './employee/employee'
 import { isRecord } from '../utils/validators'
-import { type CatalogueCompetency } from '../components/Competencies/ExploreCompetencies'
+import { type CatalogueCompetency } from '../types/competencies'
 
 interface CatalogueCompetencyApiResponse {
   competencyId: number

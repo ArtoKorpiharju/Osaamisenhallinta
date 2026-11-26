@@ -64,13 +64,16 @@ export default function SearchCompetence({
     return result
   }, [matchingSearch])
 
+  const activeFilter: TypeFilter =
+  typeFilter !== 'all' && counts[typeFilter] === 0 ? 'all' : typeFilter
+
   const filtered = useMemo(
-    () =>
-      typeFilter === 'all'
-        ? [...matchingSearch]
-        : matchingSearch.filter((c) => c.type === typeFilter),
-    [matchingSearch, typeFilter]
-  )
+  () =>
+    activeFilter === 'all'
+      ? [...matchingSearch]
+      : matchingSearch.filter((c) => c.type === activeFilter),
+    [matchingSearch, activeFilter]
+)
 
   const chips: { value: TypeFilter; label: string }[] = [
     {
@@ -113,7 +116,7 @@ export default function SearchCompetence({
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
         {chips.map((chip) => {
-          const selected = typeFilter === chip.value
+          const selected = activeFilter === chip.value
 
           return (
             <Chip
