@@ -10,9 +10,7 @@ import PageContainer from '../../components/PageContainer'
 import PageTitle from '../../components/PageTitle'
 import { getApiErrorMessage } from '../../services/api'
 import { fetchCompetencies } from '../../services/competencies'
-import {
-  fetchEmployeeCompetencies,
-  deleteEmployeeCompetency,
+import { fetchEmployeeCompetencies, deleteEmployeeCompetency, assignCompetency,
 } from '../../services/employee/employeeCompetencies'
 import { type EmployeeCompetency } from '../../types/overview'
 import ExploreCompetencies, {
@@ -85,6 +83,28 @@ export default function EmployeeCompetencies() {
       })
   }
 
+  const handleAdd = (competency: CatalogueCompetency, issueDate: string) => {
+  if (userId === undefined) return
+
+  assignCompetency(userId, competency.competencyId, issueDate)
+    // Reload so the backend-calculated status and expiry date are shown.
+    .then(() => fetchEmployeeCompetencies(userId))
+    .then((updated) => {
+      setError(null)
+      setCompetencies(updated)
+    })
+    .catch((err: unknown) => {
+      setError(
+        getApiErrorMessage(err, t('competencies.errors.add'), {
+          400: t('competencies.errors.addInvalidDate'),
+          404: t('competencies.errors.addNotFound'),
+          409: t('competencies.errors.addConflict'),
+        })
+      )
+    })
+}
+
+
   return (
     <PageContainer>
       <Paper
@@ -123,11 +143,15 @@ export default function EmployeeCompetencies() {
         <Box>
           <ExploreCompetencies
             competencies={catalogue}
-            addedIds={new Set(competencies.map((c) => c.competencyId))}
-            onAdd={(c) => {
-              console.log('Added competency:', c)
-            }}
-          />
+            addedIds={
+              new Set(
+                competencies
+                  .filter((c) => c.employeeCompetencyId !== null)
+                  .map((c) => c.competencyId)
+            )
+         }
+        onAdd={handleAdd}
+        />
         </Box>
       </Paper>
 

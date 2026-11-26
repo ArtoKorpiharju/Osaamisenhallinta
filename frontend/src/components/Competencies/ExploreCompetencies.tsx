@@ -7,12 +7,13 @@ import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import { useTranslation } from 'react-i18next'
 
-import ExpandableTable, {
-  type ExpandableTableColumn,
-  type SortState,
-} from '../ExpandableTable'
+import ExpandableTable, { type ExpandableTableColumn, type SortState,} 
+from '../ExpandableTable'
+import CompetenceDetailDialog from '../Qualifications/CompetenceDetailDialog'
 import { tones } from '../../config/tones'
-import { type CompetencyType } from '../../types/overview'
+import {type CompetencyType, type EmployeeCompetency,
+} from '../../types/overview'
+
 
 // A competency from the whole system catalogue (not only the employee's own).
 export interface CatalogueCompetency {
@@ -35,7 +36,8 @@ interface ExploreCompetenciesProps {
   competencies: readonly CatalogueCompetency[]
   // Ids of competencies that the employee already has.
   addedIds: ReadonlySet<number>
-  onAdd: (competency: CatalogueCompetency) => void
+  // Called after the user has confirmed the issue date in the dialog.
+  onAdd: (competency: CatalogueCompetency, issueDate: string) => void
 }
 
 export default function ExploreCompetencies({
@@ -50,6 +52,8 @@ export default function ExploreCompetencies({
   const [sort, setSort] = useState<SortState>({ by: 'name', direction: 'asc' })
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(4)
+  // The competency whose detail dialog is open.
+  const [selected, setSelected] = useState<CatalogueCompetency | null>(null)
 
   // Labels used in the type column and in the filter chips.
   const typeLabel = (type: CompetencyType) =>
@@ -157,7 +161,8 @@ export default function ExploreCompetencies({
                 disabled={added}
                 onClick={(event) => {
                   event.stopPropagation()
-                  onAdd(c)
+                  // Open the detail dialog, the competency is added on confirm.
+                  setSelected(c)
                 }}
                 sx={{
                   textTransform: 'none',
@@ -177,6 +182,22 @@ export default function ExploreCompetencies({
       },
     },
   ]
+
+  // The employee does not have this competency yet, so the dialog gets an
+  // empty one (no id, no dates). The dialog then shows "No renewal plan
+  // available" and the "New issue date" field.
+  const dialogCompetence: EmployeeCompetency | null = selected
+    ? {
+        employeeCompetencyId: null,
+        competencyId: selected.competencyId,
+        name: selected.name,
+        type: selected.type,
+        issueDate: null,
+        expirationDate: null,
+        status: 'missing',
+        renewalPlan: null,
+      }
+    : null
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -207,7 +228,7 @@ export default function ExploreCompetencies({
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
         {chips.map((chip) => {
-          const selected = typeFilter === chip.value
+          const selectedChip = typeFilter === chip.value
 
           return (
             <Chip
@@ -218,15 +239,15 @@ export default function ExploreCompetencies({
                 setTypeFilter(chip.value)
                 setPage(0)
               }}
-              aria-pressed={selected}
+              aria-pressed={selectedChip}
               sx={{
                 fontWeight: 700,
                 fontSize: 12,
-                bgcolor: selected ? tones.info.main : 'background.paper',
-                color: selected ? '#ffffff' : 'text.primary',
+                bgcolor: selectedChip ? tones.info.main : 'background.paper',
+                color: selectedChip ? '#ffffff' : 'text.primary',
                 border: `1px solid ${alpha(tones.info.main, 0.3)}`,
                 '&:hover': {
-                  bgcolor: selected
+                  bgcolor: selectedChip
                     ? tones.info.main
                     : alpha(tones.info.main, 0.08),
                 },
@@ -312,6 +333,19 @@ export default function ExploreCompetencies({
           }}
         />
       </Box>
+
+      {/* Same detail dialog as in Qualifications, opened from the Add button. */}
+      <CompetenceDetailDialog
+        competence={dialogCompetence}
+        qualificationName={t('competencies.explore.title')}
+        onClose={() => {
+          setSelected(null)
+        }}
+        onConfirmRenewal={(_competence, newIssueDate) => {
+          if (selected) onAdd(selected, newIssueDate)
+          setSelected(null)
+        }}
+      />
     </Box>
   )
 }
