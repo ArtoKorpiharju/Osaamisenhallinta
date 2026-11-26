@@ -18,11 +18,13 @@ import StatusChip from '../StatusChip'
 interface MyCompetenciesTableProps {
   competencies: readonly EmployeeCompetency[]
   onRemove?: (competency: EmployeeCompetency) => void
+  onCompetencyClick?: (competency: EmployeeCompetency) => void
 }
 
 export default function MyCompetenciesTable({
   competencies,
   onRemove,
+  onCompetencyClick,
 }: MyCompetenciesTableProps) {
   const { t } = useTranslation()
 
@@ -130,6 +132,7 @@ export default function MyCompetenciesTable({
           getRowId={(c) =>
             String(c.employeeCompetencyId ?? `missing-${String(c.competencyId)}`)
           }
+          onRowClick={onCompetencyClick}
           emptyMessage={t('competencies.table.empty')}
         />
       </Box>

@@ -6,11 +6,20 @@ import { useTranslation } from 'react-i18next'
 import MyCompetenciesTable from '../../components/Competencies/MyCompetenciesTable'
 import RemoveCompetencyDialog from '../../components/Competencies/RemoveCompetencyDialog'
 import SearchCompetence from '../../components/Competencies/SearchCompetence'
+import CompetenceDetailDialog, {
+  type RenewalPlanInput,
+} from '../../components/Qualifications/CompetenceDetailDialog'
 import PageContainer from '../../components/PageContainer'
 import PageTitle from '../../components/PageTitle'
 import { getApiErrorMessage } from '../../services/api'
 import { fetchCompetencies } from '../../services/competencies'
-import { fetchEmployeeCompetencies, deleteEmployeeCompetency, assignCompetency,
+import {
+  fetchEmployeeCompetencies,
+  deleteEmployeeCompetency,
+  assignCompetency,
+  saveRenewalPlan,
+  deleteRenewalPlan,
+  updateCompetencyIssueDate,
 } from '../../services/employee/employeeCompetencies'
 import { type EmployeeCompetency } from '../../types/overview'
 import ExploreCompetencies, {
@@ -28,6 +37,13 @@ export default function EmployeeCompetencies() {
   const [loading, setLoading] = useState(true)
   const [pendingRemoval, setPendingRemoval] =
     useState<EmployeeCompetency | null>(null)
+
+  // Only the id is stored, so the dialog shows fresh data after a reload.
+  const [selectedCompetencyId, setSelectedCompetencyId] = useState<
+    number | null
+  >(null)
+  const selectedCompetency =
+    competencies.find((c) => c.competencyId === selectedCompetencyId) ?? null
 
   // Fetch the whole competency catalogue once.
   useEffect(() => {
@@ -57,6 +73,12 @@ export default function EmployeeCompetencies() {
       })
   }, [userId, t])
 
+  // Reload so the backend-calculated status and expiry date are shown.
+  const reloadCompetencies = async () => {
+    if (userId === undefined) return
+    setCompetencies(await fetchEmployeeCompetencies(userId))
+  }
+
   const handleConfirmRemove = () => {
     const target = pendingRemoval
     setPendingRemoval(null)
@@ -84,26 +106,82 @@ export default function EmployeeCompetencies() {
   }
 
   const handleAdd = (competency: CatalogueCompetency, issueDate: string) => {
-  if (userId === undefined) return
+    if (userId === undefined) return
 
-  assignCompetency(userId, competency.competencyId, issueDate)
-    // Reload so the backend-calculated status and expiry date are shown.
-    .then(() => fetchEmployeeCompetencies(userId))
-    .then((updated) => {
-      setError(null)
-      setCompetencies(updated)
-    })
-    .catch((err: unknown) => {
-      setError(
-        getApiErrorMessage(err, t('competencies.errors.add'), {
-          400: t('competencies.errors.addInvalidDate'),
-          404: t('competencies.errors.addNotFound'),
-          409: t('competencies.errors.addConflict'),
-        })
-      )
-    })
-}
+    assignCompetency(userId, competency.competencyId, issueDate)
+      .then(reloadCompetencies)
+      .then(() => {
+        setError(null)
+      })
+      .catch((err: unknown) => {
+        setError(
+          getApiErrorMessage(err, t('competencies.errors.add'), {
+            400: t('competencies.errors.addInvalidDate'),
+            404: t('competencies.errors.addNotFound'),
+            409: t('competencies.errors.addConflict'),
+          })
+        )
+      })
+  }
 
+  // Save the renewal plan, or delete it when `plan` is null.
+  const handleSaveRenewalPlan = (
+    competence: EmployeeCompetency,
+    plan: RenewalPlanInput | null
+  ) => {
+    const employeeCompetencyId = competence.employeeCompetencyId
+    if (userId === undefined || employeeCompetencyId === null) return
+
+    const request =
+      plan === null
+        ? deleteRenewalPlan(userId, employeeCompetencyId)
+        : saveRenewalPlan(userId, employeeCompetencyId, plan)
+
+    request
+      .then(reloadCompetencies)
+      .then(() => {
+        setError(null)
+      })
+      .catch((err: unknown) => {
+        setError(
+          getApiErrorMessage(err, t('competencies.errors.saveRenewalPlan'), {
+            400: t('competencies.errors.invalidRenewalPlan'),
+            404: t('competencies.errors.removeNotFound'),
+          })
+        )
+      })
+  }
+
+  // Renew a competency with a new issue date.
+  const handleConfirmRenewal = (
+    competence: EmployeeCompetency,
+    newIssueDate: string
+  ) => {
+    if (userId === undefined) return
+
+    const request =
+      competence.employeeCompetencyId === null
+        ? assignCompetency(userId, competence.competencyId, newIssueDate)
+        : updateCompetencyIssueDate(
+            userId,
+            competence.employeeCompetencyId,
+            newIssueDate
+          )
+
+    request
+      .then(reloadCompetencies)
+      .then(() => {
+        setError(null)
+      })
+      .catch((err: unknown) => {
+        setError(
+          getApiErrorMessage(err, t('competencies.errors.renew'), {
+            400: t('competencies.errors.invalidIssueDate'),
+            404: t('competencies.errors.removeNotFound'),
+          })
+        )
+      })
+  }
 
   return (
     <PageContainer>
@@ -130,6 +208,9 @@ export default function EmployeeCompetencies() {
             <MyCompetenciesTable
               competencies={filtered}
               onRemove={setPendingRemoval}
+              onCompetencyClick={(c) => {
+                setSelectedCompetencyId(c.competencyId)
+              }}
             />
           )}
         </SearchCompetence>
@@ -148,10 +229,10 @@ export default function EmployeeCompetencies() {
                 competencies
                   .filter((c) => c.employeeCompetencyId !== null)
                   .map((c) => c.competencyId)
-            )
-         }
-        onAdd={handleAdd}
-        />
+              )
+            }
+            onAdd={handleAdd}
+          />
         </Box>
       </Paper>
 
@@ -162,6 +243,16 @@ export default function EmployeeCompetencies() {
         onCancel={() => {
           setPendingRemoval(null)
         }}
+      />
+
+      <CompetenceDetailDialog
+        competence={selectedCompetency}
+        qualificationName={t('competencies.my.title')}
+        onClose={() => {
+          setSelectedCompetencyId(null)
+        }}
+        onSaveRenewalPlan={handleSaveRenewalPlan}
+        onConfirmRenewal={handleConfirmRenewal}
       />
     </PageContainer>
   )
