@@ -75,12 +75,11 @@ export default function useCompetencies(userId: number | undefined) {
     setCompetencies(await fetchEmployeeCompetencies(userId))
   }, [userId])
 
-  // Yhteinen kääre: suorittaa toiminnon, lataa uudelleen ja hoitaa virheen.
-  const run = useCallback(
-    async (
+    const run = useCallback(
+      async (
       action: () => Promise<unknown>,
       fallbackKey: string,
-      statusKeys: Partial<Record<number, string>> = {}
+      statusKeys: Record<number, string> = {}
     ) => {
       try {
         await action()
@@ -95,6 +94,7 @@ export default function useCompetencies(userId: number | undefined) {
     },
     [reload, t]
   )
+
 
   const addCompetency = useCallback(
     (competency: CatalogueCompetency, issueDate: string) => {
