@@ -1,4 +1,4 @@
-import { fetchApiData, sendApiRequest } from '../api'
+import { fetchApiData, sendApiRequest  } from '../api'
 import { type EmployeeCompetency, type RenewalPlan } from '../../types/overview'
 import {
   isCompetencyApiResponse,
@@ -50,7 +50,17 @@ export async function deleteRenewalPlan(
   employeeCompetencyId: number
 ): Promise<void> {
   await sendApiRequest(
-    `/api/employees/${String(employeeId)}/competencies/${String(employeeCompetencyId)}/renewal-plan`,
+      `/api/employees/${String(employeeId)}/competencies/${String(employeeCompetencyId)}/renewal-plan`,
+    'DELETE'
+  )
+}
+
+export async function deleteEmployeeCompetency(
+  employeeId: number,
+  employeeCompetencyId: number
+): Promise<void> {
+  await sendApiRequest(
+    `/api/employees/${String(employeeId)}/competencies/${String(employeeCompetencyId)}`,
     'DELETE'
   )
 }

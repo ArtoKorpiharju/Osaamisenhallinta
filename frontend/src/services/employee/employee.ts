@@ -60,7 +60,7 @@ function isQualificationStatusApiResponse(
 }
 
 // Check if an API response value contains valid competency status.
-function isCompetencyStatusApiResponse(
+export function isCompetencyStatusApiResponse(
   value: unknown
 ): value is CompetencyStatusApiResponse {
   return (
@@ -178,9 +178,7 @@ function mapCompetencyStatus(
   }
 }
 
-export function mapCompetencyType(
-  type: CompetencyTypeApiResponse
-): CompetencyType {
+export function mapCompetencyType(type: CompetencyTypeApiResponse): CompetencyType {
   switch (type) {
     case 'TRAINING':
       return 'training'
