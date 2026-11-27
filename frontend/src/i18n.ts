@@ -20,6 +20,8 @@ const resources = {
         qualifications: 'Qualifications',
         competencies: 'Competencies',
         renewals: 'Renewals',
+        myUnit: 'My unit',
+        log: 'Log',
         settings: 'Settings',
       },
       profile: {
@@ -129,6 +131,33 @@ const resources = {
           notCompleted: 'Not completed',
           notPlanned: 'Not planned',
           dayAbbreviation: 'd',
+        },
+      },
+      myUnit: {
+        title: 'My unit',
+        sections: {
+          supervisors: 'Unit supervisors',
+          employees: 'Unit employees',
+        },
+        employeeDialog: {
+          close: 'Close',
+          tabs: {
+            overview: 'Overview',
+            qualifications: 'Qualifications',
+            competencies: 'Competencies',
+          },
+        },
+        employees: {
+          searchPlaceholder:
+            'Search for people, qualifications or competencies',
+          searchLabel: 'Search employees',
+          columns: {
+            employee: 'Employee name',
+            criticalQualifications: 'Critical qualifications',
+            qualifications: 'Qualifications',
+            competencies: 'Competencies',
+            plannedRenewals: 'Renewals planned',
+          },
         },
       },
       adminOverview: {
@@ -348,6 +377,8 @@ const resources = {
         qualifications: 'Kelpoisuudet',
         competencies: 'Osaamiset',
         renewals: 'Uusimiset',
+        myUnit: 'Oma yksikkö',
+        log: 'Loki',
         settings: 'Asetukset',
       },
       profile: {
@@ -457,6 +488,32 @@ const resources = {
           notCompleted: 'Ei suoritettu',
           notPlanned: 'Ei suunniteltu',
           dayAbbreviation: 'pv',
+        },
+      },
+      myUnit: {
+        title: 'Oma yksikkö',
+        sections: {
+          supervisors: 'Yksikön esihenkilöt',
+          employees: 'Yksikön työntekijät',
+        },
+        employeeDialog: {
+          close: 'Sulje',
+          tabs: {
+            overview: 'Yleisnäkymä',
+            qualifications: 'Kelpoisuudet',
+            competencies: 'Osaamiset',
+          },
+        },
+        employees: {
+          searchPlaceholder: 'Hae henkilöitä, kelpoisuuksia tai osaamisia',
+          searchLabel: 'Hae työntekijöitä',
+          columns: {
+            employee: 'Työntekijän nimi',
+            criticalQualifications: 'Kriittiset kelpoisuudet',
+            qualifications: 'Kelpoisuudet',
+            competencies: 'Osaamiset',
+            plannedRenewals: 'Suunnitellut uusimiset',
+          },
         },
       },
       adminOverview: {

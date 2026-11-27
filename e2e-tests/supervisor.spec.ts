@@ -16,5 +16,5 @@ test("supervisor overview shows stats and upcoming expirations", async ({
   ]) {
     await expect(page.getByText(title, { exact: true }).first()).toBeVisible();
   }
-  await expect(page.getByText("Emma Johnson")).toBeVisible();
+  await expect(page.getByText("Mika Niemi").first()).toBeVisible();
 });

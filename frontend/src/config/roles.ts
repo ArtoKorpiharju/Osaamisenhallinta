@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import type { SvgIconProps } from '@mui/material/SvgIcon'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
+import PersonIcon from '@mui/icons-material/Person'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 export const roles = [
@@ -42,6 +43,11 @@ export const pagesPerRole: Record<Role, Page[]> = {
       labelKey: 'navigation.overview',
       path: '/supervisor/overview',
       icon: HomeOutlinedIcon,
+    },
+    {
+      labelKey: 'navigation.myUnit',
+      path: '/supervisor/my-unit',
+      icon: PersonIcon,
     },
   ],
   admin: [

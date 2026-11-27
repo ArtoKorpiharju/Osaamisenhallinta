@@ -64,6 +64,43 @@ export interface SupervisorOverview {
   employees: string[]
 }
 
+export interface UnitPerson {
+  id: number
+  firstName: string
+  lastName: string
+}
+
+export interface UnitOverview {
+  unitId: number
+  unitName: string
+  supervisors: UnitPerson[]
+  employees: UnitPerson[]
+}
+
+export interface UnitEmployeeQualifications {
+  employee: UnitPerson
+  qualifications: EmployeeQualification[]
+  competencies: EmployeeCompetency[]
+}
+
+export interface UnitDetails {
+  supervisors: UnitPerson[]
+  employees: UnitEmployeeQualifications[]
+}
+
+export interface ExpiringCompetency {
+  employeeId: number
+  employeeFirstName: string
+  employeeLastName: string
+  qualificationId: number
+  qualificationName: string
+  competencyId: number
+  competencyName: string
+  expirationDate: string | null
+  status: CompetencyStatus
+  renewalDate: string | null
+}
+
 export interface OverviewSummary {
   outdated: number
   expiring: number

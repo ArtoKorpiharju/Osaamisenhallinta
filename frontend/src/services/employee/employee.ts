@@ -11,7 +11,7 @@ import {
 type QualificationStatusApiResponse =
   'NOT_QUALIFIED' | 'EXPIRING_SOON' | 'QUALIFIED'
 
-type CompetencyStatusApiResponse =
+export type CompetencyStatusApiResponse =
   'EXPIRED' | 'MISSING' | 'EXPIRING_SOON' | 'VALID'
 
 export type CompetencyTypeApiResponse =
@@ -163,7 +163,7 @@ function mapQualificationStatus(
 
 // Maps a qualification status from the API response to the frontend
 // QualificationStatus type.
-function mapCompetencyStatus(
+export function mapCompetencyStatus(
   status: CompetencyStatusApiResponse
 ): CompetencyStatus {
   switch (status) {

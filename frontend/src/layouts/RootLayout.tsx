@@ -72,6 +72,7 @@ export default function RootLayout() {
   const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false)
   const navigationOpen = isMobile ? mobileNavigationOpen : desktopNavigationOpen
   const [seedUsers, setSeedUsers] = useState<SeedUser[]>([])
+  const currentUser = getUserForRole(seedUsers, role)
   const [usersError, setUsersError] = useState<string | null>(null)
   const [usersLoading, setUsersLoading] = useState(true)
 
@@ -187,7 +188,8 @@ export default function RootLayout() {
           {usersLoading && <Alert severity="info">Fetching seed users…</Alert>}
           <Outlet
             context={{
-              userId: getUserForRole(seedUsers, role)?.id,
+              userId: currentUser?.id,
+              unitId: currentUser?.supervisedUnit ?? undefined,
             }}
           />
         </Box>

@@ -1,8 +1,9 @@
 import { Chip, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import DataTable, { type DataTableColumn } from './DataTable'
-import { tones } from '../config/tones'
+import DataTable, { type DataTableColumn } from '../DataTable'
+import Panel from '../Panel'
+import { tones } from '../../config/tones'
 
 export interface ExpirationItem {
   id: number
@@ -127,13 +128,14 @@ function InvalidAndExpiringCompetenciesTable({
   ]
 
   return (
-    <DataTable
-      title={t('supervisorOverview.invalidAndExpiring.title')}
-      columns={columns}
-      rows={items}
-      getRowId={(item) => item.id}
-      onRowClick={onItemClick}
-    />
+    <Panel title={t('supervisorOverview.invalidAndExpiring.title')}>
+      <DataTable
+        columns={columns}
+        rows={items}
+        getRowId={(item) => item.id}
+        onRowClick={onItemClick}
+      />
+    </Panel>
   )
 }
 

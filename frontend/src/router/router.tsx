@@ -7,6 +7,7 @@ import EmployeeQualifications from '../pages/employee/Qualifications'
 import EmployeeCompetencies from '../pages/employee/Competencies'
 
 import SupervisorOverview from '../pages/supervisor/Overview'
+import SupervisorMyUnit from '../pages/supervisor/MyUnit'
 
 import AdminOverview from '../pages/admin/Overview'
 import AdminQualifications from '../pages/admin/Qualifications'
@@ -40,6 +41,7 @@ export default function AppRouter() {
               element={<Navigate to="/supervisor/overview" replace />}
             />
             <Route path="overview" element={<SupervisorOverview />} />
+            <Route path="my-unit" element={<SupervisorMyUnit />} />
           </Route>
           <Route path="admin">
             <Route index element={<Navigate to="/admin/overview" replace />} />

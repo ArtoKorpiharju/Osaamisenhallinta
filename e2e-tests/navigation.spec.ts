@@ -41,6 +41,14 @@ test("employee navigation opens each page", async ({ page }) => {
   }
 });
 
+test("supervisor navigation opens my unit page", async ({ page }) => {
+  await page.goto("/supervisor/overview");
+
+  await page.getByRole("link", { name: "My unit" }).click();
+  await expect(page).toHaveURL("/supervisor/my-unit");
+  await expect(page.getByRole("heading", { name: "My unit" })).toBeVisible();
+});
+
 test("admin navigation opens each page", async ({ page }) => {
   await page.goto("/admin/overview");
 
